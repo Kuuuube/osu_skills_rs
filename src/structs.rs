@@ -1,3 +1,5 @@
+use std::iter::Map;
+
 pub struct Vector2F64 {
     pub x: f64,
     pub y: f64
@@ -133,7 +135,7 @@ pub struct Beatmap {
 
     //This might be incorrect. Original c++ code:
     //std::map<int, int> timeMapper;
-    pub time_mapper: Vec<i32>,
+    pub time_mapper: Map<i32, i32>,
 
     pub x: Vec<f64>,
     pub y: Vec<f64>,
@@ -150,9 +152,11 @@ pub struct Beatmap {
     pub press_intervals: Vec<f64>,
     pub tap_strains: Vec<f64>,
 
+    //This might be incorrect. Original c++ code:
     //std::map<int, std::vector<std::vector<int>>> streams;
-
     //std::map<int, std::vector<std::vector<int>>> bursts;
+    pub streams: Map<i32, Vec<Vec<i32>>>,
+    pub bursts: Map<i32, Vec<Vec<i32>>>,
 
     pub skills: Skills,
 
