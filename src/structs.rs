@@ -1,17 +1,14 @@
 use std::iter::Map;
+use crate::vector2d;
 
-pub struct Vector2F64 {
-    pub x: f64,
-    pub y: f64
-}
-
+#[derive(Default)]
 pub struct Timing {
     pub time: i64,
     pub data: f64,
     pub key: i32,
     pub press: bool,
 
-    pub pos: Vector2F64
+    pub pos: vector2d::Vector2F64
 }
 
 pub enum Mods {
@@ -58,28 +55,30 @@ pub enum HitObjectType {
 } 
 
 pub struct HitObject {
-    pub pos: Vector2F64,
-    pub time: i32,
+    pub pos: vector2d::Vector2F64,
+    pub time: i64,
     pub hit_object_type: i32,
 
     pub curve_type: CurveType,
-    pub curves: Vec<Vector2F64>,
-    pub lerp_points: Vec<Vector2F64>,
+    pub curves: Vec<vector2d::Vector2F64>,
+    pub lerp_points: Vec<vector2d::Vector2F64>,
     pub ncurve: i32,
     pub repeat: i32,
     pub repeat_times: Vec<i32>,
     pub pixel_length: f64,
     pub end_time: i32,
     pub to_repeat_time: i32,
-    pub endpoint: Vector2F64,
+    pub endpoint: vector2d::Vector2F64,
     pub ticks: Vec<i32>
 }
 
+#[derive(Default)]
 pub struct Burst {
     pub interval: i32,
     pub strain: f64
 }
 
+#[derive(Default)]
 pub struct Stream {
     interval: i32,
     length: i32
@@ -95,10 +94,11 @@ pub enum AimPointTypes {
 
 pub struct AimPoint {
     pub time: i32,
-    pub pos: Vector2F64,
+    pub pos: vector2d::Vector2F64,
     pub aim_point_type: AimPointTypes
 }
 
+#[derive(Default)]
 pub struct Skills {
     pub stamina: f64,
     pub tenacity: f64,
@@ -110,6 +110,7 @@ pub struct Skills {
     pub reaction: f64,
 }
 
+#[derive(Default)]
 pub struct Beatmap {
     pub format: i32,
 
@@ -135,7 +136,7 @@ pub struct Beatmap {
 
     //This might be incorrect. Original c++ code:
     //std::map<int, int> timeMapper;
-    pub time_mapper: Map<i32, i32>,
+    //pub time_mapper: Map<i32, i32>,
 
     pub x: Vec<f64>,
     pub y: Vec<f64>,
@@ -155,8 +156,8 @@ pub struct Beatmap {
     //This might be incorrect. Original c++ code:
     //std::map<int, std::vector<std::vector<int>>> streams;
     //std::map<int, std::vector<std::vector<int>>> bursts;
-    pub streams: Map<i32, Vec<Vec<i32>>>,
-    pub bursts: Map<i32, Vec<Vec<i32>>>,
+    //pub streams: Map<i32, Vec<Vec<i32>>>,
+    //pub bursts: Map<i32, Vec<Vec<i32>>>,
 
     pub skills: Skills,
 
