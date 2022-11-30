@@ -1,4 +1,5 @@
 use crate::structs;
+use crate::structs::HitObjectType;
 use crate::vector2d;
 
 pub fn deg_to_rad(degrees: f64) -> f64 {
@@ -9,8 +10,8 @@ pub fn rad_to_deg(radians: f64) -> f64 {
     return radians * 180.0 / std::f64::consts::PI;
 }
 
-pub fn btwn(lss: i64, val: i64, gtr: i64) -> bool {
-    return (i64::min(lss, gtr) <= val) && (val <= i64::max(lss, gtr));
+pub fn btwn(lss: &i64, val: &i64, gtr: &i64) -> bool {
+    return (&i64::min(*lss, *gtr) <= val) && (val <= &i64::max(*lss, *gtr));
 }
 
 pub fn ms_to_bpm(ms: i32) -> i32{
@@ -44,7 +45,7 @@ pub fn get_angle(a: vector2d::Vector2F64, b: vector2d::Vector2F64, c: vector2d::
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
-pub fn find_hit_object_at(hit_objects: Vec<structs::HitObject>, time: i64, dir: bool) -> u32 {
+pub fn find_hit_object_at(hit_objects: &Vec<structs::HitObject>, time: i64, dir: bool) -> u32 {
     let mut start: u32 = 0;
     let mut end: u32 = hit_objects.len().try_into().unwrap();
     let mut mid: u32;
@@ -52,15 +53,15 @@ pub fn find_hit_object_at(hit_objects: Vec<structs::HitObject>, time: i64, dir: 
     while start <= end {
         mid = (start + end) / 2;
 
-         if btwn(hit_objects[mid as usize].time as i64, time, hit_objects[mid as usize].end_time as i64) {
-            if btwn(hit_objects[(mid + 1) as usize].time as i64, time, hit_objects[(mid) as usize].end_time as i64) {
+         if btwn(&(hit_objects[mid as usize].time as i64), &time, &(hit_objects[mid as usize].end_time as i64)) {
+            if btwn(&(hit_objects[(mid + 1) as usize].time as i64), &time, &(hit_objects[(mid) as usize].end_time as i64)) {
                 return mid + 1;
             } else {
                 return mid;
             }
         }
 
-        if btwn(hit_objects[mid as usize].time as i64, time, hit_objects[(mid + 1) as usize].end_time as i64) {
+        if btwn(&(hit_objects[mid as usize].time as i64), &time, &(hit_objects[(mid + 1) as usize].end_time as i64)) {
             return mid + dir as u32;
         }
 
@@ -74,3 +75,7 @@ pub fn find_hit_object_at(hit_objects: Vec<structs::HitObject>, time: i64, dir: 
     let final_val: u32 = hit_objects.len().try_into().unwrap();
     return final_val - 1;
 } 
+
+pub fn is_hit_object_type(hit_object: &i32, object_type: HitObjectType) -> bool {
+    return (hit_object & object_type as i32) > 0;
+}
