@@ -82,3 +82,28 @@ pub fn get_value(min: f64, max: f64, percent: f64) -> f64 {
 pub fn cs_to_px(cs: f64) -> f64 {
     return 54.5 - (4.5 * cs);
 }
+
+pub fn get_weighted_value_2(vals: Vec<f64>, decay: f64) -> f64 {
+    let mut result: f64 = 0.0;
+    let mut i: usize = 0;
+    while i < vals.len() {
+        result += vals[i] * f64::powf(decay, i as f64);
+        i += 1;
+    }
+    return result;
+}
+
+pub fn get_peak_vals(vals: &Vec<f64>) -> Vec<f64>{
+    let mut output: Vec<f64> = Default::default();
+    let mut i: usize = 1;
+    if vals.len() >= 3 {
+        while i < vals.len() - 1 {
+            if vals[i] > vals[i - 1] && vals[i] > vals[i + 1] {
+                output.push(vals[i]);
+            }
+            i += 1;
+        }
+        output.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    }
+    return output;
+}
