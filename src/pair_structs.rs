@@ -35,7 +35,7 @@ pub struct Pairi32VectorVectori32 {
 }
 
 impl Default for Pairi32VectorVectori32 {
-    fn default() -> Self {Pairi32VectorVectori32 { x: (0), y: (vec![vec![0]]) }}
+    fn default() -> Self {Pairi32VectorVectori32 { x: (0), y: (Default::default()) }}
 }
 
 fn get_length(vector2_0: Pairf64) -> f64 {
