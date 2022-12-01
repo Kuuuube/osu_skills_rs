@@ -1,6 +1,6 @@
 use crate::structs;
 
-pub fn calculate_precision(beatmap: structs::Beatmap, agility_limit: f64, agility_pow: f64, total_mult: f64, total_pow: f64) -> f64 {
+pub fn calculate_precision(beatmap: &structs::Beatmap, agility_limit: f64, agility_pow: f64, total_mult: f64, total_pow: f64) -> f64 {
     let scaled_agility;
     let agility_subtract = f64::powf(agility_limit, 0.1) - 1.0;
     let agility_shift = f64::powf(agility_subtract, 10.0);
