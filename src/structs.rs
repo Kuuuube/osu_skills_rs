@@ -1,4 +1,3 @@
-use std::iter::Map;
 use crate::vector2d;
 
 #[derive(Default)]
@@ -39,20 +38,20 @@ pub enum HitObjectType {
     Normal = 1,
     Slider = 2,
     NewCombo = 4,
-    NormalNewCombo = 5,
-    SliderNewCombo = 6,
+    //NormalNewCombo = 5,
+    //SliderNewCombo = 6,
     Spinner = 8,
     ColourHax = 112,
     Hold = 128,
     //ManiaLong = 128
 }
 
- pub enum CurveType {
+pub enum CurveType {
     PerfectCurve,
     BezierCurve,
     LinearCurve,
     CatmullCurve
-} 
+}
 
 pub struct HitObject {
     pub pos: vector2d::Vector2F64,

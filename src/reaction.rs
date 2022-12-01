@@ -1,7 +1,6 @@
 use crate::structs;
 use crate::utils;
 use crate::vector2d;
-use crate::slider;
 use crate::patterns;
 
 fn pattern_req(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing, cspx: f64) -> f64 {
@@ -22,67 +21,6 @@ fn pattern_req(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing,
     }
 
     return time as f64 / ((dist / (2.0 * cspx)) * ((std::f64::consts::PI - angle) / std::f64::consts::PI));
-}
-
-fn is_hit_object_at(hit_objects: &Vec<structs::HitObject>, previous_time: i64, current_time: i64) -> bool {
-    let i = utils::find_hit_object_at(&hit_objects, current_time, false);
-
-    if utils::btwn(&previous_time, &(hit_objects[i as usize].time as i64), &current_time) {
-        return true;
-    }
-
-    if utils::btwn(&(hit_objects[i as usize].time as i64), &current_time, &(hit_objects[i as usize].end_time as i64)) {
-        return true;
-    }
-
-    return false;
-}
-
-fn get_next_tick_point(hit_objects: Vec<structs::HitObject>, time: i64) -> structs::Timing {
-    let mut time_mut = time;
-    let mut tick_point: structs::Timing = Default::default();
-    let i: u32 = utils::find_hit_object_at(&hit_objects, time, true);
-
-    if i >= (hit_objects.len() as u32 - 1) {
-        return structs::Timing{time: 0, data: -1.0, key: Default::default(), press: Default::default(), pos: Default::default()};
-    }
-
-    if !is_hit_object_at(&hit_objects, time - 1, time) {
-        time_mut = hit_objects[(i + 1) as usize].time;
-        let pos: &vector2d::Vector2F64 = &hit_objects[(i + 1) as usize].pos;
-
-        tick_point.pos = vector2d::Vector2F64{x: pos.x, y: pos.y};
-        tick_point.time = time_mut;
-        tick_point.data = 0.0;
-        tick_point.press = false;
-        return tick_point;
-    } else {
-        if utils::is_hit_object_type(&hit_objects[i as usize].hit_object_type, structs::HitObjectType::Slider) {
-            let ticks: &Vec<i32> = &hit_objects[i as usize].ticks;
-            let mut tick = 1;
-            for _tick_index in ticks {
-                if utils::btwn(&(ticks[tick - 1] as i64), &time_mut, &(ticks[tick] as i64)) {
-                    time_mut = ticks[tick as usize] as i64;
-                    let pos: vector2d::Vector2F64 = slider::get_slider_pos(&hit_objects[i as usize], ticks[tick]);
-
-                    tick_point.pos = vector2d::Vector2F64{x: pos.x, y: pos.y};
-                    tick_point.time = time_mut;
-                    tick_point.data = 0.0;
-                    tick_point.press = true;
-                    return tick_point;
-                }
-                tick += 1;
-            }
-        }
-        time_mut = hit_objects[(i + 1) as usize].time;
-        let pos = hit_objects[(i + 1) as usize].pos;
-
-        tick_point.pos = vector2d::Vector2F64{x: pos.x, y: pos.y};
-        tick_point.time = time_mut;
-        tick_point.data = 0.0;
-        tick_point.press = false;
-        return tick_point;
-    }
 }
 
 fn pattern_to_reaction(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing, ar_ms: f64, cs_px: f64) -> f64{
