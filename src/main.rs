@@ -1,24 +1,19 @@
-mod precision;
-mod reaction;
 mod utils;
 mod structs;
 mod pair_structs;
 mod patterns;
-mod stamina;
-mod tenacity;
-mod agility;
-mod accuracy;
 mod erf;
+mod skill_calculation;
 
 fn main() {
     let mut testmap: structs::Beatmap = Default::default();
 
-    testmap.skills.precision = precision::calculate_precision(&testmap);
-    testmap.skills.reaction = reaction::calculate_reaction(&testmap, false);
-    testmap.skills.stamina = stamina::calculate_stamina(&testmap);
-    testmap.skills.tenacity = tenacity::calculate_tenacity(&testmap);
-    testmap.skills.agility = agility::calculate_agility(&testmap);
-    testmap.skills.accuracy = accuracy::calculate_accuracy(&testmap);
+    testmap.skills.precision = skill_calculation::precision::calculate_precision(&testmap);
+    testmap.skills.reaction = skill_calculation::reaction::calculate_reaction(&testmap, false);
+    testmap.skills.stamina = skill_calculation::stamina::calculate_stamina(&testmap);
+    testmap.skills.tenacity = skill_calculation::tenacity::calculate_tenacity(&testmap);
+    testmap.skills.agility = skill_calculation::agility::calculate_agility(&testmap);
+    testmap.skills.accuracy = skill_calculation::accuracy::calculate_accuracy(&testmap);
 
     let precision = testmap.skills.precision.to_string();
     let reaction = testmap.skills.reaction.to_string();
