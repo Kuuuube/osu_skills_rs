@@ -1,3 +1,4 @@
+#[derive(Copy, Clone)]
 pub struct Vector2F64 {
     pub x: f64,
     pub y: f64
@@ -5,6 +6,16 @@ pub struct Vector2F64 {
 
 impl Default for Vector2F64 {
     fn default() -> Self {Vector2F64 { x: (0.0), y: (0.0) }}
+}
+
+#[derive(Copy, Clone)]
+pub struct Vector2I64 {
+    pub x: i64,
+    pub y: i64
+}
+
+impl Default for Vector2I64 {
+    fn default() -> Self {Vector2I64 { x: (0), y: (0) }}
 }
 
 fn get_length(vector2_0: Vector2F64) -> f64 {
