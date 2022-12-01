@@ -1,11 +1,11 @@
 use crate::structs;
 use crate::utils;
-use crate::vector2d;
+use crate::pair_structs;
 
-pub fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity_start: f64, opacity_end: f64) -> vector2d::Vector2I64 {
+pub fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity_start: f64, opacity_end: f64) -> pair_structs::Vector2i64 {
     let ar_ms: f64 = utils::ar_to_ms(ar);
     let preamp_time: f64 = obj.time as f64 - ar_ms;
-    let mut times: vector2d::Vector2I64 = Default::default();
+    let mut times: pair_structs::Vector2i64 = Default::default();
 
     if hidden {
         let fade_in_duration: f64 = 0.4 * ar_ms;

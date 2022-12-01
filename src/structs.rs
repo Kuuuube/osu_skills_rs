@@ -1,4 +1,4 @@
-use crate::vector2d;
+use crate::pair_structs;
 
 #[derive(Default)]
 pub struct Timing {
@@ -7,7 +7,7 @@ pub struct Timing {
     pub key: i32,
     pub press: bool,
 
-    pub pos: vector2d::Vector2F64
+    pub pos: pair_structs::Vector2f64
 }
 
 pub enum Mods {
@@ -54,20 +54,20 @@ pub enum CurveType {
 }
 
 pub struct HitObject {
-    pub pos: vector2d::Vector2F64,
+    pub pos: pair_structs::Vector2f64,
     pub time: i64,
     pub hit_object_type: i32,
 
     pub curve_type: CurveType,
-    pub curves: Vec<vector2d::Vector2F64>,
-    pub lerp_points: Vec<vector2d::Vector2F64>,
+    pub curves: Vec<pair_structs::Vector2f64>,
+    pub lerp_points: Vec<pair_structs::Vector2f64>,
     pub ncurve: i32,
     pub repeat: i32,
     pub repeat_times: Vec<i32>,
     pub pixel_length: f64,
     pub end_time: i32,
     pub to_repeat_time: i32,
-    pub endpoint: vector2d::Vector2F64,
+    pub endpoint: pair_structs::Vector2f64,
     pub ticks: Vec<i32>
 }
 
@@ -93,7 +93,7 @@ pub enum AimPointTypes {
 
 pub struct AimPoint {
     pub time: i32,
-    pub pos: vector2d::Vector2F64,
+    pub pos: pair_structs::Vector2f64,
     pub aim_point_type: AimPointTypes
 }
 
@@ -133,9 +133,7 @@ pub struct Beatmap {
     pub aim_points: Vec<AimPoint>,
     pub target_points: Vec<Timing>,
 
-    //This might be incorrect. Original c++ code:
-    //std::map<int, int> timeMapper;
-    //pub time_mapper: Map<i32, i32>,
+    pub time_mapper: pair_structs::Vector2i32Map,
 
     pub x: Vec<f64>,
     pub y: Vec<f64>,
@@ -152,11 +150,10 @@ pub struct Beatmap {
     pub press_intervals: Vec<f64>,
     pub tap_strains: Vec<f64>,
 
-    //This might be incorrect. Original c++ code:
-    //std::map<int, std::vector<std::vector<int>>> streams;
-    //std::map<int, std::vector<std::vector<int>>> bursts;
-    //pub streams: Map<i32, Vec<Vec<i32>>>,
-    //pub bursts: Map<i32, Vec<Vec<i32>>>,
+    pub test: Vec<Vec<i32>>,
+
+    pub streams: pair_structs::VectorVectori32Map,
+    pub bursts: pair_structs::VectorVectori32Map,
 
     pub skills: Skills,
 

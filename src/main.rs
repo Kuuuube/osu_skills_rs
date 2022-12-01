@@ -2,7 +2,7 @@ mod precision;
 mod reaction;
 mod utils;
 mod structs;
-mod vector2d;
+mod pair_structs;
 mod patterns;
 mod stamina;
 

@@ -1,6 +1,6 @@
 use crate::structs;
 use crate::structs::HitObjectType;
-use crate::vector2d;
+use crate::pair_structs;
 
 pub fn deg_to_rad(degrees: f64) -> f64 {
     return degrees * std::f64::consts::PI / 180.0;
@@ -12,9 +12,9 @@ pub fn btwn(lss: &i64, val: &i64, gtr: &i64) -> bool {
     return (&i64::min(*lss, *gtr) <= val) && (val <= &i64::max(*lss, *gtr));
 }
 
-pub fn get_dir_angle(a: vector2d::Vector2F64, b: vector2d::Vector2F64, c: vector2d::Vector2F64) -> f64 {
-    let ab = vector2d::Vector2F64 {x: b.x - a.x, y: b.y - a.y};
-    let cb = vector2d::Vector2F64 {x: b.x - c.x, y: b.y - c.y};
+pub fn get_dir_angle(a: pair_structs::Vector2f64, b: pair_structs::Vector2f64, c: pair_structs::Vector2f64) -> f64 {
+    let ab = pair_structs::Vector2f64 {x: b.x - a.x, y: b.y - a.y};
+    let cb = pair_structs::Vector2f64 {x: b.x - c.x, y: b.y - c.y};
 
     let dot: f64 = ab.x * cb.x + ab.y * cb.y;
     let cross: f64 = ab.x * cb.y + ab.y * cb.x;
@@ -24,7 +24,7 @@ pub fn get_dir_angle(a: vector2d::Vector2F64, b: vector2d::Vector2F64, c: vector
     return alpha;
 }
 
-pub fn get_angle(a: vector2d::Vector2F64, b: vector2d::Vector2F64, c: vector2d::Vector2F64) -> f64 {
+pub fn get_angle(a: pair_structs::Vector2f64, b: pair_structs::Vector2f64, c: pair_structs::Vector2f64) -> f64 {
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
