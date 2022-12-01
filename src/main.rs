@@ -1,14 +1,16 @@
 mod precision;
+mod reaction;
+mod utils;
 mod structs;
 mod vector2d;
+mod slider;
+mod patterns;
 
 fn main() {
-    let testmap: structs::Beatmap = Default::default();
+    let mut testmap: structs::Beatmap = Default::default();
 
-    let precision = precision::calculate_precision(testmap, 1000.0, 0.1, 20.0, 2.0).to_string();
-    println!("new: {precision}");
+    testmap.skills.precision = precision::calculate_precision(&testmap, 1000.0, 0.1, 20.0, 2.0);
 
-    let test = vector2d::Vector2F64{ x: 100.0, y: 500.2};
-
-    println!("{}, {}", test.x, test.y);
+    let precision = testmap.skills.precision.to_string();
+    println!("precision: {precision}")
 }
