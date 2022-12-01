@@ -107,3 +107,11 @@ pub fn get_peak_vals(vals: &Vec<f64>) -> Vec<f64>{
     }
     return output;
 }
+
+pub fn od_to_ms(od: f64) -> f64 {
+    return -6.0 * od + 79.5;
+}
+
+pub fn has_mod(beatmap: &structs::Beatmap, mods: structs::Mods) -> bool {
+    return (mods as i32 & beatmap.mods as i32) > 0;
+}
