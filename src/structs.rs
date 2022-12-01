@@ -59,6 +59,11 @@ pub enum CurveType {
     CatmullCurve
 }
 
+impl Default for CurveType {
+    fn default() -> Self {CurveType::PerfectCurve}
+}
+
+#[derive(Default)]
 pub struct HitObject {
     pub pos: pair_structs::Pairf64,
     pub time: i64,
