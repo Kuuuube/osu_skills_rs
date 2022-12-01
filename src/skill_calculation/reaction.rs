@@ -70,7 +70,8 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
     return ver_scale * f64::powf(react_to_skill(time_to_react), curve_exp);
 }
 
-pub fn calculate_reaction(beatmap: &structs::Beatmap, hidden: bool) -> f64{
+pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64{
+    let hidden: bool = utils::has_mod(beatmap, structs::Mods::HD);
     let mut max: f64 = 0.0;
     let mut avg: f64 = 0.0;
     let weight: f64 = 0.7; //this value comes from osu skills config file "AvgWeighting"
