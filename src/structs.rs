@@ -41,6 +41,7 @@ pub struct TimingPoint {
 }
 
 pub enum HitObjectType {
+    None = 0,
     Normal = 1,
     Slider = 2,
     NewCombo = 4,
@@ -52,7 +53,12 @@ pub enum HitObjectType {
     //ManiaLong = 128
 }
 
+impl Default for HitObjectType {
+    fn default() -> Self {HitObjectType::None}
+}
+
 pub enum CurveType {
+    None,
     PerfectCurve,
     BezierCurve,
     LinearCurve,
@@ -60,7 +66,7 @@ pub enum CurveType {
 }
 
 impl Default for CurveType {
-    fn default() -> Self {CurveType::PerfectCurve}
+    fn default() -> Self {CurveType::None}
 }
 
 #[derive(Default)]
@@ -100,6 +106,10 @@ pub enum AimPointTypes {
     AimPointSlider,
     AimPointSliderreverse,
     AimPointSliderend
+}
+
+impl Default for AimPointTypes {
+    fn default() -> Self {AimPointTypes::AimPointNone}
 }
 
 pub struct AimPoint {
