@@ -9,7 +9,7 @@ mod stamina;
 fn main() {
     let mut testmap: structs::Beatmap = Default::default();
 
-    testmap.skills.precision = precision::calculate_precision(&testmap, 1000.0, 0.1, 20.0, 2.0);
+    testmap.skills.precision = precision::calculate_precision(&testmap);
     testmap.skills.reaction = reaction::calculate_reaction(&testmap, false);
     testmap.skills.stamina = stamina::calculate_stamina(&testmap);
 
