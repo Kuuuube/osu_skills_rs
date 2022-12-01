@@ -10,7 +10,9 @@ pub struct Timing {
     pub pos: pair_structs::Pairf64
 }
 
+#[derive(Copy, Clone)]
 pub enum Mods {
+    NM = 0,
     NF = 1,
     EZ = 2,
     HD = 8,
@@ -23,6 +25,10 @@ pub enum Mods {
     AU = 2048,
     SO = 4096,
     AP = 8192
+}
+
+impl Default for Mods {
+    fn default() -> Self {Mods::NM}
 }
 
 pub struct TimingPoint {
@@ -157,7 +163,7 @@ pub struct Beatmap {
 
     pub skills: Skills,
 
-    pub mods: i32,
+    pub mods: Mods,
     pub mods_string: String,
 
     pub compressed_stream: Vec<i32>,
