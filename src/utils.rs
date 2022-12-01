@@ -47,7 +47,7 @@ pub fn get_angle(a: vector2d::Vector2F64, b: vector2d::Vector2F64, c: vector2d::
 
 pub fn find_hit_object_at(hit_objects: &Vec<structs::HitObject>, time: i64, dir: bool) -> u32 {
     let mut start: u32 = 0;
-    let mut end: u32 = hit_objects.len().try_into().unwrap();
+    let mut end: u32 = hit_objects.len() as u32;
     let mut mid: u32;
 
     while start <= end {
@@ -72,10 +72,65 @@ pub fn find_hit_object_at(hit_objects: &Vec<structs::HitObject>, time: i64, dir:
         }
     }
 
-    let final_val: u32 = hit_objects.len().try_into().unwrap();
+    let final_val: u32 = hit_objects.len() as u32;
     return final_val - 1;
 } 
 
 pub fn is_hit_object_type(hit_object: &i32, object_type: HitObjectType) -> bool {
     return (hit_object & object_type as i32) > 0;
+}
+
+pub fn lerp(a: f64, b: f64, t: f64) -> f64 {
+    return a * (1.0 - t) + b * t;
+}
+
+pub fn ar_to_ms(ar: f64) -> f64 {
+    if ar <= 5.0 {
+        return 1800.0 - 120.0 * ar;
+    } else {
+        return 1950.0 - 150.0 * ar;
+    }
+
+}
+
+pub fn find_timing_at(timings: &Vec<structs::Timing>, time: i64) -> i32 {
+    let mut start: i32 = 0;
+    let mut end: i32 = timings.len() as i32 - 2;
+    let mut mid: i32;
+
+    if end < 0 {
+        return 0;
+    }
+
+    while start <= end {
+        mid = (start + end) / 2;
+
+        if btwn(&timings[mid as usize].time, &time, &timings[(mid + 1) as usize].time) {
+            return mid + 1;
+        }
+
+        if time < timings[mid as usize].time {
+            end = mid - 1;
+        } else {
+            start = mid + 1;
+        }
+    }
+
+    if time < timings[0].time {
+        return i32::min_value();
+    }
+
+    if time > timings[timings.len() - 1].time {
+        return i32::max_value();
+    }
+
+    return i32::min_value(); //original code returns NAN here
+}
+
+pub fn get_value(min: f64, max: f64, percent: f64) -> f64 {
+    return f64::max(max, min) - (1.0 - percent) * (f64::max(max, min) - f64::min(max, min));
+}
+
+pub fn cs_to_px(cs: f64) -> f64 {
+    return 54.5 - (4.5 * cs);
 }
