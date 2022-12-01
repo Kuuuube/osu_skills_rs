@@ -1,4 +1,4 @@
-use crate::erf;
+use crate::erf::erf;
 use crate::structs;
 use crate::utils;
 
@@ -22,7 +22,7 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     if beatmap.skills.stamina == 0.0 {
         tapping = 1.0; //erf::erf::erf(f64::INFINITY)
     } else {
-        tapping = erf::erf::erf(od_ms / acc_scale * beatmap.skills.stamina * beatmap.skills.stamina);
+        tapping = erf::erf(od_ms / acc_scale * beatmap.skills.stamina * beatmap.skills.stamina);
     }
 
     let verscale: f64 = 0.3; //this value comes from osu skills config file "VerScale"
