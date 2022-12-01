@@ -4,9 +4,9 @@ use crate::pair_structs;
 use crate::patterns;
 
 fn pattern_req(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing, cspx: f64) -> f64 {
-    let point1 = pair_structs::Vector2f64 { x: p1.pos.x, y: p1.pos.y };
-    let point2 = pair_structs::Vector2f64 { x: p2.pos.x, y: p2.pos.y };
-    let point3 = pair_structs::Vector2f64 { x: p3.pos.x, y: p3.pos.y };
+    let point1 = pair_structs::Pairf64 { x: p1.pos.x, y: p1.pos.y };
+    let point2 = pair_structs::Pairf64 { x: p2.pos.x, y: p2.pos.y };
+    let point3 = pair_structs::Pairf64 { x: p3.pos.x, y: p3.pos.y };
 
     let dist_12: f64 = pair_structs::get_distance_from(&point1, &point2);
     let dist_23: f64 = pair_structs::get_distance_from(&point2, &point3);
@@ -45,7 +45,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
     if index >= (target_points.len() as i32) - 2 {
         time_to_react = utils::ar_to_ms(ar);
     } else if index < 3 {
-        let visibility_times: pair_structs::Vector2i64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
+        let visibility_times: pair_structs::Pairi64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         time_to_react = (hit_objects[0].time - visibility_times.x) as f64;
     } else {
         let t1: &structs::Timing = &target_points[index as usize];
@@ -58,7 +58,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
             time_since_start = f64::abs((target_point.time - hit_objects[target_point.key as usize].time) as f64);
         }
 
-        let visibility_times: pair_structs::Vector2i64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
+        let visibility_times: pair_structs::Pairi64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         let actual_ar_time: f64 = ((hit_objects[0].time - visibility_times.x) as f64) + time_since_start;
 
         let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, utils::cs_to_px(cs));

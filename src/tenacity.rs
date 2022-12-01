@@ -1,7 +1,7 @@
 use crate::structs;
 use crate::pair_structs;
 
-fn get_longest_stream(streams: &Vec<pair_structs::VectorVectori32Map>) -> structs::Stream {
+fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> structs::Stream {
     let mut max: usize = 1;
     let mut interval: i32 = 0;
 

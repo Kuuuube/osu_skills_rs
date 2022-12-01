@@ -7,7 +7,7 @@ pub struct Timing {
     pub key: i32,
     pub press: bool,
 
-    pub pos: pair_structs::Vector2f64
+    pub pos: pair_structs::Pairf64
 }
 
 pub enum Mods {
@@ -54,20 +54,20 @@ pub enum CurveType {
 }
 
 pub struct HitObject {
-    pub pos: pair_structs::Vector2f64,
+    pub pos: pair_structs::Pairf64,
     pub time: i64,
     pub hit_object_type: i32,
 
     pub curve_type: CurveType,
-    pub curves: Vec<pair_structs::Vector2f64>,
-    pub lerp_points: Vec<pair_structs::Vector2f64>,
+    pub curves: Vec<pair_structs::Pairf64>,
+    pub lerp_points: Vec<pair_structs::Pairf64>,
     pub ncurve: i32,
     pub repeat: i32,
     pub repeat_times: Vec<i32>,
     pub pixel_length: f64,
     pub end_time: i32,
     pub to_repeat_time: i32,
-    pub endpoint: pair_structs::Vector2f64,
+    pub endpoint: pair_structs::Pairf64,
     pub ticks: Vec<i32>
 }
 
@@ -93,7 +93,7 @@ pub enum AimPointTypes {
 
 pub struct AimPoint {
     pub time: i32,
-    pub pos: pair_structs::Vector2f64,
+    pub pos: pair_structs::Pairf64,
     pub aim_point_type: AimPointTypes
 }
 
@@ -133,7 +133,7 @@ pub struct Beatmap {
     pub aim_points: Vec<AimPoint>,
     pub target_points: Vec<Timing>,
 
-    pub time_mapper: Vec<pair_structs::Vector2i32Map>,
+    pub time_mapper: Vec<pair_structs::Pairi32>,
 
     pub x: Vec<f64>,
     pub y: Vec<f64>,
@@ -152,8 +152,8 @@ pub struct Beatmap {
 
     pub test: Vec<Vec<i32>>,
 
-    pub streams: Vec<pair_structs::VectorVectori32Map>,
-    pub bursts: Vec<pair_structs::VectorVectori32Map>,
+    pub streams: Vec<pair_structs::Pairi32VectorVectori32>,
+    pub bursts: Vec<pair_structs::Pairi32VectorVectori32>,
 
     pub skills: Skills,
 

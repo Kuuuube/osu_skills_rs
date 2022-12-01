@@ -12,9 +12,9 @@ pub fn btwn(lss: &i64, val: &i64, gtr: &i64) -> bool {
     return (&i64::min(*lss, *gtr) <= val) && (val <= &i64::max(*lss, *gtr));
 }
 
-pub fn get_dir_angle(a: pair_structs::Vector2f64, b: pair_structs::Vector2f64, c: pair_structs::Vector2f64) -> f64 {
-    let ab = pair_structs::Vector2f64 {x: b.x - a.x, y: b.y - a.y};
-    let cb = pair_structs::Vector2f64 {x: b.x - c.x, y: b.y - c.y};
+pub fn get_dir_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_structs::Pairf64) -> f64 {
+    let ab = pair_structs::Pairf64 {x: b.x - a.x, y: b.y - a.y};
+    let cb = pair_structs::Pairf64 {x: b.x - c.x, y: b.y - c.y};
 
     let dot: f64 = ab.x * cb.x + ab.y * cb.y;
     let cross: f64 = ab.x * cb.y + ab.y * cb.x;
@@ -24,7 +24,7 @@ pub fn get_dir_angle(a: pair_structs::Vector2f64, b: pair_structs::Vector2f64, c
     return alpha;
 }
 
-pub fn get_angle(a: pair_structs::Vector2f64, b: pair_structs::Vector2f64, c: pair_structs::Vector2f64) -> f64 {
+pub fn get_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_structs::Pairf64) -> f64 {
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
