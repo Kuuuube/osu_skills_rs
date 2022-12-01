@@ -79,8 +79,8 @@ pub struct Burst {
 
 #[derive(Default)]
 pub struct Stream {
-    interval: i32,
-    length: i32
+    pub interval: i32,
+    pub length: i32
 }
 
 pub enum AimPointTypes {
@@ -133,7 +133,7 @@ pub struct Beatmap {
     pub aim_points: Vec<AimPoint>,
     pub target_points: Vec<Timing>,
 
-    pub time_mapper: pair_structs::Vector2i32Map,
+    pub time_mapper: Vec<pair_structs::Vector2i32Map>,
 
     pub x: Vec<f64>,
     pub y: Vec<f64>,
@@ -152,8 +152,8 @@ pub struct Beatmap {
 
     pub test: Vec<Vec<i32>>,
 
-    pub streams: pair_structs::VectorVectori32Map,
-    pub bursts: pair_structs::VectorVectori32Map,
+    pub streams: Vec<pair_structs::VectorVectori32Map>,
+    pub bursts: Vec<pair_structs::VectorVectori32Map>,
 
     pub skills: Skills,
 
