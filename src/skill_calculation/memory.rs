@@ -66,6 +66,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             } else {
                 let observable_time: i64 = cur.time - (utils::ar_to_ms(beatmap.ar) * 0.3) as i64;
                 if prev.time > observable_time {
+                    j -= 1;
                     continue;
                 }
                 help_pixels = utils::cs_to_px(beatmap.cs) as i32;

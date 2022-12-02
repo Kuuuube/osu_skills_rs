@@ -81,6 +81,7 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
             if time > 0.0 {
                 strain = distance / time * angle_bonus;
             } else {
+                i += 1;
                 continue;
             }
 
