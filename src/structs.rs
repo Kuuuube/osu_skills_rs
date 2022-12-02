@@ -156,10 +156,8 @@ pub struct Beatmap {
 
     pub time_mapper: Vec<pair_structs::Pairi32>,
 
-    pub x: Vec<f64>,
-    pub y: Vec<f64>,
-    pub x_change: Vec<f64>,
-    pub y_change: Vec<f64>,
+    pub velocities: Vec<pair_structs::Pairf64>,
+    pub velocities_change: Vec<pair_structs::Pairf64>,
     pub distances: Vec<f64>,
     pub aim_strains: Vec<f64>,
     pub angle_strains: Vec<f64>,
