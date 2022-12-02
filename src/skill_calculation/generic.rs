@@ -63,8 +63,10 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut prev_time: i64 = i64::min_value();
 
     for hit_obj in &beatmap.hit_objects {
-        if i64::abs(hit_obj.time - prev_time) > 5 {
-            continue;
+        if hit_obj.time >= prev_time && prev_time >= 0 {
+            if i64::abs(hit_obj.time - prev_time) > 5 {
+                continue;
+            }
         }
         prev_time = hit_obj.time;
 
@@ -111,28 +113,30 @@ fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         i += 1;
     }
 
-    i = 0;
-    let mut old_angle: f64 = beatmap.angles[0] - 2.0 * beatmap.angles[0];
-    for angle in &beatmap.angles {
-        let angle_deref = *angle;
-        let bonus: f64;
-        let absd: f64 = f64::abs(angle_deref);
-        if utils::sign(angle_deref) == utils::sign(old_angle) {
-            if absd < 90.0 {
-                bonus = f64::sin(utils::deg_to_rad(absd) * 0.784 + 0.339837);
+    if beatmap.angles.len() > 0 {        
+        i = 0;
+        let mut old_angle: f64 = beatmap.angles[0] - 2.0 * beatmap.angles[0];
+        for angle in &beatmap.angles {
+            let angle_deref = *angle;
+            let bonus: f64;
+            let absd: f64 = f64::abs(angle_deref);
+            if utils::sign(angle_deref) == utils::sign(old_angle) {
+                if absd < 90.0 {
+                    bonus = f64::sin(utils::deg_to_rad(absd) * 0.784 + 0.339837);
+                } else {
+                    bonus = f64::sin(utils::deg_to_rad(absd));
+                }
             } else {
-                bonus = f64::sin(utils::deg_to_rad(absd));
+                if absd < 90.0 {
+                    bonus = f64::sin(utils::deg_to_rad(absd) * 0.536 + 0.72972);
+                } else {
+                    bonus = f64::sin(utils::deg_to_rad(absd)) / 2.0;
+                }
             }
-        } else {
-            if absd < 90.0 {
-                bonus = f64::sin(utils::deg_to_rad(absd) * 0.536 + 0.72972);
-            } else {
-                bonus = f64::sin(utils::deg_to_rad(absd)) / 2.0;
-            }
+            beatmap.angle_bonuses.push(bonus);
+            old_angle = angle_deref;
+            i += 1;
         }
-        beatmap.angle_bonuses.push(bonus);
-        old_angle = angle_deref;
-        i += 1;
     }
 
     return beatmap;
