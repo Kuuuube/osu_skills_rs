@@ -100,6 +100,7 @@ pub struct Stream {
     pub length: i32
 }
 
+#[derive(PartialEq)]
 pub enum AimPointTypes {
     AimPointNone,
     AimPointCircle,

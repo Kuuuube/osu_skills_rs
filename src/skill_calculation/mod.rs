@@ -6,3 +6,4 @@ pub mod reaction;
 pub mod stamina;
 pub mod tenacity;
 pub mod generic;
+pub mod strains;
