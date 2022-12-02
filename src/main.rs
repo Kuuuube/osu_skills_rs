@@ -13,6 +13,8 @@ fn main() {
     let hit_object_test: structs::HitObject = Default::default();
     beatmap.hit_objects = vec![hit_object_test];
 
+    beatmap = utils::apply_mods(beatmap);
+
     beatmap = skill_calculation::strains::calculate_aim_strains(beatmap);
     beatmap = skill_calculation::strains::calculate_tap_strains(beatmap);
     beatmap = skill_calculation::generic::prepare_aim_data(beatmap);

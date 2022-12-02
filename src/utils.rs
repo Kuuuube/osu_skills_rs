@@ -36,7 +36,14 @@ pub fn ar_to_ms(ar: f64) -> f64 {
     } else {
         return 1950.0 - 150.0 * ar;
     }
+}
 
+fn ms_to_ar(ms: f64) -> f64 {
+    if ms >= 1200.0 {
+        return (1800.0 - ms) / 120.0
+    } else {
+        return (1950.0 - ms) / 150.0
+    }
 }
 
 pub fn find_timing_at(timings: &Vec<structs::Timing>, time: i64) -> i32 {
@@ -138,4 +145,53 @@ pub fn sign(x: f64) -> f64 {
     } else {
         return 0.0;
     }
+}
+
+pub fn apply_mods(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    if has_mod(&beatmap, structs::Mods::EZ) {
+        beatmap.ar *= 0.5;
+        beatmap.od *= 0.5;
+        beatmap.cs *= 0.5;
+    }
+
+    if has_mod(&beatmap, structs::Mods::HR) {
+        beatmap.ar = f64::min(beatmap.ar * 1.4, 10.0);
+        beatmap.od = f64::min(beatmap.od * 1.4, 10.0);
+        beatmap.cs = f64::min(beatmap.cs * 1.3, 10.0);
+    }
+
+    if has_mod(&beatmap, structs::Mods::HT) {
+        beatmap = apply_speed(beatmap, 0.75);
+    }
+
+    if has_mod(&beatmap, structs::Mods::DT) {
+        beatmap = apply_speed(beatmap, 1.5);
+    }
+
+
+
+    return beatmap;
+}
+
+fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
+    let mut i: usize = 0;
+    while i < beatmap.hit_objects.len() - 1 {
+        beatmap.hit_objects[i].time = (f64::ceil(beatmap.hit_objects[i].time as f64 / speed)) as i64;
+        
+        i += 1;
+    }
+
+    i = 0;
+    while i < beatmap.timing_points.len() - 1 {
+        if beatmap.timing_points[i].beat_interval > 0.0 {
+            beatmap.timing_points[i].beat_interval /= speed;
+        }
+
+        beatmap.timing_points[i].offset = (f64::ceil(beatmap.timing_points[i].offset as f64 / speed)) as i32;
+        
+        i += 1;
+    }
+
+    beatmap.ar = ms_to_ar(ar_to_ms(beatmap.ar) / speed);
+    return beatmap;
 }
