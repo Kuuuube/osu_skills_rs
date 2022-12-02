@@ -31,6 +31,7 @@ impl Default for Mods {
     fn default() -> Self {Mods::NM}
 }
 
+#[derive(Default, Copy, Clone)]
 pub struct TimingPoint {
     pub offset: i32,
     pub beat_interval: f64,
@@ -57,6 +58,7 @@ impl Default for HitObjectType {
     fn default() -> Self {HitObjectType::None}
 }
 
+#[derive(Copy, Clone)]
 pub enum CurveType {
     None,
     PerfectCurve,
@@ -69,7 +71,7 @@ impl Default for CurveType {
     fn default() -> Self {CurveType::None}
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct HitObject {
     pub pos: pair_structs::Pairf64,
     pub time: i64,

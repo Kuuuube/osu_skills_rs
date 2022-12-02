@@ -84,6 +84,28 @@ pub fn get_value(min: f64, max: f64, percent: f64) -> f64 {
     return f64::max(max, min) - (1.0 - percent) * (f64::max(max, min) - f64::min(max, min));
 }
 
+pub fn get_value_pos(list: &Vec<f64>, value: &f64, order: bool) -> usize {
+    if order == false {
+        let mut i: usize = list.len() - 1;
+        while i >= 1 {
+            if list[i - 1] < *value {
+                return i;
+            }
+            i -= 1;
+        }
+        return 0;
+    } else {
+        let mut i: usize = 0;
+        while i < list.len() - 1 {
+            if list[i + 1] < *value {
+                return i;
+            }
+            i += 1;
+        }
+        return 0;
+    }
+}
+
 pub fn cs_to_px(cs: f64) -> f64 {
     return 54.5 - (4.5 * cs);
 }
