@@ -17,6 +17,9 @@ fn main() {
 
     beatmap = skill_calculation::strains::calculate_aim_strains(beatmap);
     beatmap = skill_calculation::strains::calculate_tap_strains(beatmap);
+
+    beatmap = skill_calculation::generic::prepare_timing_points(beatmap);
+
     beatmap = skill_calculation::generic::prepare_aim_data(beatmap);
 
     beatmap.skills.reaction = skill_calculation::reaction::calculate_reaction(&beatmap);
