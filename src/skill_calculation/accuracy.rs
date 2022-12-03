@@ -1,4 +1,4 @@
-use crate::erf::erf;
+use crate::algs::erf;
 use crate::structs;
 use crate::utils;
 

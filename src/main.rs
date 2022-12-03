@@ -4,7 +4,7 @@ mod utils;
 mod structs;
 mod pair_structs;
 mod patterns;
-mod erf;
+mod algs;
 mod skill_calculation;
 
 fn main() {

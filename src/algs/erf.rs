@@ -1,7 +1,7 @@
 //! Provides the [error](https://en.wikipedia.org/wiki/Error_function) and
 //! related functions
 
-use crate::erf::evaluate;
+use crate::algs::evaluate;
 use std::f64;
 
 /// `erf` calculates the error function at `x`.
