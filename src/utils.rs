@@ -1,5 +1,4 @@
 use crate::structs;
-use crate::structs::HitObjectType;
 use crate::pair_structs;
 
 pub fn deg_to_rad(degrees: f64) -> f64 {
@@ -26,7 +25,7 @@ pub fn get_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_str
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
-pub fn is_hit_object_type(hit_object: &i32, object_type: HitObjectType) -> bool {
+pub fn is_hit_object_type(hit_object: &i32, object_type: structs::HitObjectType) -> bool {
     return (hit_object & object_type as i32) > 0;
 }
 
@@ -216,4 +215,28 @@ fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
 
     beatmap.ar = ms_to_ar(ar_to_ms(beatmap.ar) / speed);
     return beatmap;
+}
+
+pub fn bernstien(i: i64, n: i64, t: f64) -> f64 {
+    return binomial_coef(n, i) as f64 * f64::powf(t, i as f64) * f64::powf(1.0 - t, (n - i) as f64);
+}
+
+fn binomial_coef(n: i64, k: i64) -> i64 {
+    let mut k_mut = k;
+    if k < 0 || k > n {
+        return 0;
+    }
+    if k == 0 || k == n {
+        return 1;
+    }
+
+    k_mut = i64::min(k, n - k);
+    let mut c: i64 = 1;
+    let mut i: i64 = 0;
+    while i < k_mut {
+        c = c * (n - i) / (i + 1);
+        
+        i += 1;
+    }
+    return c;
 }
