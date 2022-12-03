@@ -52,6 +52,42 @@ impl std::ops::Mul for Pairf64 {
     }
 }
 
+impl std::ops::AddAssign for Pairf64 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        };
+    }
+}
+
+impl std::ops::SubAssign for Pairf64 {
+    fn sub_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+        };
+    }
+}
+
+impl std::ops::MulAssign for Pairf64 {
+    fn mul_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x * other.x,
+            y: self.y * other.y,
+        };
+    }
+}
+
+impl std::ops::DivAssign for Pairf64 {
+    fn div_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x / other.x,
+            y: self.y / other.y,
+        };
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct Pairi64 {
     pub x: i64,
@@ -106,6 +142,42 @@ impl std::ops::Mul for Pairi64 {
     }
 }
 
+impl std::ops::AddAssign for Pairi64 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        };
+    }
+}
+
+impl std::ops::SubAssign for Pairi64 {
+    fn sub_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+        };
+    }
+}
+
+impl std::ops::MulAssign for Pairi64 {
+    fn mul_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x * other.x,
+            y: self.y * other.y,
+        };
+    }
+}
+
+impl std::ops::DivAssign for Pairi64 {
+    fn div_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x / other.x,
+            y: self.y / other.y,
+        };
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct Pairi32 {
     pub x: i32,
@@ -157,6 +229,42 @@ impl std::ops::Mul for Pairi32 {
             x: self.x * other.x,
             y: self.y * other.y,
         }
+    }
+}
+
+impl std::ops::AddAssign for Pairi32 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        };
+    }
+}
+
+impl std::ops::SubAssign for Pairi32 {
+    fn sub_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+        };
+    }
+}
+
+impl std::ops::MulAssign for Pairi32 {
+    fn mul_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x * other.x,
+            y: self.y * other.y,
+        };
+    }
+}
+
+impl std::ops::DivAssign for Pairi32 {
+    fn div_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x / other.x,
+            y: self.y / other.y,
+        };
     }
 }
 
