@@ -172,10 +172,12 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
         hit_object.pos.x = safe_parse_f64(split[0]);
         hit_object.pos.y = safe_parse_f64(split[1]);
         hit_object.time = safe_parse_i64(split[2]);
-        hit_object.hit_object_type = safe_parse_hit_object_type(split[3]);
+        hit_object.hit_object_type = safe_parse_i32(split[3]);
         hit_object.end_time = hit_object.time as i32;
 
-        match hit_object.hit_object_type {
+        let match_hit_object_type = hit_object_type_checker(hit_object.hit_object_type);
+
+        match match_hit_object_type {
             structs::HitObjectType::Normal => {
                 hit_object.end_point = hit_object.pos;
                 beatmap.hit_objects.push(hit_object);
@@ -192,6 +194,9 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
 
                     i += 1;
                 }
+                hit_object.repeat = safe_parse_i32(split[6]);
+                hit_object.pixel_length = safe_parse_f64(split[7]);
+                beatmap.hit_objects.push(hit_object);
             },
             structs::HitObjectType::Spinner => {
                 beatmap.spinners += 1;
@@ -237,24 +242,15 @@ fn safe_parse_i64(input: &str) -> i64 {
     return output;
 }
 
-fn safe_parse_hit_object_type(input: &str) -> structs::HitObjectType {
-    let int_parsed = match input.parse::<i32>() {
-        Ok(ok) => ok,
-        Err(error) => { println!("Failed to parse i64 in .osu file. Error: {error}: `{input}`"); -1 }
-    };
-    let output = match int_parsed {
-        0 => structs::HitObjectType::None,
-        1 => structs::HitObjectType::Normal,
-        2 => structs::HitObjectType::Slider,
-        4 => structs::HitObjectType::NewCombo,
-        5 => structs::HitObjectType::NormalNewCombo,
-        6 => structs::HitObjectType::SliderNewCombo,
-        8 => structs::HitObjectType::Spinner,
-        112 => structs::HitObjectType::ColourHax,
-        128 => structs::HitObjectType::Hold,
-        _ => structs::HitObjectType::None
-    };
-    return output;
+fn hit_object_type_checker(input: i32) -> structs::HitObjectType {
+    if input & (structs::HitObjectType::Normal as i32) > 0 {
+        return structs::HitObjectType::Normal;
+    } else if input & (structs::HitObjectType::Slider as i32) > 0 {
+        return structs::HitObjectType::Slider;
+    } else if input & (structs::HitObjectType::Spinner as i32) > 0 {
+        return structs::HitObjectType::Spinner;
+    }
+    return structs::HitObjectType::None;
 }
 
 fn safe_parse_curve_type(input: &str) -> structs::CurveType {

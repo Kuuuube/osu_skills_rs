@@ -87,7 +87,7 @@ pub struct Bezier {
 pub struct HitObject {
     pub pos: pair_structs::Pairf64,
     pub time: i64,
-    pub hit_object_type: HitObjectType,
+    pub hit_object_type: i32,
 
     pub curve_type: CurveType,
     pub curves: Vec<pair_structs::Pairf64>,
