@@ -25,8 +25,8 @@ pub fn get_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_str
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
-pub fn is_hit_object_type(hit_object: &i32, object_type: structs::HitObjectType) -> bool {
-    return (hit_object & object_type as i32) > 0;
+pub fn is_hit_object_type(hit_object: &structs::HitObjectType, object_type: structs::HitObjectType) -> bool {
+    return *hit_object == object_type;
 }
 
 pub fn ar_to_ms(ar: f64) -> f64 {

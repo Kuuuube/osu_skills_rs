@@ -87,12 +87,12 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             }
 
             if utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::NewCombo) || utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::ColourHax) {
-                let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.endpoint);
+                let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.end_point);
                 if dist > (observable_dist + help_pixels) as f64 {
                     mem_points = slider_bonus_factor * (dist / (cur.time - old.time) as f64);
                 }
             } else {
-                let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.endpoint);
+                let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.end_point);
                 if dist > (observable_dist + help_pixels) as f64 {
                     let follow_points_nerf: f64 = 0.8; //this value comes from osu skills config file "FollowpointsNerf"
                     mem_points = slider_bonus_factor * follow_points_nerf * (dist / (cur.time - old.time) as f64);
