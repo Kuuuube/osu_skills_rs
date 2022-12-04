@@ -9,7 +9,10 @@ mod skill_calculation;
 mod osu_parser;
 
 fn main() {
-    let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap("test.osu");
+    let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap("./testmaps/v3.osu");
+
+    let format = &beatmap.sm.to_string();
+    println!("{format}");
  
     let hit_object_test: structs::HitObject = Default::default();
     beatmap.hit_objects = vec![hit_object_test];
