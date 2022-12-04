@@ -11,20 +11,14 @@ mod osu_parser;
 fn main() {
     let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap("./testmaps/v3.osu");
 
-    let format = &beatmap.sm.to_string();
-    println!("{format}");
- 
-    let hit_object_test: structs::HitObject = Default::default();
-    beatmap.hit_objects = vec![hit_object_test];
-
     beatmap = utils::apply_mods(beatmap);
-
-    beatmap = skill_calculation::strains::calculate_aim_strains(beatmap);
-    beatmap = skill_calculation::strains::calculate_tap_strains(beatmap);
 
     beatmap = skill_calculation::generic::prepare_timing_points(beatmap);
 
     beatmap = skill_calculation::generic::prepare_aim_data(beatmap);
+
+    beatmap = skill_calculation::strains::calculate_aim_strains(beatmap);
+    beatmap = skill_calculation::strains::calculate_tap_strains(beatmap);
 
     beatmap.skills.reaction = skill_calculation::reaction::calculate_reaction(&beatmap);
     beatmap.skills.stamina = skill_calculation::stamina::calculate_stamina(&beatmap);
