@@ -96,12 +96,12 @@ pub fn get_value_pos(list: &Vec<f64>, value: &f64, order: bool) -> usize {
     } else {
         let mut i: usize = 0;
         while i < list.len() - 1 {
-            if list[i + 1] < *value {
+            if list[i + 1] > *value {
                 return i;
             }
             i += 1;
         }
-        return 0;
+        return list.len() - 1;
     }
 }
 
