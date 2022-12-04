@@ -6,9 +6,10 @@ mod pair_structs;
 mod patterns;
 mod algs;
 mod skill_calculation;
+mod osu_parser;
 
 fn main() {
-    let mut beatmap: structs::Beatmap = Default::default();
+    let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap("test.osu");
  
     let hit_object_test: structs::HitObject = Default::default();
     beatmap.hit_objects = vec![hit_object_test];
