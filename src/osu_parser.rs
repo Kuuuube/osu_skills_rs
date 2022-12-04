@@ -43,7 +43,7 @@ pub fn parse_beatmap(file_path: &str) -> structs::Beatmap {
                 Found::FoundEvents => {},
                 Found::FoundTimingPoints => {beatmap_data = timing_points_parser(beatmap_data, line_unwrap)},
                 Found::FoundColours => {},
-                Found::FoundHitobjects => {},
+                Found::FoundHitobjects => {beatmap_data = hit_objects_parser(beatmap_data, line_unwrap)},
                 Found::FoundNone => {},
             };
         }
@@ -184,7 +184,7 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
                 let slider_split: Vec<&str> = trim_str_vec(split[5].split("|").collect());
                 hit_object.curve_type = safe_parse_curve_type(slider_split[0]);
                 
-                let mut i: usize = 0;
+                let mut i: usize = 1;
                 while i < slider_split.len() {
                     let curve_split: Vec<&str> = trim_str_vec(slider_split[i].split(":").collect());
                     let curve = pair_structs::Pairf64 {x: safe_parse_f64(curve_split[0]), y: safe_parse_f64(curve_split[1])};
