@@ -147,24 +147,21 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     beatmap.bpm_max = 0.0;
 
     let mut bpm: f64 = 0.0;
-    let mut slider_mult: f64 = -100.0;
+    let mut slider_mult: f64;
     let mut old_beat: f64 = -100.0;
-
-    let mut tp: structs::TimingPoint = Default::default();
 
     let mut i: usize = 0;
     while i < beatmap.timing_points.len() {
-        if tp.inherited {
-            tp = beatmap.timing_points[i];
-            if tp.beat_interval <= 0.0 {
-                slider_mult = tp.beat_interval;
-                old_beat = tp.beat_interval;
+        if beatmap.timing_points[i].inherited {
+            if beatmap.timing_points[i].beat_interval <= 0.0 {
+                slider_mult = beatmap.timing_points[i].beat_interval;
+                old_beat = beatmap.timing_points[i].beat_interval;
             } else {
                 slider_mult = old_beat;
             }
         } else {
             slider_mult = -100.0;
-            bpm = 60000.0 / tp.beat_interval;
+            bpm = 60000.0 / beatmap.timing_points[i].beat_interval;
 
             if beatmap.bpm_min > bpm {
                 beatmap.bpm_min = bpm;
@@ -173,8 +170,8 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 beatmap.bpm_max = bpm;
             }
         }
-        tp.bpm = bpm;
-        tp.sm = slider_mult;
+        beatmap.timing_points[i].bpm = bpm;
+        beatmap.timing_points[i].sm = slider_mult;
 
         i += 1;
     }
