@@ -96,7 +96,7 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             let end_time: i32 = utils::get_last_tick_time(hit_obj);
             let end_pos: pair_structs::Pairf64 = patterns::get_slider_pos(hit_obj, end_time);
 
-            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) != 0.0 {
+            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) {
                 beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
             }
         }
@@ -113,7 +113,7 @@ fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         i += 1;
     }
 
-    if beatmap.angles.len() > 0 {        
+    if beatmap.angles.len() > 0 {
         i = 0;
         let mut old_angle: f64 = beatmap.angles[0] - 2.0 * beatmap.angles[0];
         for angle in &beatmap.angles {
@@ -135,6 +135,7 @@ fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             }
             beatmap.angle_bonuses.push(bonus);
             old_angle = angle_deref;
+
             i += 1;
         }
     }
