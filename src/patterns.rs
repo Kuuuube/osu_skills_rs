@@ -94,7 +94,6 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
 
     i = 0;
     while i < beatmap.hit_objects.len() {
-        i += 1;
         if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
             let timing_point_index: usize = utils::get_value_pos(&timing_point_offsets, &(beatmap.hit_objects[i].time as f64), true);
 
@@ -116,10 +115,10 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
             let tick_interval: f64 = beat_lengths[timing_point_index] / beatmap.st;
             let err_interval: i32 = 10;
             let mut j: f64 = 1.0;
-            i = (beatmap.hit_objects[i].time + tick_interval as i64) as usize;
 
-            while i < (beatmap.hit_objects[i].end_time - err_interval) as usize {
-                if i > beatmap.hit_objects[i].end_time as usize {
+            let mut k: usize = (beatmap.hit_objects[i].time + tick_interval as i64) as usize;
+            while k < (beatmap.hit_objects[i].end_time - err_interval) as usize {
+                if k > beatmap.hit_objects[i].end_time as usize {
                     break;
                 }
 
@@ -128,7 +127,9 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                     break;
                 }
 
-                i += tick_interval as usize;
+                beatmap.hit_objects[i].ticks.push(tick_time as i32);
+
+                k += tick_interval as usize;
                 j += 1.0;
             }
 
@@ -145,23 +146,71 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
         } else {
             beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32;
         }
+        i += 1;
     }
 
     return beatmap;
 }
 
-/* fn slider(hit_object: structs::HitObject, line: bool) -> structs::HitObject {
+ fn slider(hit_object: structs::HitObject, line: bool) -> structs::HitObject {
+    let mut slider: structs::Slider = Default::default();
+    let beziers: Vec<pair_structs::Pairf64>;
 
-    let control_points: i32 = hit_object.curves.len() as i32 + 1;
+    let control_points: usize = hit_object.curves.len() + 1;
     let points: Vec<pair_structs::Pairf64>;
     let last_point = pair_structs::Pairf64{x: -1.0, y: -1.0};
 
     let mut i: usize = 0;
     while i < hit_object.curves.len() {
-        
+        slider.slider.push(pair_structs::Pairf64{x: hit_object.curves[i].x, y: hit_object.curves[i].y});
+        i += 1;
+    }
 
+    slider.x = hit_object.pos.x;
+    slider.y = hit_object.pos.y;
+
+    i = 0;
+    while i < control_points {
+        // left off here ---------------------------------------------------------------------------------------------
+        
         i += 1;
     }
 
     return hit_object;
-} */
+} 
+
+fn bezier_fn(points: Vec<pair_structs::Pairf64>) {
+    let mut bezier: structs::Bezier = Default::default();
+    let mut i: usize = 0;
+    while i < points.len() {
+        bezier.approx_length += pair_structs::get_distance_from(&points[i], &points[i + 1]);
+
+        i += 1;
+    }
+
+    bezier_init(bezier);
+}
+
+fn bezier_init(mut bezier: structs::Bezier) -> structs::Bezier {
+    bezier.ncurve = (bezier.approx_length / 4.0 + 2.0) as i32;
+    let mut i: usize = 0;
+    while i < bezier.ncurve as usize {
+        bezier.curve_points.push(point_at(i as f64 / (bezier.ncurve - 1) as f64, &bezier));
+        
+        i += 1;
+    }
+
+    return bezier;
+}
+
+fn point_at(t: f64, bezier: &structs::Bezier) -> pair_structs::Pairf64 {
+    let mut c: pair_structs::Pairf64 = Default::default();
+    let n: usize = bezier.points.len() - 1;
+    let mut i: usize = 0;
+    while i <= n {
+        let b: f64 = utils::bernstien(i as i64, n as i64, t);
+        c += pair_structs::Pairf64{x: bezier.points[i].x * b, y: bezier.points[i].y * b};
+        i += 1;
+    }
+    return c;
+}
