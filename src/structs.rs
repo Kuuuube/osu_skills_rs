@@ -80,7 +80,23 @@ pub struct Bezier {
     pub curve_dist: Vec<f64>,
     pub ncurve: i32,
     pub total_distance: f64,
-    pub approx_length: f64
+}
+
+
+#[derive(Default)]
+pub struct CircumscribedCircle {
+    pub curve: Vec<pair_structs::Pairf64>,
+    pub ncurve: i32,
+    pub two_pi: f64,
+    pub half_pi: f64,
+    pub circle_center: pair_structs::Pairf64,
+    pub radius: f64,
+    pub start: pair_structs::Pairf64,
+    pub mid: pair_structs::Pairf64,
+    pub end: pair_structs::Pairf64,
+    pub start_ang: f64,
+    pub end_ang: f64,
+    pub mid_ang: f64    
 }
 
 #[derive(Default, Clone)]
@@ -104,16 +120,12 @@ pub struct HitObject {
 
 #[derive(Default)]
 pub struct Slider {
+    pub curve: Vec<pair_structs::Pairf64>,
     pub curve_points_separation: i32,
     pub start_angle: f64,
     pub end_angle: f64,
-    pub pos: pair_structs::Pairf64,
-    pub slider: Vec<pair_structs::Pairf64>,
-    pub curves: Vec<pair_structs::Pairf64>,
-    pub lerp_points: Vec<pair_structs::Pairf64>,
-    pub ncurve: i32,
-    pub pixel_length: f64,
-    pub end_point: pair_structs::Pairf64,
+    pub xy: pair_structs::Pairf64,
+    pub slider_xy: Vec<pair_structs::Pairf64>,
 }
 
 #[derive(Default)]
