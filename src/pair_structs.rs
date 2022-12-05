@@ -278,6 +278,16 @@ impl Default for Pairi32VectorVectori32 {
     fn default() -> Self {Pairi32VectorVectori32 { x: (0), y: (Default::default()) }}
 }
 
+#[derive(Clone)]
+pub struct Pairi32VectorPairf64 {
+    pub x: i32,
+    pub y: Vec<Pairf64>
+}
+
+impl Default for Pairi32VectorPairf64 {
+    fn default() -> Self {Pairi32VectorPairf64 { x: (0), y: (Default::default()) }}
+}
+
 fn get_length(vector2_0: Pairf64) -> f64 {
     return f64::sqrt(vector2_0.x * vector2_0.x + vector2_0.y * vector2_0.y);
 }
