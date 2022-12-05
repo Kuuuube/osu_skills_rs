@@ -1,4 +1,4 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Pairf64 {
     pub x: f64,
     pub y: f64
@@ -88,7 +88,7 @@ impl std::ops::DivAssign for Pairf64 {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Pairi64 {
     pub x: i64,
     pub y: i64
@@ -178,7 +178,7 @@ impl std::ops::DivAssign for Pairi64 {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Pairi32 {
     pub x: i32,
     pub y: i32
@@ -268,7 +268,7 @@ impl std::ops::DivAssign for Pairi32 {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub struct Pairi32VectorVectori32 {
     pub x: i32,
     pub y: Vec<Vec<i32>>
