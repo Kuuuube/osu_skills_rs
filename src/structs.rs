@@ -107,9 +107,13 @@ pub struct Slider {
     pub curve_points_separation: i32,
     pub start_angle: f64,
     pub end_angle: f64,
-    pub x: f64,
-    pub y: f64,
-    pub slider: Vec<pair_structs::Pairf64>
+    pub pos: pair_structs::Pairf64,
+    pub slider: Vec<pair_structs::Pairf64>,
+    pub curves: Vec<pair_structs::Pairf64>,
+    pub lerp_points: Vec<pair_structs::Pairf64>,
+    pub ncurve: i32,
+    pub pixel_length: f64,
+    pub end_point: pair_structs::Pairf64,
 }
 
 #[derive(Default)]

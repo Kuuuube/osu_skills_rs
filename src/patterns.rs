@@ -141,7 +141,9 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 beatmap.hit_objects[i].pixel_length = 100.0;
                 beatmap.hit_objects[i].curve_type = structs::CurveType::LinearCurve;
 
-                beatmap.hit_objects[i] = slider(beatmap.hit_objects[i].clone(), true);
+                let slider_data: pair_structs::Pairi32VectorPairf64 = slider_fn(&beatmap.hit_objects[i], true);
+                beatmap.hit_objects[i].lerp_points = slider_data.y;
+                beatmap.hit_objects[i].ncurve = slider_data.x;
             }
         } else {
             beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32;
@@ -152,13 +154,13 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
     return beatmap;
 }
 
- fn slider(hit_object: structs::HitObject, line: bool) -> structs::HitObject {
+pub fn slider_fn(hit_object: &structs::HitObject, line: bool) -> pair_structs::Pairi32VectorPairf64 {
     let mut slider: structs::Slider = Default::default();
-    let beziers: Vec<pair_structs::Pairf64>;
+    let mut beziers: Vec<structs::Bezier> = Default::default();
 
     let control_points: usize = hit_object.curves.len() + 1;
-    let points: Vec<pair_structs::Pairf64>;
-    let last_point = pair_structs::Pairf64{x: -1.0, y: -1.0};
+    let mut points: Vec<pair_structs::Pairf64> = Default::default();
+    let mut last_point = pair_structs::Pairf64{x: -1.0, y: -1.0};
 
     let mut i: usize = 0;
     while i < hit_object.curves.len() {
@@ -166,29 +168,116 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
         i += 1;
     }
 
-    slider.x = hit_object.pos.x;
-    slider.y = hit_object.pos.y;
+    slider.pos.x = hit_object.pos.x;
+    slider.pos.y = hit_object.pos.y;
 
     i = 0;
     while i < control_points {
-        // left off here ---------------------------------------------------------------------------------------------
+        let t_point: pair_structs::Pairf64;
+        if i == 0 {
+            t_point = pair_structs::Pairf64 {x: slider.pos.x, y: slider.pos.y};
+        } else {
+            t_point = slider.slider[i - 1];
+        }
+
+        if line {
+            if last_point != (pair_structs::Pairf64 {x: -1.0, y: -1.0}) {
+                points.push(t_point);
+                beziers.push(bezier_fn(&points));
+                points.clear();
+            }
+        } else if last_point != (pair_structs::Pairf64 {x: -1.0, y: -1.0}) && t_point == last_point {
+            if points.len() >= 2 {
+                beziers.push(bezier_fn(&points));
+            }
+            points.clear();
+            last_point = t_point;
+        }
         
         i += 1;
     }
 
-    return hit_object;
+    if line || points.len() < 2 {
+    } else {
+        beziers.push(bezier_fn(&points));
+        points.clear();
+    }
+
+    slider_init(beziers, slider);    
+
+    return pair_structs::Pairi32VectorPairf64 { x: (0), y: (Default::default()) };
 } 
 
-fn bezier_fn(points: Vec<pair_structs::Pairf64>) {
+fn slider_init(mut curves_list: Vec<structs::Bezier>, mut hit_object: structs::Slider) -> structs::Slider {
+    let curve_points_separation: i32 = 5;
+    hit_object.ncurve = hit_object.pixel_length as i32 / curve_points_separation;
+    hit_object.curves.resize(hit_object.ncurve as usize + 1, Default::default());
+
+    if curves_list.len() == 0 {
+        let object_pos_vec: Vec<pair_structs::Pairf64> = vec![hit_object.pos];
+        curves_list.push(bezier_fn(&object_pos_vec));
+        hit_object.end_point = hit_object.pos;
+    }
+
+    let mut distance_at: f64 = 0.0;
+    let curve_counter: usize = 0;
+    let mut cur_point: i32 = 0;
+    let mut cur_curve: &structs::Bezier = &curves_list[curve_counter + 1];
+    let mut last_curve: pair_structs::Pairf64 = cur_curve.curve_points[0];
+    let mut last_distance_at: f64 = 0.0;
+
+    let pixel_length: f64 = hit_object.pixel_length;
+
+    let mut i: usize = 0;
+    while i < hit_object.ncurve as usize {
+        let pref_distance: i32 = i as i32 * pixel_length as i32 / hit_object.ncurve;
+        while distance_at < pref_distance as f64 {
+            last_distance_at = distance_at;
+            last_curve = cur_curve.curve_points[cur_point as usize];
+            cur_point += 1;
+
+            if cur_point >= cur_curve.ncurve {
+                if curve_counter < curves_list.len() {
+                    cur_curve = &curves_list[curve_counter + 1];
+                    cur_point = 0;
+                } else {
+                    cur_point = cur_curve.ncurve - 1;
+
+                    if last_distance_at == distance_at {
+                        break;
+                    }
+                }
+            }
+            distance_at += cur_curve.curve_dist[cur_point as usize];
+        }
+        let this_curve: pair_structs::Pairf64 = cur_curve.curve_points[cur_point as usize];
+
+        if distance_at - last_distance_at > 1.0 {
+            let t: f64 = (pref_distance as f64 - last_distance_at) / (distance_at - last_distance_at);
+            hit_object.curves[i] = pair_structs::Pairf64{x: utils::lerp(last_curve.x, this_curve.x, t), y: (utils::lerp(last_curve.y, this_curve.y, t))};
+        } else {
+            hit_object.curves[i] = this_curve;
+        }
+        
+        i += 1;
+    }
+    return hit_object;
+}
+
+fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
     let mut bezier: structs::Bezier = Default::default();
+    let mut approx_length: f64 = 0.0;
     let mut i: usize = 0;
     while i < points.len() {
-        bezier.approx_length += pair_structs::get_distance_from(&points[i], &points[i + 1]);
+        approx_length += pair_structs::get_distance_from(&points[i], &points[i + 1]);
 
         i += 1;
     }
+    
+    bezier.approx_length = approx_length;
+    bezier = bezier_init(bezier);
 
-    bezier_init(bezier);
+    return bezier;
 }
 
 fn bezier_init(mut bezier: structs::Bezier) -> structs::Bezier {
@@ -198,6 +287,16 @@ fn bezier_init(mut bezier: structs::Bezier) -> structs::Bezier {
         bezier.curve_points.push(point_at(i as f64 / (bezier.ncurve - 1) as f64, &bezier));
         
         i += 1;
+    }
+
+    i = 0;
+    while i < bezier.ncurve as usize {
+        if i == 0 {
+            bezier.curve_dist.push(0.0);
+        } else {
+            bezier.curve_dist.push(pair_structs::get_distance_from(&bezier.curve_points[i], &bezier.curve_points[i - 1]));
+            bezier.total_distance += bezier.curve_dist[i];
+        }
     }
 
     return bezier;

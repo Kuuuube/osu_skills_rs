@@ -180,3 +180,66 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     return beatmap;
 }
 
+pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    let mut i: usize = 0;
+    while i < beatmap.hit_objects.len() {
+        if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+            match beatmap.hit_objects[i].curve_type {
+                structs::CurveType::BezierCurve => {
+                    let slider_data: pair_structs::Pairi32VectorPairf64 = patterns::slider_fn(&beatmap.hit_objects[i], false);
+                    beatmap.hit_objects[i].lerp_points = slider_data.y;
+                    beatmap.hit_objects[i].ncurve = slider_data.x;
+                },
+                structs::CurveType::PerfectCurve => {
+                    if beatmap.hit_objects[i].curves.len() == 2 {
+                        //CircumscribedCircle add code here ---------------
+
+
+
+
+
+
+
+
+                    } else {
+                        let slider_data: pair_structs::Pairi32VectorPairf64 = patterns::slider_fn(&beatmap.hit_objects[i], false);
+                        beatmap.hit_objects[i].lerp_points = slider_data.y;
+                        beatmap.hit_objects[i].ncurve = slider_data.x;
+                    }
+                },
+                structs::CurveType::LinearCurve => {
+                    let slider_data: pair_structs::Pairi32VectorPairf64 = patterns::slider_fn(&beatmap.hit_objects[i], true);
+                    beatmap.hit_objects[i].lerp_points = slider_data.y;
+                    beatmap.hit_objects[i].ncurve = slider_data.x;
+                },
+                structs::CurveType::CatmullCurve => {
+                    let slider_data: pair_structs::Pairi32VectorPairf64 = patterns::slider_fn(&beatmap.hit_objects[i], true);
+                    beatmap.hit_objects[i].lerp_points = slider_data.y;
+                    beatmap.hit_objects[i].ncurve = slider_data.x;
+                },
+                _ => ()
+            }
+
+            if (beatmap.hit_objects[i].repeat % 2) != 0 {
+                beatmap.hit_objects[i].end_point = *beatmap.hit_objects[i].lerp_points.last().unwrap();
+            } else {
+                beatmap.hit_objects[i].end_point = beatmap.hit_objects[i].lerp_points[0];
+            }
+        }
+        
+        i += 1;
+    }
+    return beatmap;
+}
+
+pub fn prepare_tap_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    return beatmap;
+}
+
+pub fn find_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    return beatmap;
+}
+
+pub fn analyze_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    return beatmap;
+}
