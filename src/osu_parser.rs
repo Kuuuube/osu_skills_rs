@@ -153,7 +153,12 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
             timing_point.inherited = safe_parse_i32(split[6]) == 0;
             beatmap.timing_points.push(timing_point);
         },
-        _ => ()
+        _ => { /* unknown format, assume least possible amount of data for a valid map aka osu file format v3 */
+            timing_point.offset = safe_parse_i32(split[0]);
+            timing_point.beat_interval = safe_parse_f64(split[1]);
+            timing_point.meter = 4;
+            beatmap.timing_points.push(timing_point);
+        },
     }
     return beatmap;
 }
