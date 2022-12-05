@@ -288,10 +288,18 @@ impl Default for Pairi32VectorPairf64 {
     fn default() -> Self {Pairi32VectorPairf64 { x: (0), y: (Default::default()) }}
 }
 
-fn get_length(vector2_0: Pairf64) -> f64 {
-    return f64::sqrt(vector2_0.x * vector2_0.x + vector2_0.y * vector2_0.y);
+fn get_length(pairf64_0: Pairf64) -> f64 {
+    return f64::sqrt(pairf64_0.x * pairf64_0.x + pairf64_0.y * pairf64_0.y);
 }
 
-pub fn get_distance_from(vector2_0: &Pairf64, vector2_1: &Pairf64) -> f64 {
-    return get_length(Pairf64{ x: vector2_0.x - vector2_1.x, y: vector2_0.y - vector2_1.y });
+pub fn get_distance_from(pairf64_0: &Pairf64, pairf64_1: &Pairf64) -> f64 {
+    return get_length(Pairf64{ x: pairf64_0.x - pairf64_1.x, y: pairf64_0.y - pairf64_1.y });
+}
+
+pub fn mid_point(pairf64_0: &Pairf64, pairf64_1: &Pairf64) -> Pairf64 {
+    return (*pairf64_0 + *pairf64_1) / Pairf64 { x: 2.0, y: 2.0 };
+}
+
+pub fn nor(pairf64_0: &Pairf64) -> Pairf64 {
+    return Pairf64 { x: -pairf64_0.y, y: pairf64_0.x };
 }
