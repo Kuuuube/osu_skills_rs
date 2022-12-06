@@ -304,7 +304,7 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
     return bezier;
 }
 
-pub fn circumscribed_circle(hit_object: structs::HitObject, mut slider: structs::Slider) -> structs::CircumscribedCircle {
+pub fn circumscribed_circle(hit_object: &structs::HitObject, mut slider: structs::Slider) -> structs::CircumscribedCircle {
     let mut circle: structs::CircumscribedCircle = Default::default();
     let curve_points_separation: i32 = 5;
     
