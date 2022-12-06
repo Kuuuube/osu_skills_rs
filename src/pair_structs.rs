@@ -288,7 +288,7 @@ impl Default for Pairi32VectorPairf64 {
     fn default() -> Self {Pairi32VectorPairf64 { x: (0), y: (Default::default()) }}
 }
 
-fn get_length(pairf64_0: Pairf64) -> f64 {
+pub fn get_length(pairf64_0: Pairf64) -> f64 {
     return f64::sqrt(pairf64_0.x * pairf64_0.x + pairf64_0.y * pairf64_0.y);
 }
 
