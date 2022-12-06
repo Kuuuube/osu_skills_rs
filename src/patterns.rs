@@ -141,9 +141,9 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 beatmap.hit_objects[i].pixel_length = 100.0;
                 beatmap.hit_objects[i].curve_type = structs::CurveType::LinearCurve;
 
-                let slider_data: pair_structs::Pairi32VectorPairf64 = slider_fn(&beatmap.hit_objects[i], true);
-                beatmap.hit_objects[i].lerp_points = slider_data.y;
-                beatmap.hit_objects[i].ncurve = slider_data.x;
+                let slider_data: structs::Slider = slider_fn(&beatmap.hit_objects[i], true);
+                //beatmap.hit_objects[i].lerp_points = slider_data.xy.y;
+                beatmap.hit_objects[i].ncurve = slider_data.xy.x as i32;
             }
         } else {
             beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32;
@@ -154,7 +154,8 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
     return beatmap;
 }
 
-pub fn slider_fn(hit_object: &structs::HitObject, line: bool) -> pair_structs::Pairi32VectorPairf64 {
+pub fn slider_fn(hit_object: &structs::HitObject, line: bool) -> structs::Slider {
+    let mut new_hit_object: structs::HitObject = Default::default();
     let mut slider: structs::Slider = Default::default();
     let mut beziers: Vec<structs::Bezier> = Default::default();
 
@@ -164,20 +165,20 @@ pub fn slider_fn(hit_object: &structs::HitObject, line: bool) -> pair_structs::P
 
     let mut i: usize = 0;
     while i < hit_object.curves.len() {
-        slider.slider.push(pair_structs::Pairf64{x: hit_object.curves[i].x, y: hit_object.curves[i].y});
+        slider.slider_xy.push(pair_structs::Pairf64{x: hit_object.curves[i].x, y: hit_object.curves[i].y});
         i += 1;
     }
 
-    slider.pos.x = hit_object.pos.x;
-    slider.pos.y = hit_object.pos.y;
+    slider.xy.x = hit_object.pos.x;
+    slider.xy.y = hit_object.pos.y;
 
     i = 0;
     while i < control_points {
         let t_point: pair_structs::Pairf64;
         if i == 0 {
-            t_point = pair_structs::Pairf64 {x: slider.pos.x, y: slider.pos.y};
+            t_point = pair_structs::Pairf64 {x: slider.xy.x, y: slider.xy.y};
         } else {
-            t_point = slider.slider[i - 1];
+            t_point = slider.slider_xy[i - 1];
         }
 
         if line {
@@ -203,20 +204,16 @@ pub fn slider_fn(hit_object: &structs::HitObject, line: bool) -> pair_structs::P
         points.clear();
     }
 
-    slider_init(beziers, slider);    
+    let mut curves_list = beziers;
 
-    return pair_structs::Pairi32VectorPairf64 { x: (0), y: (Default::default()) };
-} 
-
-fn slider_init(mut curves_list: Vec<structs::Bezier>, mut hit_object: structs::Slider) -> structs::Slider {
     let curve_points_separation: i32 = 5;
-    hit_object.ncurve = hit_object.pixel_length as i32 / curve_points_separation;
-    hit_object.curves.resize(hit_object.ncurve as usize + 1, Default::default());
+    new_hit_object.ncurve = hit_object.pixel_length as i32 / curve_points_separation;
+    new_hit_object.curves.resize(hit_object.ncurve as usize + 1, Default::default());
 
     if curves_list.len() == 0 {
         let object_pos_vec: Vec<pair_structs::Pairf64> = vec![hit_object.pos];
         curves_list.push(bezier_fn(&object_pos_vec));
-        hit_object.end_point = hit_object.pos;
+        new_hit_object.end_point = hit_object.pos;
     }
 
     let mut distance_at: f64 = 0.0;
@@ -254,15 +251,18 @@ fn slider_init(mut curves_list: Vec<structs::Bezier>, mut hit_object: structs::S
 
         if distance_at - last_distance_at > 1.0 {
             let t: f64 = (pref_distance as f64 - last_distance_at) / (distance_at - last_distance_at);
-            hit_object.curves[i] = pair_structs::Pairf64{x: utils::lerp(last_curve.x, this_curve.x, t), y: (utils::lerp(last_curve.y, this_curve.y, t))};
+            new_hit_object.curves[i] = pair_structs::Pairf64{x: utils::lerp(last_curve.x, this_curve.x, t), y: (utils::lerp(last_curve.y, this_curve.y, t))};
         } else {
-            hit_object.curves[i] = this_curve;
+            new_hit_object.curves[i] = this_curve;
         }
         
         i += 1;
     }
-    return hit_object;
-}
+
+    let dummyreturn: structs::Slider = Default::default();
+    return dummyreturn;
+} 
+
 
 fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
     let mut bezier: structs::Bezier = Default::default();
@@ -273,18 +273,20 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
 
         i += 1;
     }
-    
-    bezier.approx_length = approx_length;
-    bezier = bezier_init(bezier);
-
-    return bezier;
-}
-
-fn bezier_init(mut bezier: structs::Bezier) -> structs::Bezier {
-    bezier.ncurve = (bezier.approx_length / 4.0 + 2.0) as i32;
+      
+    bezier.ncurve = (approx_length / 4.0 + 2.0) as i32;
     let mut i: usize = 0;
     while i < bezier.ncurve as usize {
-        bezier.curve_points.push(point_at(i as f64 / (bezier.ncurve - 1) as f64, &bezier));
+        let mut c: pair_structs::Pairf64 = Default::default();
+        let n: usize = bezier.points.len() - 1;
+        let mut i: usize = 0;
+        let t: f64 = i as f64 / (bezier.ncurve - 1) as f64;
+        while i <= n {
+            let b: f64 = utils::bernstien(i as i64, n as i64, t);
+            c += pair_structs::Pairf64{x: bezier.points[i].x * b, y: bezier.points[i].y * b};
+            i += 1;
+        }
+        bezier.curve_points.push(c);
         
         i += 1;
     }
@@ -302,14 +304,96 @@ fn bezier_init(mut bezier: structs::Bezier) -> structs::Bezier {
     return bezier;
 }
 
-fn point_at(t: f64, bezier: &structs::Bezier) -> pair_structs::Pairf64 {
-    let mut c: pair_structs::Pairf64 = Default::default();
-    let n: usize = bezier.points.len() - 1;
+pub fn circumscribed_circle(hit_object: structs::HitObject, mut slider: structs::Slider) -> structs::CircumscribedCircle {
+    let mut circle: structs::CircumscribedCircle = Default::default();
+    let curve_points_separation: i32 = 5;
+    
     let mut i: usize = 0;
-    while i <= n {
-        let b: f64 = utils::bernstien(i as i64, n as i64, t);
-        c += pair_structs::Pairf64{x: bezier.points[i].x * b, y: bezier.points[i].y * b};
+    while i < hit_object.curves.len()  {
+        slider.slider_xy.push(hit_object.curves[i]);
         i += 1;
     }
-    return c;
+    slider.xy = hit_object.pos;
+
+    circle.start = slider.xy;
+    circle.mid = slider.slider_xy[0];
+    circle.end = slider.slider_xy[1];
+    
+    let mida: pair_structs::Pairf64 = pair_structs::mid_point(&circle.start, &circle.mid);
+    let midb: pair_structs::Pairf64 = pair_structs::mid_point(&circle.end, &circle.mid);
+    let nora = pair_structs::nor(&(circle.mid - circle.start));
+    let norb = pair_structs::nor(&(circle.mid - circle.end));
+
+    circle.circle_center = circumscribed_circle_intersect(mida, nora, midb, norb);
+    if circle.circle_center == (pair_structs::Pairf64{x: -1.0, y: -1.0}) {
+        slider = slider_fn(&hit_object, true);
+        circle.curve.resize(slider.curve.len(), Default::default());
+        circle.curve = slider.curve;
+        circle.ncurve = slider.ncurve;
+        return circle;
+    }
+
+    let start_ang_point: pair_structs::Pairf64 = circle.start - circle.circle_center;
+    let mid_ang_point: pair_structs::Pairf64 = circle.mid - circle.circle_center;
+    let end_ang_point: pair_structs::Pairf64 = circle.end - circle.circle_center;
+    
+    circle.start_ang = f64::atan2(start_ang_point.y, start_ang_point.x);
+    circle.mid_ang = f64::atan2(mid_ang_point.y, mid_ang_point.x);
+    circle.end_ang = f64::atan2(end_ang_point.y, end_ang_point.x);
+
+    let two_pi: f64 = std::f64::consts::PI * 2.0;
+
+    if !circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang) {
+        if f64::abs(circle.start_ang + two_pi - circle.end_ang) < two_pi && circumscribed_circle_is_in(circle.start_ang + two_pi, circle.mid_ang, circle.end_ang) {
+            circle.start_ang += two_pi; 
+        } else if f64::abs(circle.start_ang - (circle.end_ang + two_pi)) < two_pi && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang + (two_pi)) {
+            circle.end_ang += two_pi;
+        } else if f64::abs(circle.start_ang - two_pi - circle.end_ang) < two_pi && circumscribed_circle_is_in(circle.start_ang - (two_pi), circle.mid_ang, circle.end_ang) {
+            circle.start_ang -= two_pi;
+        } else if f64::abs(circle.start_ang - (circle.end_ang - two_pi)) < two_pi && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang - (two_pi)) {
+            circle.end_ang -= two_pi;
+        } else {
+            return circle;
+        }
+    }
+
+    circle.radius = pair_structs::get_length(start_ang_point);
+    let pixel_length: f64 = hit_object.pixel_length;
+    let arc_ang: f64 = pixel_length / circle.radius;
+
+    if circle.end_ang > circle.start_ang {
+        circle.end_ang = circle.start_ang + arc_ang;
+    } else {
+        circle.end_ang = circle.start_ang - arc_ang;
+    }
+
+    let step: i32 = hit_object.pixel_length as i32 / curve_points_separation;
+    circle.ncurve = step;
+    let len: usize = step as usize + 1;
+    let mut i: usize = 0;
+    while i < len {
+        //let xy: pair_structs::Pairf64 = circumscribed_circle.point_at(i / step);
+        let ang: f64 = utils::lerp(circle.start_ang, circle.end_ang, i as f64 / step as f64);
+        circle.curve.push(pair_structs::Pairf64 { x: f64::cos(ang) * circle.radius + circle.circle_center.x, y: f64::sin(ang) * circle.radius + circle.circle_center.y });
+        
+        i += 1;
+    }
+
+    return circle;
+}
+
+fn circumscribed_circle_intersect(a: pair_structs::Pairf64, ta: pair_structs::Pairf64, b: pair_structs::Pairf64, tb: pair_structs::Pairf64) -> pair_structs::Pairf64 {
+    let des: f64 = tb.x * ta.y - tb.y * ta.x;
+    if f64::abs(des) > 0.00001 {
+        return pair_structs::Pairf64{x: -1.0, y: -1.0};
+    }
+
+    let u: f64 = ((b.y - a.y) * ta.x + (a.x - b.x) * ta.y) / des;
+    let b_new = pair_structs::Pairf64{x: b.x * (tb.x * u), y: b.y * (tb.x * u)};
+    
+    return b_new;
+}
+
+fn circumscribed_circle_is_in(a: f64, b: f64, c: f64) -> bool {
+    return (b > a && b < c) || (b < a && b > c);
 }
