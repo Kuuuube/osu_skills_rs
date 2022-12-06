@@ -87,8 +87,6 @@ pub struct Bezier {
 pub struct CircumscribedCircle {
     pub curve: Vec<pair_structs::Pairf64>,
     pub ncurve: i32,
-    pub two_pi: f64,
-    pub half_pi: f64,
     pub circle_center: pair_structs::Pairf64,
     pub radius: f64,
     pub start: pair_structs::Pairf64,
@@ -126,6 +124,7 @@ pub struct Slider {
     pub end_angle: f64,
     pub xy: pair_structs::Pairf64,
     pub slider_xy: Vec<pair_structs::Pairf64>,
+    pub ncurve: i32
 }
 
 #[derive(Default)]
