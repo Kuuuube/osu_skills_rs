@@ -15,7 +15,6 @@ pub fn parse_beatmap(file_path: &str) -> structs::Beatmap {
 
     for (index, line) in reader.lines().enumerate() {
         let line_unwrap = line.unwrap();
-        //println!("{}. {}", index + 1, line_unwrap);
         
         if beatmap_data.format == "" {
             beatmap_data.format = line_unwrap;
