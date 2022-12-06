@@ -184,32 +184,33 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
         if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(&beatmap.hit_objects[i], false);
+                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), false);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::PerfectCurve => {
                     if beatmap.hit_objects[i].curves.len() == 2 {
                         let slider_data: structs::Slider = Default::default();
-                        let circle_data: structs::CircumscribedCircle = patterns::circumscribed_circle(&beatmap.hit_objects[i], slider_data);
+                        let circle_data: structs::CircumscribedCircle = patterns::circumscribed_circle(beatmap.hit_objects[i].clone(), slider_data);
                         beatmap.hit_objects[i].lerp_points.resize(circle_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = circle_data.curve;
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
                     } else {
-                        let slider_data: structs::Slider = patterns::slider_fn(&beatmap.hit_objects[i], false);
+                        let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), false);
                         beatmap.hit_objects[i].lerp_points = slider_data.curve;
                         beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                     }
                 },
                 structs::CurveType::LinearCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(&beatmap.hit_objects[i], true);
+                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::CatmullCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(&beatmap.hit_objects[i], true);
+                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
@@ -217,9 +218,15 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             }
 
             if (beatmap.hit_objects[i].repeat % 2) != 0 {
-                beatmap.hit_objects[i].end_point = *beatmap.hit_objects[i].lerp_points.last().unwrap();
+                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.last() {
+                    Some(some) => *some,
+                    None => Default::default()
+                };
             } else {
-                beatmap.hit_objects[i].end_point = beatmap.hit_objects[i].lerp_points[0];
+                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.first().cloned() {
+                    Some(some) => some,
+                    None => Default::default()
+                };
             }
         }
         
