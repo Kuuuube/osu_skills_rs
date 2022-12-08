@@ -149,12 +149,20 @@ pub fn lerp(a: f64, b: f64, t: f64) -> f64 {
 pub fn get_last_tick_time(hit_obj: &structs::HitObject) -> i32 {
     if hit_obj.ticks.len() != 0 {
         if hit_obj.repeat > 1 {
-            return hit_obj.end_time - (hit_obj.end_time - hit_obj.repeat_times.last().unwrap()) / 2;
+            let last_in_vec: i32 = match hit_obj.repeat_times.last() {
+                Some(some) => *some,
+                None => Default::default()
+            };
+            return hit_obj.end_time - (hit_obj.end_time - last_in_vec) / 2;
         } else {
             return hit_obj.end_time - (hit_obj.end_time - hit_obj.time as i32) / 2;
         }
     } else {
-        return hit_obj.end_time - (hit_obj.end_time - hit_obj.repeat_times.last().unwrap()) / 2;
+        let last_in_vec: i32 = match hit_obj.repeat_times.last() {
+            Some(some) => *some,
+            None => Default::default()
+        };
+        return hit_obj.end_time - (hit_obj.end_time - last_in_vec) / 2;
     }
 }
 
