@@ -183,10 +183,12 @@ pub fn apply_mods(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     if has_mod(&beatmap, structs::Mods::HT) {
         beatmap = apply_speed(beatmap, 0.75);
+        //for some reason OD is not calculated here, maybe add in at some point
     }
 
     if has_mod(&beatmap, structs::Mods::DT) {
         beatmap = apply_speed(beatmap, 1.5);
+        //for some reason OD is not calculated here, maybe add in at some point
     }
 
 
