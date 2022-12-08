@@ -187,7 +187,7 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), false);
+                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), false);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
@@ -199,18 +199,18 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
                         beatmap.hit_objects[i].lerp_points = circle_data.curve;
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
                     } else {
-                        let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), false);
+                        let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), false);
                         beatmap.hit_objects[i].lerp_points = slider_data.curve;
                         beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                     }
                 },
                 structs::CurveType::LinearCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), true);
+                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::CatmullCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn_slider(beatmap.hit_objects[i].clone(), true);
+                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
