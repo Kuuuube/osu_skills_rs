@@ -232,7 +232,6 @@ pub fn bernstien(i: i64, n: i64, t: f64) -> f64 {
 }
 
 fn binomial_coef(n: i64, k: i64) -> i64 {
-    let mut k_mut = k;
     if k < 0 || k > n {
         return 0;
     }
@@ -240,7 +239,7 @@ fn binomial_coef(n: i64, k: i64) -> i64 {
         return 1;
     }
 
-    k_mut = i64::min(k, n - k);
+    let k_mut = i64::min(k, n - k);
     let mut c: i64 = 1;
     let mut i: i64 = 0;
     while i < k_mut {

@@ -13,18 +13,18 @@ pub struct Timing {
 #[derive(Copy, Clone)]
 pub enum Mods {
     NM = 0,
-    NF = 1,
+    //NF = 1,
     EZ = 2,
     HD = 8,
     HR = 16,
-    SD = 32,
+    //SD = 32,
     DT = 64,
-    RL = 128,
+    //RL = 128,
     HT = 256,
-    FL = 1024,
-    AU = 2048,
-    SO = 4096,
-    AP = 8192
+    //FL = 1024,
+    //AU = 2048,
+    //SO = 4096,
+    //AP = 8192
 }
 
 impl Default for Mods {
@@ -48,11 +48,11 @@ pub enum HitObjectType {
     Normal = 1,
     Slider = 2,
     NewCombo = 4,
-    NormalNewCombo = 5,
-    SliderNewCombo = 6,
+    //NormalNewCombo = 5,
+    //SliderNewCombo = 6,
     Spinner = 8,
     ColourHax = 112,
-    Hold = 128,
+    //Hold = 128,
     //ManiaLong = 128
 }
 
@@ -144,7 +144,7 @@ pub enum AimPointTypes {
     AimPointNone,
     AimPointCircle,
     AimPointSlider,
-    AimPointSliderreverse,
+    //AimPointSliderreverse,
     AimPointSliderend
 }
 

@@ -42,7 +42,7 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
         beatmap.skills.stamina = skill_calculation::stamina::calculate_stamina(&beatmap);
         beatmap.skills.tenacity = skill_calculation::tenacity::calculate_tenacity(&beatmap);
         beatmap.skills.agility = skill_calculation::agility::calculate_agility(&beatmap);
-        beatmap.skills.precision = skill_calculation::precision::calculate_precision(&beatmap);
+        beatmap.skills.precision = skill_calculation::precision::calculate_classic_precision(&beatmap);
         beatmap.skills.accuracy = skill_calculation::accuracy::calculate_accuracy(&beatmap);
         beatmap.skills.memory = skill_calculation::memory::calculate_memory(&beatmap);
     }

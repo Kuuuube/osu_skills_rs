@@ -3,7 +3,7 @@ use crate::{structs, pair_structs};
 
 pub fn parse_beatmap(file_path: &str) -> structs::Beatmap {
     let mut found: Found = Found::FoundNone;
-    let mut is_header: bool = false;
+    let mut is_header: bool;
     let mut beatmap_data: structs::Beatmap = Default::default();
     
     let file = match std::fs::File::open(file_path) {
@@ -13,7 +13,7 @@ pub fn parse_beatmap(file_path: &str) -> structs::Beatmap {
 
     let reader = std::io::BufReader::new(file);
 
-    for (index, line) in reader.lines().enumerate() {
+    for (_index, line) in reader.lines().enumerate() {
         let line_unwrap = line.unwrap();
         
         if beatmap_data.format == "" {
