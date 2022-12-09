@@ -238,11 +238,3 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 pub fn prepare_tap_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     return beatmap;
 }
-
-pub fn find_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
-    return beatmap;
-}
-
-pub fn analyze_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
-    return beatmap;
-}
