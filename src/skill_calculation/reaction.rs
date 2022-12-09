@@ -1,7 +1,46 @@
 use crate::structs;
 use crate::utils;
 use crate::pair_structs;
-use crate::patterns;
+
+fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity_start: f64, opacity_end: f64) -> pair_structs::Pairi64 {
+    let ar_ms: f64 = utils::ar_to_ms(ar);
+    let preamp_time: f64 = obj.time as f64 - ar_ms;
+    let mut times: pair_structs::Pairi64 = Default::default();
+
+    if hidden {
+        let fade_in_duration: f64 = 0.4 * ar_ms;
+        let fade_in_time_end: f64 = preamp_time + fade_in_duration;
+
+        times.x = utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
+
+        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
+            let fade_out_duration: f64 = obj.end_time as f64 - fade_in_time_end;
+            let fade_out_time_end: f64 = fade_in_time_end + fade_out_duration;
+            times.y = utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_end) as i64;
+
+            return times;
+        } else {
+            let fade_out_duration: f64 = 0.7 * (obj.end_time as f64 - fade_in_time_end);
+            let fade_out_time_end: f64 = fade_in_time_end + fade_out_duration;
+            times.y = utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_start) as i64;
+
+            return times;
+        }
+    } else {
+        let fade_in_duration: f64 = f64::min(utils::ar_to_ms(ar), 400.0);
+        let fade_in_time_end: f64 = preamp_time + fade_in_duration;
+
+        times.x = utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
+
+        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
+            times.y = obj.end_time as i64;
+            return times;
+        } else {
+            times.y = obj.time;
+            return times;
+        }
+    }
+}
 
 fn pattern_req(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing, cspx: f64) -> f64 {
     let point1 = pair_structs::Pairf64 { x: p1.pos.x, y: p1.pos.y };
@@ -45,7 +84,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
     if index >= (target_points.len() as i32) - 2 {
         time_to_react = utils::ar_to_ms(ar);
     } else if index < 3 {
-        let visibility_times: pair_structs::Pairi64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
+        let visibility_times: pair_structs::Pairi64 = get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         time_to_react = (hit_objects[0].time - visibility_times.x) as f64;
     } else {
         let t1: &structs::Timing = &target_points[index as usize];
@@ -58,7 +97,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
             time_since_start = f64::abs((target_point.time - hit_objects[target_point.key as usize].time) as f64);
         }
 
-        let visibility_times: pair_structs::Pairi64 = patterns::get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
+        let visibility_times: pair_structs::Pairi64 = get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         let actual_ar_time: f64 = ((hit_objects[0].time - visibility_times.x) as f64) + time_since_start;
 
         let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, utils::cs_to_px(cs));

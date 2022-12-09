@@ -1,7 +1,6 @@
 mod utils;
 mod structs;
 mod pair_structs;
-mod patterns;
 mod algs;
 mod skill_calculation;
 mod osu_parser;
@@ -27,7 +26,7 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
         beatmap = utils::apply_mods(beatmap);
 
         beatmap = skill_calculation::generic::prepare_timing_points(beatmap);
-        beatmap = patterns::approximate_slider_points(beatmap);
+        beatmap = skill_calculation::slider::approximate_slider_points(beatmap);
         beatmap = skill_calculation::generic::bake_slider_data(beatmap);
 
         beatmap = skill_calculation::generic::prepare_aim_data(beatmap);

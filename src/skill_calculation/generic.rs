@@ -1,7 +1,7 @@
 use crate::structs;
 use crate::pair_structs;
 use crate::utils;
-use crate::patterns;
+use crate::skill_calculation;
 
 pub fn prepare_aim_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     beatmap = calculate_movement_data(beatmap);
@@ -76,7 +76,7 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             beatmap.target_points.push(target_point);
         } else if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
             for tick in &hit_obj.ticks {
-                target_point = structs::Timing{time: *tick as i64, pos: patterns::get_slider_pos(hit_obj, *tick), key: i, press: true, data: Default::default()};
+                target_point = structs::Timing{time: *tick as i64, pos: skill_calculation::slider::get_slider_pos(hit_obj, *tick), key: i, press: true, data: Default::default()};
 
                 beatmap.target_points.push(target_point);
             }
@@ -94,7 +94,7 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time as i32, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointSlider });
 
             let end_time: i32 = utils::get_last_tick_time(hit_obj);
-            let end_pos: pair_structs::Pairf64 = patterns::get_slider_pos(hit_obj, end_time);
+            let end_pos: pair_structs::Pairf64 = skill_calculation::slider::get_slider_pos(hit_obj, end_time);
 
             if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) {
                 beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
@@ -187,30 +187,30 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), false);
+                    let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::PerfectCurve => {
                     if beatmap.hit_objects[i].curves.len() == 2 {
                         let slider_data: structs::Slider = Default::default();
-                        let circle_data: structs::CircumscribedCircle = patterns::circumscribed_circle(beatmap.hit_objects[i].clone(), slider_data);
+                        let circle_data: structs::CircumscribedCircle = skill_calculation::slider::circumscribed_circle(beatmap.hit_objects[i].clone(), slider_data);
                         beatmap.hit_objects[i].lerp_points.resize(circle_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = circle_data.curve;
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
                     } else {
-                        let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), false);
+                        let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
                         beatmap.hit_objects[i].lerp_points = slider_data.curve;
                         beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                     }
                 },
                 structs::CurveType::LinearCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), true);
+                    let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::CatmullCurve => {
-                    let slider_data: structs::Slider = patterns::slider_fn(beatmap.hit_objects[i].clone(), true);
+                    let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
