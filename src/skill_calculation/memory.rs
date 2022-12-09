@@ -62,7 +62,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             }
             if !utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(prev.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs)) as i32;
+                help_pixels = (size * utils::cs_to_px(beatmap.cs) as f64) as i32;
             } else {
                 let observable_time: i64 = cur.time - (utils::ar_to_ms(beatmap.ar) * 0.3) as i64;
                 if prev.time > observable_time {
@@ -81,7 +81,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         if !observable {
             if !utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(old.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs)) as i32;
+                help_pixels = (size * utils::cs_to_px(beatmap.cs) as f64) as i32;
             } else {
                 help_pixels = utils::cs_to_px(beatmap.cs) as i32;
             }

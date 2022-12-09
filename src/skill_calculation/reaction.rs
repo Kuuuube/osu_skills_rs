@@ -100,7 +100,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
         let visibility_times: pair_structs::Pairi64 = get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         let actual_ar_time: f64 = ((hit_objects[0].time - visibility_times.x) as f64) + time_since_start;
 
-        let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, utils::cs_to_px(cs));
+        let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, utils::cs_to_px(cs) as f64);
         time_to_react = f64::sqrt(time_to_react * time_to_react + result * result);
     }
 
