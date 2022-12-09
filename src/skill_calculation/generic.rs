@@ -19,7 +19,7 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     while i < beatmap.hit_objects.len() {
         if (utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
             let mut distance: f64 = pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
-            let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs);
+            let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs) as f64;
             let interval: f64 = beatmap.hit_objects[i].time as f64 - previous_time as f64;
 
             if distance >= rad_subtract {
@@ -96,7 +96,7 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             let end_time: i32 = utils::get_last_tick_time(hit_obj);
             let end_pos: pair_structs::Pairf64 = skill_calculation::slider::get_slider_pos(hit_obj, end_time);
 
-            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) {
+            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) as f64 {
                 beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
             }
         }
@@ -188,6 +188,7 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
                     let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
+                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
@@ -200,17 +201,20 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
                     } else {
                         let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
+                        beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = slider_data.curve;
                         beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                     }
                 },
                 structs::CurveType::LinearCurve => {
                     let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
+                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
                 structs::CurveType::CatmullCurve => {
                     let slider_data: structs::Slider = skill_calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
+                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                 },
@@ -223,8 +227,8 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
                     None => Default::default()
                 };
             } else {
-                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.first().cloned() {
-                    Some(some) => some,
+                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.first() {
+                    Some(some) => *some,
                     None => Default::default()
                 };
             }
