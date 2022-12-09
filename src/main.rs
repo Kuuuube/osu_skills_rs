@@ -6,7 +6,14 @@ mod skill_calculation;
 mod osu_parser;
 
 fn main() {
-    let beatmap: structs::Beatmap = process_beatmap("./testmaps/v14.osu");
+    let args: Vec<String> = std::env::args().collect();
+
+    let get_path = match args.get(1) {
+        Some(some) => some,
+        None => { panic!("Invalid .osu file path specified."); }
+    };
+
+    let beatmap: structs::Beatmap = process_beatmap(get_path);
 
     handle_results(beatmap);
 }
