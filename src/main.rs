@@ -32,8 +32,6 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
 
         beatmap = skill_calculation::generic::prepare_aim_data(beatmap);
         beatmap = skill_calculation::generic::prepare_tap_data(beatmap);
-        beatmap = skill_calculation::generic::find_patterns(beatmap);
-        beatmap = skill_calculation::generic::analyze_patterns(beatmap);
 
         beatmap = skill_calculation::strains::calculate_aim_strains(beatmap);
         beatmap = skill_calculation::strains::calculate_tap_strains(beatmap);
