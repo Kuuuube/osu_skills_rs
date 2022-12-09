@@ -52,7 +52,7 @@ pub fn get_slider_pos(hit_object: &structs::HitObject, time: i32) -> pair_struct
         } else {
             let time_length: i32 = time - hit_object.time as i32;
             let repeats_done: i32 = time_length / hit_object.to_repeat_time;
-            percent = ((time_length - hit_object.to_repeat_time * repeats_done) / hit_object.to_repeat_time) as f64;
+            percent = (time_length - hit_object.to_repeat_time * repeats_done) as f64 / hit_object.to_repeat_time as f64;
             if repeats_done % 2 != 0 {
                 percent = 1.0 - percent;
             }
