@@ -138,7 +138,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 hit_object_new.curves = vec![pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x, y: beatmap.hit_objects[i].pos.y}, pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x + tick_interval / beatmap.st, y: beatmap.hit_objects[i].pos.y + tick_interval / beatmap.st}];
                 hit_object_new.pos = beatmap.hit_objects[i].pos;
                 hit_object_new.hit_object_type = beatmap.hit_objects[i].hit_object_type;
-                hit_object_new.time = beatmap.hit_objects[i].time + 101;
+                hit_object_new.time = beatmap.hit_objects[i].time;
                 hit_object_new.end_time = beatmap.hit_objects[i].end_time + 101;
                 hit_object_new.to_repeat_time = beatmap.hit_objects[i].to_repeat_time + 101;
                 hit_object_new.repeat = 1;
