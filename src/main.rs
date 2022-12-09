@@ -8,15 +8,7 @@ mod osu_parser;
 fn main() {
     let beatmap: structs::Beatmap = process_beatmap("./testmaps/v14.osu");
 
-    let reaction = beatmap.skills.reaction.to_string();
-    let stamina = beatmap.skills.stamina.to_string();
-    let tenacity = beatmap.skills.tenacity.to_string();
-    let agility = beatmap.skills.agility.to_string();
-    let precision = beatmap.skills.precision.to_string();
-    let accuracy = beatmap.skills.accuracy.to_string();
-    let memory = beatmap.skills.memory.to_string();
-    
-    println!("stamina: {stamina}, tenacity: {tenacity}, agility: {agility}, accuracy: {accuracy}, precision: {precision}, reaction: {reaction}, memory: {memory}");
+    handle_results(beatmap);
 }
 
 fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
@@ -44,4 +36,8 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
         beatmap.skills.memory = skill_calculation::memory::calculate_memory(&beatmap);
     }
     return beatmap;
+}
+
+fn handle_results(beatmap: structs::Beatmap) {
+    println!("stamina: {}, tenacity: {}, agility: {}, accuracy: {}, precision: {}, reaction: {}, memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.accuracy, beatmap.skills.agility, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
 }
