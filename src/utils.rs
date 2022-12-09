@@ -105,8 +105,8 @@ pub fn get_value_pos(list: &Vec<f64>, value: &f64, order: bool) -> usize {
     }
 }
 
-pub fn cs_to_px(cs: f64) -> f64 {
-    return 54.5 - (4.5 * cs);
+pub fn cs_to_px(cs: f64) -> i32 {
+    return (54.5 - (4.5 * cs)) as i32;
 }
 
 pub fn get_weighted_value_2(vals: Vec<f64>, decay: f64) -> f64 {
@@ -129,7 +129,7 @@ pub fn get_peak_vals(vals: &Vec<f64>) -> Vec<f64>{
             }
             i += 1;
         }
-        output.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        output.sort_by(|a, b| b.partial_cmp(a).unwrap());
     }
     return output;
 }
