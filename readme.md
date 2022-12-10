@@ -12,7 +12,7 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 ## Progress
 
-- **Stamina:** Broken
+- **Stamina:** Accurate within <0.01% in all tested cases.
 
 - **Tenacity:** Broken
 
