@@ -11,6 +11,12 @@ pub fn prepare_aim_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     return beatmap;
 }
 
+pub fn prepare_tap_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    beatmap = calculate_press_intervals(beatmap);
+    beatmap = gather_tap_patterns(beatmap);
+    return beatmap;
+}
+
 fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut previous_pos: pair_structs::Pairf64 = Default::default();
     let mut previous_time: i64 = -1;
@@ -60,11 +66,11 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut target_point: structs::Timing;
     let mut i: i32 = 0;
-    let mut prev_time: i64 = i64::min_value();
+    let mut prev_time: i64 = i32::min_value() as i64;
 
     for hit_obj in &beatmap.hit_objects {
-        if hit_obj.time >= prev_time && prev_time >= 0 {
-            if i64::abs(hit_obj.time - prev_time) > 5 {
+        if hit_obj.time >= prev_time && hit_obj.time < i32::max_value() as i64 {
+            if i64::abs(hit_obj.time - prev_time) < 5 {
                 continue;
             }
         }
@@ -238,6 +244,22 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     return beatmap;
 }
 
-pub fn prepare_tap_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    let mut previous_time: i64 = -1;
+    let mut i: usize = 0;
+    while i < beatmap.hit_objects.len() - 1 {
+        if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+            if previous_time != -1 {
+                beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as f64);
+            }
+            previous_time = beatmap.hit_objects[i].time;
+        }
+
+        i += 1;
+    }
+    return beatmap;
+}
+
+fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     return beatmap;
 }
