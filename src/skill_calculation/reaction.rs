@@ -71,8 +71,8 @@ fn pattern_to_reaction(p1: &structs::Timing, p2: &structs::Timing, p3: &structs:
 }
 
 fn react_to_skill(time_to_react: f64) -> f64 {
-    let a: f64 = f64::powf(2.0, f64::log10(78608.0 / 15625.0) / f64::log10(34.0 / 25.0)) * f64::powf(125.0, f64::log10(68.0 / 25.0) / f64::log10(34.0 / 35.0));
-    let b: f64 = f64::log10(2.0) / (f64::log10(2.0) - 2.0 * f64::log10(5.0) + f64::log10(17.0));
+    let a: f64 = f64::powf(2.0, f64::ln(78608.0 / 15625.0) / f64::ln(34.0 / 25.0)) * f64::powf(125.0, f64::ln(68.0 / 25.0) / f64::ln(34.0 / 35.0));
+    let b: f64 = f64::ln(2.0) / (f64::ln(2.0) - 2.0 * f64::ln(5.0) + f64::ln(17.0));
     return a / f64::powf(time_to_react, b);
 }
 
