@@ -46,5 +46,5 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
 }
 
 fn handle_results(beatmap: structs::Beatmap) {
-    println!("stamina: {}, tenacity: {}, agility: {}, accuracy: {}, precision: {}, reaction: {}, memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.accuracy, beatmap.skills.agility, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+    println!("stamina: {}, tenacity: {}, agility: {}, accuracy: {}, precision: {}, reaction: {}, memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
 }
