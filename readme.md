@@ -18,7 +18,7 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 - **Agility:** Accurate within <1% in most cases. Up to 5% inaccuracy in some cases.
 
-- **Accuracy:** Broken
+- **Accuracy:** Accurate within <0.01% in all tested cases.
 
 - **Precision:** Accurate within <1% in most cases. Up to 5% inaccuracy in some cases. (Directly tied to Agility)
 
