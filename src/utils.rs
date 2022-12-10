@@ -16,9 +16,7 @@ pub fn get_dir_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair
     let dot: f64 = ab.x * cb.x + ab.y * cb.y;
     let cross: f64 = ab.x * cb.y - ab.y * cb.x;
 
-    let alpha = f64::atan2(cross, dot) * 180.0 / std::f64::consts::PI;
-
-    return alpha;
+    return f64::atan2(cross, dot) * 180.0 / std::f64::consts::PI;
 }
 
 pub fn get_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_structs::Pairf64) -> f64 {
