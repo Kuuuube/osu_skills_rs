@@ -28,6 +28,6 @@ pub fn calculate_classic_precision(beatmap: &structs::Beatmap) -> f64 {
 
     let scaled_agility: f64 = f64::powf(beatmap.skills.agility + 1.0, agility_pow) - agility_subtract;
 
-    let precision: f64 = total_mult * f64::powf(scaled_agility * beatmap.cs, total_pow);
+    let precision: f64 = total_mult * f64::powf(scaled_agility * (beatmap.cs as i32 as f64), total_pow);
     return precision;
 }
