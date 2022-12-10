@@ -1,4 +1,3 @@
-use crate::structs::HitObject;
 use crate::utils;
 use crate::structs;
 use crate::pair_structs;
@@ -15,7 +14,7 @@ fn get_approach_relative_size(time: f64, hit_time: f64, ar: f64) -> f64 {
     }
 }
 
-fn is_observable_from(obj: &HitObject, distance: i32, from_pos: &pair_structs::Pairf64) -> bool {
+fn is_observable_from(obj: &structs::HitObject, distance: i32, from_pos: &pair_structs::Pairf64) -> bool {
     let dist: f64 = pair_structs::get_distance_from(&obj.pos, &from_pos);
     if dist < distance as f64 {
         return true;
@@ -29,14 +28,15 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
     }
     
     let mut total_mem_points: f64 = 0.0;
-    let mut old: &HitObject = &beatmap.hit_objects[0];
+    let mut old: &structs::HitObject = &beatmap.hit_objects[0];
     let mut combo: i32 = 0;
 
-    let mut i: i32 = 1;
-    while i < beatmap.hit_objects.len() as i32 {
-        let cur: &HitObject = &beatmap.hit_objects[i as usize];
+    let mut i: usize = 1;
+    while i < beatmap.hit_objects.len() {
+        let cur: &structs::HitObject = &beatmap.hit_objects[i];
         let mut mem_points: f64 = 0.0;
         let observable_dist: i32;
+
         if combo < 100 {
             observable_dist = 160;
         } else if combo < 200 {
@@ -54,9 +54,9 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         let mut observable: bool = false;
         let mut help_pixels: i32;
 
-        let mut j = i;
+        let mut j: usize = i - 1;
         while j > 0 {
-            let prev: &structs::HitObject = &beatmap.hit_objects[j as usize];
+            let prev: &structs::HitObject = &beatmap.hit_objects[j];
             if cur.time - prev.time > utils::ar_to_ms(beatmap.ar) as i64 {
                 break;
             }
