@@ -194,8 +194,7 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
                 },
                 structs::CurveType::PerfectCurve => {
                     if beatmap.hit_objects[i].curves.len() == 2 {
-                        let slider_data: structs::Slider = Default::default();
-                        let circle_data: structs::CircumscribedCircle = skill_calculation::slider::circumscribed_circle(beatmap.hit_objects[i].clone(), slider_data);
+                        let circle_data: structs::CircumscribedCircle = skill_calculation::slider::circumscribed_circle(beatmap.hit_objects[i].clone());
                         beatmap.hit_objects[i].lerp_points.resize(circle_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = circle_data.curve;
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
