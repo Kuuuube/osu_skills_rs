@@ -16,7 +16,7 @@ pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow)) * mult;
+                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow) * mult);
             }
             beatmap.tap_strains.push(strain);
         } else {
@@ -31,7 +31,7 @@ pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow)) * mult;
+                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow) * mult);
                 let decay: f64 = 0.94; //this value comes from osu skills config file "Decay"
                 strain += old_bonus * decay;
             }
