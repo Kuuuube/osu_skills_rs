@@ -24,7 +24,7 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 - **Reaction:** Broken
 
-- **Memory:** Broken
+- **Memory:** Accurate within <1% in most cases. Up to 200% inaccuracy in some cases.
 
 ## Building
 
