@@ -25,7 +25,7 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     while i < beatmap.hit_objects.len() {
         if (utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
             let mut distance: f64 = pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
-            let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs) as f64;
+            let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
             let interval: f64 = beatmap.hit_objects[i].time as f64 - previous_time as f64;
 
             if distance >= rad_subtract {
@@ -102,7 +102,7 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             let end_time: i32 = utils::get_last_tick_time(hit_obj);
             let end_pos: pair_structs::Pairf64 = skill_calculation::slider::get_slider_pos(hit_obj, end_time);
 
-            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) as f64 {
+            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs as i32 as f64) as f64 {
                 beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
             }
         }
