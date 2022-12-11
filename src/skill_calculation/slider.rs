@@ -71,9 +71,9 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 }
             }
 
-            let tick_interval: f64 = beat_lengths[timing_point_index] / beatmap.st;
+            let tick_interval: i32 = (beat_lengths[timing_point_index] / beatmap.st) as i32;
             let err_interval: i32 = 10;
-            let mut j: f64 = 1.0;
+            let mut j: i32 = 1;
 
             let mut k: usize = (beatmap.hit_objects[i].time + tick_interval as i64) as usize;
             while k < (beatmap.hit_objects[i].end_time - err_interval) as usize {
@@ -89,12 +89,12 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 beatmap.hit_objects[i].ticks.push(tick_time as i32);
 
                 k += tick_interval as usize;
-                j += 1.0;
+                j += 1;
             }
 
             if i64::abs(beatmap.hit_objects[i].end_time as i64 - beatmap.hit_objects[i].time) < 100 && (beatmap.hit_objects[i].ticks.len() == 0) {
                 let mut hit_object_new: structs::HitObject = Default::default();
-                hit_object_new.curves = vec![pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x, y: beatmap.hit_objects[i].pos.y}, pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x + tick_interval / beatmap.st, y: beatmap.hit_objects[i].pos.y + tick_interval / beatmap.st}];
+                hit_object_new.curves = vec![pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x, y: beatmap.hit_objects[i].pos.y}, pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x + tick_interval as f64 / beatmap.st, y: beatmap.hit_objects[i].pos.y + tick_interval as f64 / beatmap.st}];
                 hit_object_new.pos = beatmap.hit_objects[i].pos;
                 hit_object_new.hit_object_type = beatmap.hit_objects[i].hit_object_type;
                 hit_object_new.time = beatmap.hit_objects[i].time;
