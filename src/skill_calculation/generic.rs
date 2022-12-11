@@ -26,7 +26,7 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         if (utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
             let mut distance: f64 = pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
             let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
-            let interval: f64 = beatmap.hit_objects[i].time as f64 - previous_time as f64;
+            let interval: f64 = (beatmap.hit_objects[i].time - previous_time) as f64;
 
             if distance >= rad_subtract {
                 distance -= rad_subtract;
@@ -51,7 +51,7 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     i = 0;
     while i < beatmap.velocities.len() {
-        let vel: pair_structs::Pairf64 = pair_structs::Pairf64 { x: (i as f64), y: (i as f64) };
+        let vel: pair_structs::Pairf64 = pair_structs::Pairf64 { x: beatmap.velocities[i].x, y: beatmap.velocities[i].y };
         if i != 0 {
             beatmap.velocities_change.push(vel - old_vel);
         }
