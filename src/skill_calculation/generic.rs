@@ -173,7 +173,7 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
             if beatmap.bpm_min > bpm {
                 beatmap.bpm_min = bpm;
             }
-            if beatmap.bpm_max > bpm {
+            if beatmap.bpm_max < bpm {
                 beatmap.bpm_max = bpm;
             }
         }
