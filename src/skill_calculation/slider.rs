@@ -176,8 +176,8 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
 
     let mut curves_list = beziers;
 
-    let curve_points_separation: i32 = 5;
-    slider.ncurve = hit_object.pixel_length as i32 / curve_points_separation;
+    let curve_points_separation: f64 = 5.0;
+    slider.ncurve = (hit_object.pixel_length / curve_points_separation) as i32;
     slider.curve.resize(slider.ncurve as usize + 1, Default::default());
 
     if curves_list.len() == 0 {
@@ -197,8 +197,8 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
     let pixel_length: f64 = hit_object.pixel_length;
 
     let mut i: usize = 0;
-    while i < slider.ncurve as usize {
-        let pref_distance: i32 = i as i32 * pixel_length as i32 / slider.ncurve;
+    while i < (slider.ncurve + 1) as usize {
+        let pref_distance: i32 = (i as f64 * pixel_length / slider.ncurve as f64) as i32;
         while distance_at < pref_distance as f64 {
             last_distance_at = distance_at;
             last_curve = cur_curve.curve_points[cur_point as usize];
@@ -246,8 +246,7 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
         i += 1;
     }
 
-    
-    bezier.ncurve = (approx_length / 4.0 + 2.0) as i32;
+    bezier.ncurve = (approx_length / 4.0) as i32 + 2;
     i = 0;
     while i < bezier.ncurve as usize {
         let mut c: pair_structs::Pairf64 = Default::default();
@@ -271,8 +270,9 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
             bezier.curve_dist.push(0.0);
         } else {
             bezier.curve_dist.push(pair_structs::get_distance_from(&bezier.curve_points[i], &bezier.curve_points[i - 1]));
-            bezier.total_distance += bezier.curve_dist[i];
         }
+        bezier.total_distance += bezier.curve_dist[i];
+
         i += 1;
     }
 
@@ -348,7 +348,7 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let len: usize = step as usize + 1;
     let mut i: usize = 0;
     while i < len {
-        let ang: f64 = utils::lerp(circle.start_ang, circle.end_ang, i as f64 / step as f64);
+        let ang: f64 = utils::lerp(circle.start_ang, circle.end_ang, i as f64 / step);
         circle.curve.push(pair_structs::Pairf64 { x: f64::cos(ang) * circle.radius + circle.circle_center.x, y: f64::sin(ang) * circle.radius + circle.circle_center.y });
         
         i += 1;
