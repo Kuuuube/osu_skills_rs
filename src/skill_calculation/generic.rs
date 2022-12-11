@@ -245,9 +245,9 @@ pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut previous_time: i64 = -1;
     let mut i: usize = 0;
-    while i < beatmap.hit_objects.len() - 1 {
+    while i < beatmap.hit_objects.len() {
         if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
-            if previous_time != -1 {
+            if i > 0 {
                 beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as f64);
             }
             previous_time = beatmap.hit_objects[i].time;
