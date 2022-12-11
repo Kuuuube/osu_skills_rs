@@ -66,13 +66,11 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut target_point: structs::Timing;
     let mut i: i32 = 0;
-    let mut prev_time: i64 = i32::min_value() as i64;
+    let mut prev_time: i64 = -1;
 
     for hit_obj in &beatmap.hit_objects {
-        if hit_obj.time >= prev_time && hit_obj.time < i32::max_value() as i64 {
-            if i64::abs(hit_obj.time - prev_time) < 5 {
-                continue;
-            }
+        if i64::abs(hit_obj.time - prev_time) < 5 && i > 0 {
+            continue;
         }
         prev_time = hit_obj.time;
 
