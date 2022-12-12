@@ -8,23 +8,11 @@ osu!Skills calculator rewritten in rust.
 osu_skills_rs.exe {.osu file path}
 ```
 
-Methods to process large amounts of maps will be added once adding accurate calculation for all skills is finished.
+Methods to process large amounts of maps will be added soon.
 
 ## Progress
 
-- **Stamina:** Accurate within <0.01% in all tested cases.
-
-- **Tenacity:** Accurate within <0.01% in all tested cases.
-
-- **Agility:** Accurate within <0.01% in all tested cases.
-
-- **Accuracy:** Accurate within <0.01% in all tested cases.
-
-- **Precision:** Accurate within <0.01% in all tested cases.
-
-- **Reaction:** Accurate within <0.01% in all tested cases.
-
-- **Memory:** Accurate within <0.01% in all tested cases.
+All skill calculations are accurate within <0.01% in all tested cases.
 
 ## Building
 
