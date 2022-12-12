@@ -259,5 +259,33 @@ fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap 
 }
 
 fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
+    let mut old: i32 = 0;
+    let mut tmp: Vec<i32> = Default::default();
+    let mut i: usize = 0;
+    let offset_max_displacement: i32 = 2;
+
+    while i < beatmap.press_intervals.len() {
+        if i32::abs(beatmap.press_intervals[i] - old) > offset_max_displacement {
+            if tmp.len() > 6 {
+                beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
+            } else if tmp.len() > 1 {
+                beatmap.bursts.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
+            }
+            tmp.clear();
+        }
+        tmp.push(beatmap.hit_objects[i].time as i32);
+        old = beatmap.press_intervals[i];
+        i += 1;
+    }
+
+    if tmp.len() > 6 {
+        beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]});
+    } else if tmp.len() > 1 {
+        beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]});
+    }
+
+    beatmap.streams.sort();
+    beatmap.bursts.sort();
+
     return beatmap;
 }
