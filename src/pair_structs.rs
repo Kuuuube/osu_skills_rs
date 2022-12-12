@@ -268,14 +268,34 @@ impl std::ops::DivAssign for Pairi32 {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone)]
 pub struct Pairi32VectorVectori32 {
     pub x: i32,
     pub y: Vec<Vec<i32>>
 }
 
 impl Default for Pairi32VectorVectori32 {
-    fn default() -> Self {Pairi32VectorVectori32 { x: (0), y: (Default::default()) }}
+    fn default() -> Self {Pairi32VectorVectori32 { x: (Default::default()), y: (Default::default()) }}
+}
+
+impl PartialEq for Pairi32VectorVectori32 {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x
+    }
+}
+
+impl Eq for Pairi32VectorVectori32 {}
+
+impl PartialOrd for Pairi32VectorVectori32 {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.x.partial_cmp(&other.x)
+    }
+}
+
+impl Ord for Pairi32VectorVectori32 {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.x.cmp(&other.x)
+    }
 }
 
 #[derive(Clone)]
