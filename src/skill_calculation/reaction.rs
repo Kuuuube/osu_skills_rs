@@ -23,7 +23,6 @@ fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity
             let fade_out_duration: f64 = 0.7 * (obj.end_time as f64 - fade_in_time_end);
             let fade_out_time_end: f64 = fade_in_time_end + fade_out_duration;
             times.y = utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_start) as i64;
-
             return times;
         }
     } else {
@@ -71,7 +70,7 @@ fn pattern_to_reaction(p1: &structs::Timing, p2: &structs::Timing, p3: &structs:
 }
 
 fn react_to_skill(time_to_react: f64) -> f64 {
-    let a: f64 = f64::powf(2.0, f64::ln(78608.0 / 15625.0) / f64::ln(34.0 / 25.0)) * f64::powf(125.0, f64::ln(68.0 / 25.0) / f64::ln(34.0 / 35.0));
+    let a: f64 = f64::powf(2.0, f64::ln(78608.0 / 15625.0) / f64::ln(34.0 / 25.0)) * f64::powf(125.0, f64::ln(68.0 / 25.0) / f64::ln(34.0 / 25.0));
     let b: f64 = f64::ln(2.0) / (f64::ln(2.0) - 2.0 * f64::ln(5.0) + f64::ln(17.0));
     return a / f64::powf(time_to_react, b);
 }
