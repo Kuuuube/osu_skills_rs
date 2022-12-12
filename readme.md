@@ -14,7 +14,7 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 - **Stamina:** Accurate within <0.01% in all tested cases.
 
-- **Tenacity:** Accurate within <0.01% in some cases. Accurate within <2% in some cases.
+- **Tenacity:** Accurate within <0.01% in all tested cases.
 
 - **Agility:** Accurate within <0.01% in all tested cases.
 
