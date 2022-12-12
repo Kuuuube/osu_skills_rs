@@ -10,7 +10,7 @@ fn main() {
 
     let get_path = match args.get(1) {
         Some(some) => some,
-        None => { panic!("Invalid .osu file path specified."); }
+        None => { println!("Invalid .osu file path"); "" }
     };
 
     let beatmap: structs::Beatmap = process_beatmap(get_path);
