@@ -7,31 +7,31 @@ pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     let mut strain: f64 = 0.0;
 
     for interval in &beatmap.press_intervals {
-        let interval_deref: f64 = *interval;
+        let interval_deref: i32 = *interval;
         if c == 0 {
             let largest_interval: f64 = 50550.0; //this value comes from osu skills config file "LargestInterval"
-            if interval_deref >= largest_interval {
+            if interval_deref >= largest_interval as i32 {
                 strain = 0.0;
             } else {
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow) * mult);
+                strain = scale / f64::powf(interval_deref as f64, f64::powf(interval_deref as f64, pow) * mult);
             }
             beatmap.tap_strains.push(strain);
         } else {
             let largest_interval: f64 = 50550.0; //this value comes from osu skills config file "LargestInterval"
-            if interval_deref >= largest_interval {
+            if interval_deref >= largest_interval as i32 {
                 let decay_max: f64 = 0.0; //this value comes from osu skills config file "DecayMax"
                 strain *= decay_max;
             } else {
-                if interval_deref <= 15.0 {
+                if interval_deref <= 15 {
                     continue;
                 }
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref, f64::powf(interval_deref, pow) * mult);
+                strain = scale / f64::powf(interval_deref as f64, f64::powf(interval_deref as f64, pow) * mult);
                 let decay: f64 = 0.94; //this value comes from osu skills config file "Decay"
                 strain += old_bonus * decay;
             }

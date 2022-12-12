@@ -215,7 +215,7 @@ pub struct Beatmap {
     pub angle_bonuses: Vec<f64>,
     pub reaction_times: Vec<i32>,
 
-    pub press_intervals: Vec<f64>,
+    pub press_intervals: Vec<i32>,
     pub tap_strains: Vec<f64>,
 
     pub test: Vec<Vec<i32>>,

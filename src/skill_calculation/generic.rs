@@ -248,7 +248,7 @@ fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     while i < beatmap.hit_objects.len() {
         if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
             if i > 0 {
-                beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as f64);
+                beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as i32);
             }
             previous_time = beatmap.hit_objects[i].time;
         }
