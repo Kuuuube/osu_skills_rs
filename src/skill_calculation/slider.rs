@@ -18,14 +18,15 @@ pub fn get_slider_pos(hit_object: &structs::HitObject, time: i32) -> pair_struct
             }
         }
 
-        let index_f: f64 = percent * hit_object.ncurve as f64;
-        let index: i32 = index_f as i32;
+        let ncurve: usize = hit_object.ncurve as usize;
+        let index_f: f64 = percent * ncurve as f64;
+        let index: usize = index_f as usize;
 
-        if index >= hit_object.ncurve {
-            return hit_object.lerp_points[hit_object.ncurve as usize];
+        if index >= ncurve {
+            return hit_object.lerp_points[ncurve];
         } else {
-            let point = hit_object.lerp_points[index as usize];
-            let point2 = hit_object.lerp_points[(index + 1) as usize];
+            let point = hit_object.lerp_points[index];
+            let point2 = hit_object.lerp_points[index + 1];
             let t2: f64 = index_f - index as f64;
             return pair_structs::Pairf64{x: utils::lerp(point.x, point2.x, t2), y: utils::lerp(point.y, point2.y, t2)};
         }
