@@ -262,9 +262,28 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut old: i32 = 0;
     let mut tmp: Vec<i32> = Default::default();
     let mut i: usize = 0;
+    let mut uniq: Vec<i32> = Default::default();
     let offset_max_displacement: i32 = 2;
 
     while i < beatmap.press_intervals.len() {
+        let is_found: bool = uniq.contains(&beatmap.press_intervals[i]);
+        if is_found == false {
+            let mut found: bool = false;
+            let mut p: i32 = beatmap.press_intervals[i] - offset_max_displacement;
+            while p <= beatmap.press_intervals[i] + offset_max_displacement {
+                let is_found_p = uniq.contains(&p);
+                if is_found_p == true {
+                    beatmap.press_intervals[i] = p;
+                    found = true;
+                    break;
+                }
+                p += 1;
+            }
+            if !found {
+                uniq.push(beatmap.press_intervals[i])
+            }
+        }
+
         if i32::abs(beatmap.press_intervals[i] - old) > offset_max_displacement {
             if tmp.len() > 6 {
                 beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
