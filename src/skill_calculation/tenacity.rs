@@ -14,9 +14,9 @@ fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> st
             if length > max {
                 max = length;
             }
-            if max > 1 {
-                break;
-            }
+        }
+        if max > 1 {
+            break;
         }
     }
 
