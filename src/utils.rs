@@ -151,16 +151,16 @@ pub fn get_last_tick_time(hit_obj: &structs::HitObject) -> i32 {
                 Some(some) => *some,
                 None => Default::default()
             };
-            return hit_obj.end_time - (hit_obj.end_time - last_in_vec) / 2;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec) as f64 / 2.0) as i32;
         } else {
-            return hit_obj.end_time - (hit_obj.end_time - hit_obj.time as i32) / 2;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - hit_obj.time as i32) as f64 / 2.0) as i32;
         }
     } else {
         let last_in_vec: i32 = match hit_obj.ticks.last() {
             Some(some) => *some,
             None => Default::default()
         };
-        return hit_obj.end_time - (hit_obj.end_time - last_in_vec) / 2;
+        return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec) as f64 / 2.0) as i32;
     }
 }
 
