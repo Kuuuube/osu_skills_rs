@@ -22,7 +22,7 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 - **Precision:** Accurate within <0.01% in all tested cases.
 
-- **Reaction:** Broken
+- **Reaction:** Accurate within <0.01% in all tested cases.
 
 - **Memory:** Accurate within <0.01% in all tested cases.
 
