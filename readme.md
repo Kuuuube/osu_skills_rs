@@ -16,15 +16,15 @@ Methods to process large amounts of maps will be added once adding accurate calc
 
 - **Tenacity:** Broken
 
-- **Agility:** Accurate within <1% in most cases. Up to 5% inaccuracy in some cases.
+- **Agility:** Accurate within <0.01% in all tested cases.
 
 - **Accuracy:** Accurate within <0.01% in all tested cases.
 
-- **Precision:** Accurate within <1% in most cases. Up to 5% inaccuracy in some cases. (Directly tied to Agility)
+- **Precision:** Accurate within <0.01% in all tested cases.
 
 - **Reaction:** Broken
 
-- **Memory:** Accurate within <1% in most cases. Up to 200% inaccuracy in some cases.
+- **Memory:** Accurate within <0.01% in all tested cases.
 
 ## Building
 
