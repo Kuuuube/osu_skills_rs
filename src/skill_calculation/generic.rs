@@ -268,8 +268,6 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         if i32::abs(beatmap.press_intervals[i] - old) > offset_max_displacement {
             if tmp.len() > 6 {
                 beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
-            } else if tmp.len() > 1 {
-                beatmap.bursts.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
             }
             tmp.clear();
         }
@@ -280,12 +278,9 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     if tmp.len() > 6 {
         beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]});
-    } else if tmp.len() > 1 {
-        beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]});
     }
 
     beatmap.streams.sort();
-    beatmap.bursts.sort();
 
     return beatmap;
 }
