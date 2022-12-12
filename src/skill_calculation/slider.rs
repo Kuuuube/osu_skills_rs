@@ -295,7 +295,7 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     circle.start = slider.xy;
     circle.mid = slider.slider_xy[0];
     circle.end = slider.slider_xy[1];
-    
+
     let mida: pair_structs::Pairf64 = pair_structs::mid_point(&circle.start, &circle.mid);
     let midb: pair_structs::Pairf64 = pair_structs::mid_point(&circle.end, &circle.mid);
     let nora = pair_structs::nor(&(circle.mid - circle.start));
@@ -365,8 +365,8 @@ fn circumscribed_circle_intersect(a: pair_structs::Pairf64, ta: pair_structs::Pa
     }
 
     let u: f64 = ((b.y - a.y) * ta.x + (a.x - b.x) * ta.y) / des;
-    let b_new = pair_structs::Pairf64{x: b.x + (tb.x * u), y: b.y + (tb.x * u)};
-    
+    let b_new = pair_structs::Pairf64{x: b.x + (tb.x * u), y: b.y + (tb.y * u)};
+
     return b_new;
 }
 
