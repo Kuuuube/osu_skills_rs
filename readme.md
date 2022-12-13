@@ -23,7 +23,7 @@ Optional:
 --mods=MODS                 integer sum of all mod values to apply
                             (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)
 
---is-dir=TYPE               set FILE to DIR or SUBDIR and parse all .osu files in 
+--is-dir=TYPE               set FILE to DIR or SUBDIR (recursive) and parse all .osu files in 
                             (DIR|SUBDIR)
 
 --output-type=TYPE          output stream and type

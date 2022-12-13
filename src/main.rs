@@ -25,7 +25,7 @@ fn main() {
         };
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
-            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir=TYPE               set FILE to DIR or SUBDIR and parse all .osu files in (DIR|SUBDIR)\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n"); return }
+            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir=TYPE               set FILE to DIR or SUBDIR (recursive) and parse all .osu files in (DIR|SUBDIR)\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n"); return }
             "--file" => { osu_filepath = safe_get_string(split, 1) },
             "--alg" => { alg = safe_get_string(split, 1) },
             "--mods" => { mod_int = safe_parse_i32(safe_get_string(split, 1)) },
