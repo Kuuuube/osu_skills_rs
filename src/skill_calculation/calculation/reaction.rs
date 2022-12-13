@@ -1,5 +1,5 @@
 use crate::structs;
-use crate::utils;
+use crate::skill_calculation::utils;
 use crate::pair_structs;
 
 fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity_start: f64, opacity_end: f64) -> pair_structs::Pairi64 {

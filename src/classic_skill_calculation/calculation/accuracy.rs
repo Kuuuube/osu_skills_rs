@@ -1,6 +1,6 @@
 use crate::algs::erf;
 use crate::structs;
-use crate::utils;
+use crate::classic_skill_calculation::utils;
 
 pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let mut circles: f64 = 0.0;

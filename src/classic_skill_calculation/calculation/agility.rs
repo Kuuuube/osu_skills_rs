@@ -1,5 +1,5 @@
 use crate::structs;
-use crate::utils;
+use crate::classic_skill_calculation::utils;
 
 pub fn calculate_agility(beatmap: &structs::Beatmap) -> f64 {
     let total_mult: f64 = 30.0; //this value comes from osu skills config file "TotalMult"

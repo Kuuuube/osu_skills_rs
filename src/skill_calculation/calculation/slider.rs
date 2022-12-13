@@ -1,5 +1,5 @@
 use crate::structs;
-use crate::utils;
+use crate::skill_calculation::utils;
 use crate::pair_structs;
 
 pub fn get_slider_pos(hit_object: &structs::HitObject, time: i32) -> pair_structs::Pairf64 {
