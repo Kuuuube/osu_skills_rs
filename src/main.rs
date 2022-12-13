@@ -45,7 +45,7 @@ fn main() {
 
     let mut files: Vec<std::path::PathBuf> = Default::default();
 
-    match &is_dir as &str {
+    match &is_dir.to_lowercase() as &str {
         "dir" => {
             let paths = match fs::read_dir(osu_filepath) {
                 Ok(ok) => ok,
