@@ -22,9 +22,11 @@ Optional:
 
 --mods=MODS                 integer sum of all mod values to apply
                             (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)
-```
 
-Methods to process large amounts of maps will be added soon.
+--is-dir                    set FILE to DIR and parse all .osu files in DIR
+
+--out=FILE                  output to FILE
+```
 
 ## Building
 
