@@ -214,7 +214,7 @@ fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
             beatmap.timing_points[i].beat_interval /= speed;
         }
 
-        beatmap.timing_points[i].offset = (f64::ceil(beatmap.timing_points[i].offset as f64 / speed)) as i32;
+        beatmap.timing_points[i].offset = f64::ceil(beatmap.timing_points[i].offset as f64 / speed);
         
         i += 1;
     }
@@ -235,13 +235,13 @@ fn binomial_coef(n: i64, k: i64) -> i64 {
         return 1;
     }
 
-    let k_mut = i64::min(k, n - k);
-    let mut c: i64 = 1;
-    let mut i: i64 = 0;
+    let k_mut = i128::min(k as i128, (n - k) as i128);
+    let mut c: i128 = 1;
+    let mut i: i128 = 0;
     while i < k_mut {
-        c = c * (n - i) / (i + 1);
-        
+        c = c * (n as i128 - i) / (i + 1);
+
         i += 1;
     }
-    return c;
+    return c as i64;
 }

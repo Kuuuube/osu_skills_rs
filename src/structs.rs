@@ -33,9 +33,9 @@ impl Default for Mods {
 
 #[derive(Default, Copy, Clone)]
 pub struct TimingPoint {
-    pub offset: i32,
+    pub offset: f64,
     pub beat_interval: f64,
-    pub meter: i32,
+    pub meter: f64,
     pub inherited: bool,
     pub sm: f64,
     pub bpm: f64

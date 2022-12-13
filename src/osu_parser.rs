@@ -132,29 +132,29 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
 
     match split.len() {
         2 => { /* osu file format v3 */
-            timing_point.offset = safe_parse_i32(split[0]);
+            timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
-            timing_point.meter = 4;
+            timing_point.meter = 4.0;
             beatmap.timing_points.push(timing_point);
         },
         5 => { /* osu file format v4 */
-            timing_point.offset = safe_parse_i32(split[0]);
+            timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
-            timing_point.meter = safe_parse_i32(split[2]);
+            timing_point.meter = safe_parse_f64(split[2]);
             beatmap.timing_points.push(timing_point);
         },
         7 => { /* osu file format v5 */
-            timing_point.offset = safe_parse_i32(split[0]);
+            timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
-            timing_point.meter = safe_parse_i32(split[2]);
-            timing_point.inherited = safe_parse_i32(split[6]) == 0;
+            timing_point.meter = safe_parse_f64(split[2]);
+            timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
             beatmap.timing_points.push(timing_point);
         },
         8 => { /* osu file format v6-14 */
-            timing_point.offset = safe_parse_i32(split[0]);
+            timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
-            timing_point.meter = safe_parse_i32(split[2]);
-            timing_point.inherited = safe_parse_i32(split[6]) == 0;
+            timing_point.meter = safe_parse_f64(split[2]);
+            timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
             beatmap.timing_points.push(timing_point);
         },
         _ => (),
