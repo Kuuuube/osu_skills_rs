@@ -13,7 +13,7 @@ fn main() {
     let mut osu_filepath: String = Default::default();
     let mut alg: String = Default::default();
     let mut mod_int: i32 = Default::default();
-    let mut is_dir: bool = false;
+    let mut is_dir: String = Default::default();
     let mut output_file_string: String = Default::default();
     let mut output_type: String = "stdout".to_string();
 
@@ -25,11 +25,11 @@ fn main() {
         };
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
-            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir                    set FILE to DIR and parse all .osu files in DIR\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n"); return }
+            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir=TYPE               set FILE to DIR or SUBDIR and parse all .osu files in (DIR|SUBDIR)\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n"); return }
             "--file" => { osu_filepath = safe_get_string(split, 1) },
             "--alg" => { alg = safe_get_string(split, 1) },
             "--mods" => { mod_int = safe_parse_i32(safe_get_string(split, 1)) },
-            "--is-dir" => { is_dir = true },
+            "--is-dir" => { is_dir = safe_get_string(split, 1) },
             "--out" => { output_file_string = safe_get_string(split, 1) },
             "--output-type" => { output_type = safe_get_string(split, 1) },
             _ => { print!("osu!Skills rs: unknown option {}\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n", split[0]); return }
@@ -44,17 +44,23 @@ fn main() {
     }
 
     let mut files: Vec<std::path::PathBuf> = Default::default();
-    if is_dir {
-        let paths = match fs::read_dir(osu_filepath) {
-            Ok(ok) => ok,
-            Err(_) => return
-        };
-        for path in paths {
-            files.push(path.unwrap().path());
-        }
-    } else {
-        files.push(std::path::Path::new(&osu_filepath).to_path_buf());
-    }
+
+    match &is_dir as &str {
+        "dir" => {
+            let paths = match fs::read_dir(osu_filepath) {
+                Ok(ok) => ok,
+                Err(_) => return
+            };
+            for path in paths {
+                let unwrapped_path = path.unwrap().path();
+                if fs::metadata(unwrapped_path.clone()).unwrap().is_file() {
+                    files.push(unwrapped_path);
+                }
+            }
+        },
+        "subdir" => {},
+        _ => files.push(std::path::Path::new(&osu_filepath).to_path_buf())
+    };
 
     match &output_type.to_lowercase() as &str {
         "stdout" => { output_stdout(mod_int, alg, files) },
@@ -71,12 +77,14 @@ fn output_stdout(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>) {
             _ => process_beatmap(osu_filepath, mod_int)
         };
 
-        let formatted_string: String = match &alg as &str {
-            "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
-        };
+        if beatmap.skills != structs::Beatmap::default().skills {
+            let formatted_string: String = match &alg as &str {
+                "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+            };
 
-        print!("{}", formatted_string);
+            print!("{}", formatted_string);
+        }
     }
 }
 
@@ -91,17 +99,18 @@ fn output_file_txt(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
             "classic" => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
+        if beatmap.skills != structs::Beatmap::default().skills {
+            let formatted_string: String = match &alg as &str {
+                "classic" => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+            };
 
-        let formatted_string: String = match &alg as &str {
-            "classic" => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
-        };
-
-        match output_file.write(formatted_string.as_bytes()) {
-            Ok(_) => (),
-            Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
-        };
-    };
+            match output_file.write(formatted_string.as_bytes()) {
+                Ok(_) => (),
+                Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
+            };
+        }
+    }
 }
 
 fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, output_file_string: String) {
@@ -125,13 +134,15 @@ fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
             "classic" => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
-        let formatted_string: String = format!("{},{},{},{},{},{},{},{},{},{}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
-        
-        match output_file.write(formatted_string.as_bytes()) {
-            Ok(_) => (),
-            Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
-        };
-    };
+        if beatmap.skills != structs::Beatmap::default().skills {
+            let formatted_string: String = format!("{},{},{},{},{},{},{},{},{},{}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+            
+            match output_file.write(formatted_string.as_bytes()) {
+                Ok(_) => (),
+                Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
+            };
+        }
+    }
 }
 
 fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
