@@ -17,18 +17,24 @@ fn main() {
         Some(some) => some,
         None => ""
     };
+
+    let mod_int: i32 = match args.get(3) {
+        Some(some) => safe_parse_i32(some),
+        None => 0
+    };
     
     let beatmap: structs::Beatmap = match process_alg {
-        "0" => process_beatmap(get_path),
-        "1" => classic_process_beatmap(get_path),
-        _ => process_beatmap(get_path)
+        "0" => process_beatmap(get_path, mod_int),
+        "1" => classic_process_beatmap(get_path, mod_int),
+        _ => process_beatmap(get_path, mod_int)
     };
 
     handle_results(beatmap);
 }
 
-fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
+fn process_beatmap(filepath_str: &str, mod_int: i32) -> structs::Beatmap {
     let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(filepath_str);
+    beatmap.mods = mod_int;
 
     if beatmap.hit_objects.len() >= 2 {
         beatmap = skill_calculation::utils::apply_mods(beatmap);
@@ -54,8 +60,9 @@ fn process_beatmap(filepath_str: &str) -> structs::Beatmap {
     return beatmap;
 }
 
-fn classic_process_beatmap(filepath_str: &str) -> structs::Beatmap {
+fn classic_process_beatmap(filepath_str: &str, mod_int: i32) -> structs::Beatmap {
     let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(filepath_str);
+    beatmap.mods = mod_int;
 
     if beatmap.hit_objects.len() >= 2 {
         beatmap = classic_skill_calculation::utils::apply_mods(beatmap);
@@ -84,4 +91,12 @@ fn classic_process_beatmap(filepath_str: &str) -> structs::Beatmap {
 
 fn handle_results(beatmap: structs::Beatmap) {
     println!("stamina: {}, tenacity: {}, agility: {}, accuracy: {}, precision: {}, reaction: {}, memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+}
+
+fn safe_parse_i32(input: &str) -> i32 {
+    let output = match input.parse::<i32>() {
+        Ok(ok) => ok,
+        Err(error) => { println!("Failed to parse mod arg. Error: {error}: `{input}`"); 0 }
+    };
+    return output;
 }
