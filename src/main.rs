@@ -8,26 +8,30 @@ mod osu_parser;
 fn main() {
     let args: Vec<String> = std::env::args().collect();
 
-    let get_path = match args.get(1) {
-        Some(some) => some,
-        None => { println!("Invalid .osu file path"); "" }
-    };
+    let mut filepath: String = Default::default();
+    let mut alg: String = Default::default();
+    let mut mod_int: i32 = Default::default();
+    let mut help: bool = false;
 
-    let process_alg = match args.get(2) {
-        Some(some) => some,
-        None => ""
-    };
+    for arg in args {
+        let split: Vec<&str> = arg.split("=").collect();
+        match &split[0].to_lowercase() as &str {
+            "--help" => { help = true; print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mod-int=MODS              sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)\n") }
+            "--file" => { filepath = split[1].to_string() },
+            "--alg" => { alg = split[1].to_string() },
+            "--mod-int" => { mod_int = safe_parse_i32(split[1]) },
+            _ => {}
+        }
+    }
 
-    let mod_int: i32 = match args.get(3) {
-        Some(some) => safe_parse_i32(some),
-        None => 0
-    };
-    
-    match process_alg {
-        "0" => results(process_beatmap(get_path, mod_int)),
-        "1" => classic_results(classic_process_beatmap(get_path, mod_int)),
-        _ => results(process_beatmap(get_path, mod_int))
-    };
+    if filepath.len() == 0 && !help {
+        print!("osu!Skills rs: missing .osu file path\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n")
+    } else if !help {
+        match &alg.to_lowercase() as &str {
+            "classic" => classic_results(classic_process_beatmap(&filepath, mod_int)),
+            _ => results(process_beatmap(&filepath, mod_int))
+        };
+    }
 }
 
 fn process_beatmap(filepath_str: &str, mod_int: i32) -> structs::Beatmap {
