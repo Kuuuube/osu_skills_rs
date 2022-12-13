@@ -21,7 +21,7 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     }
 
     let verscale: f64 = 0.3; //this value comes from osu skills config file "VerScale"
-    let accuracy: f64 = -verscale * circles * f64::ln(tapping);
+    let accuracy: f64 = f64::abs(verscale * circles * f64::ln(tapping));
 
     return accuracy;
 }
