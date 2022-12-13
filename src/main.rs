@@ -102,7 +102,7 @@ fn results(beatmap: structs::Beatmap) {
 fn safe_parse_i32(input: &str) -> i32 {
     let output = match input.parse::<i32>() {
         Ok(ok) => ok,
-        Err(error) => { println!("Failed to parse mod arg. Error: {error}: `{input}`"); 0 }
+        Err(error) => { print!("osu!Skills rs: failed to parse --mods. Error: {error}: `{input}`\n\n"); 0 }
     };
     return output;
 }
