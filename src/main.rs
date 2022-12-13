@@ -16,10 +16,10 @@ fn main() {
     for arg in args {
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
-            "--help" => { help = true; print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mod-int=MODS              sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)\n") }
+            "--help" => { help = true; print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)\n") }
             "--file" => { filepath = split[1].to_string() },
             "--alg" => { alg = split[1].to_string() },
-            "--mod-int" => { mod_int = safe_parse_i32(split[1]) },
+            "--mods" => { mod_int = safe_parse_i32(split[1]) },
             _ => {}
         }
     }
