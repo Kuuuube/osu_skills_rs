@@ -185,6 +185,8 @@ pub struct Beatmap {
     pub beatmap_id: String,
     pub beatmap_set_id: String,
 
+    pub beatmap_md5: String,
+
     pub hp: f64,
     pub cs: f64,
     pub od: f64,

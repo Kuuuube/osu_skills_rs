@@ -4,3 +4,7 @@
 
 pub mod erf;
 pub mod evaluate;
+
+//md5 code taken from https://github.com/stainless-steel/md5
+
+pub mod md5;

@@ -1,12 +1,17 @@
 use std::io::BufRead;
-use crate::{structs, pair_structs};
+use crate::{structs, pair_structs, algs::md5};
 
 pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
     let mut found: Found = Found::FoundNone;
     let mut is_header: bool;
     let mut beatmap_data: structs::Beatmap = Default::default();
-    
-    let file = match std::fs::File::open(file_path) {
+
+    beatmap_data.beatmap_md5 = match std::fs::read(&file_path) {
+        Ok(ok) => format!("{:x}", md5::compute(ok)),
+        Err(_) => "".to_string()
+    };
+
+    let file = match std::fs::File::open(&file_path) {
         Ok(x) => x,
         Err(_) => return beatmap_data
     };

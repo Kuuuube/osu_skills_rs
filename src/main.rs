@@ -72,8 +72,8 @@ fn output_stdout(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>) {
         };
 
         let formatted_string: String = match &alg as &str {
-            "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_set_id, beatmap.beatmap_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_set_id, beatmap.beatmap_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+            "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
         };
 
         print!("{}", formatted_string);
@@ -93,8 +93,8 @@ fn output_file_txt(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
         };
 
         let formatted_string: String = match &alg as &str {
-            "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_set_id, beatmap.beatmap_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_set_id, beatmap.beatmap_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+            "classic" => format!("BeatmapID: {}, BeatmapsetID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+            _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
         };
 
         match output_file.write(formatted_string.as_bytes()) {
@@ -111,8 +111,8 @@ fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
     };
 
     let header: &str = match &alg as &str {
-        "classic" => "BeatmapsetID,BeatmapID,Stamina,Tenacity,Agility,Accuracy,Precision,Reaction,Memory\n",
-        _ => "BeatmapsetID,BeatmapID,Stamina,Streams,Aim,Accuracy,Precision,Reaction,Flashlight\n"
+        "classic" => "BeatmapID,BeatmapsetID,Md5,Stamina,Tenacity,Agility,Accuracy,Precision,Reaction,Memory\n",
+        _ => "BeatmapID,BeatmapsetID,Md5,Stamina,Streams,Aim,Accuracy,Precision,Reaction,Flashlight\n"
     };
 
     match output_file.write(header.as_bytes()) {
@@ -125,7 +125,7 @@ fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
             "classic" => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
-        let formatted_string: String = format!("{},{},{},{},{},{},{},{},{}\n", beatmap.beatmap_set_id, beatmap.beatmap_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+        let formatted_string: String = format!("{},{},{},{},{},{},{},{},{},{}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
         
         match output_file.write(formatted_string.as_bytes()) {
             Ok(_) => (),
