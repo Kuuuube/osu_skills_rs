@@ -25,7 +25,11 @@ Optional:
 
 --is-dir                    set FILE to DIR and parse all .osu files in DIR
 
+--output-type=TYPE          output stream and type
+                            (stdout|file-txt|file-csv)
+
 --out=FILE                  output to FILE
+                            (output-type must be file-txt or file-csv)
 ```
 
 ## Building
