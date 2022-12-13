@@ -1,6 +1,6 @@
 use crate::pair_structs;
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Timing {
     pub time: i64,
     pub data: f64,
@@ -31,7 +31,7 @@ impl Default for Mods {
     fn default() -> Self {Mods::NM}
 }
 
-#[derive(Default, Copy, Clone)]
+#[derive(Default, Copy, Clone, PartialEq)]
 pub struct TimingPoint {
     pub offset: f64,
     pub beat_interval: f64,
@@ -60,7 +60,7 @@ impl Default for HitObjectType {
     fn default() -> Self {HitObjectType::None}
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum CurveType {
     None,
     PerfectCurve,
@@ -97,7 +97,7 @@ pub struct CircumscribedCircle {
     pub mid_ang: f64    
 }
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, PartialEq)]
 pub struct HitObject {
     pub pos: pair_structs::Pairf64,
     pub time: i64,
@@ -127,13 +127,13 @@ pub struct Slider {
     pub ncurve: i32
 }
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Burst {
     pub interval: i32,
     pub strain: f64
 }
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Stream {
     pub interval: i32,
     pub length: i32
@@ -152,13 +152,14 @@ impl Default for AimPointTypes {
     fn default() -> Self {AimPointTypes::AimPointNone}
 }
 
+#[derive(PartialEq)]
 pub struct AimPoint {
     pub time: i32,
     pub pos: pair_structs::Pairf64,
     pub aim_point_type: AimPointTypes
 }
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Skills {
     pub stamina: f64,
     pub tenacity: f64,
@@ -170,7 +171,7 @@ pub struct Skills {
     pub reaction: f64,
 }
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Beatmap {
     pub format: String,
 
