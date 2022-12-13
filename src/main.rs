@@ -29,7 +29,11 @@ fn main() {
         _ => process_beatmap(get_path, mod_int)
     };
 
-    handle_results(beatmap);
+    match process_alg {
+        "0" => results(beatmap),
+        "1" => classic_results(beatmap),
+        _ => results(beatmap)
+    };
 }
 
 fn process_beatmap(filepath_str: &str, mod_int: i32) -> structs::Beatmap {
@@ -89,8 +93,12 @@ fn classic_process_beatmap(filepath_str: &str, mod_int: i32) -> structs::Beatmap
 }
 
 
-fn handle_results(beatmap: structs::Beatmap) {
-    println!("stamina: {}, tenacity: {}, agility: {}, accuracy: {}, precision: {}, reaction: {}, memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+fn classic_results(beatmap: structs::Beatmap) {
+    println!("Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
+}
+
+fn results(beatmap: structs::Beatmap) {
+    println!("Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
 }
 
 fn safe_parse_i32(input: &str) -> i32 {
