@@ -10,12 +10,7 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
         }
     }
 
-    let mut od_ms: f64 = utils::od_to_ms(beatmap.od);
-    if utils::has_mod(&beatmap, structs::Mods::DT) {
-        od_ms /= 1.5;
-    } else if utils::has_mod(&beatmap, structs::Mods::HT) {
-        od_ms /= 0.75;
-    }
+    let od_ms: f64 = utils::od_to_ms(beatmap.od);
 
     let tapping: f64;
     let acc_scale: f64 = 0.01; //this value comes from osu skills config file "AccScale"
