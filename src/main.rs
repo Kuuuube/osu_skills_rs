@@ -58,7 +58,7 @@ fn main() {
                 }
             }
         },
-        "subdir" => {},
+        "subdir" => { print!("osu!Skills rs: subdir option currently unimplemented.\n"); return },
         _ => files.push(std::path::Path::new(&osu_filepath).to_path_buf())
     };
 
