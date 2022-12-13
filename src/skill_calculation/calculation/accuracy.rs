@@ -10,7 +10,7 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
         }
     }
 
-    let mut od_ms: f64 = utils::od_to_ms(beatmap.od as i32 as f64);
+    let mut od_ms: f64 = utils::od_to_ms(beatmap.od);
     if utils::has_mod(&beatmap, structs::Mods::DT) {
         od_ms /= 1.5;
     } else if utils::has_mod(&beatmap, structs::Mods::HT) {
