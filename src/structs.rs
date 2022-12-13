@@ -225,7 +225,7 @@ pub struct Beatmap {
 
     pub skills: Skills,
 
-    pub mods: Mods,
+    pub mods: i32,
     pub mods_string: String,
 
     pub compressed_stream: Vec<i32>,
