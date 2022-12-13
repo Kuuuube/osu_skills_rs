@@ -1,7 +1,7 @@
 use std::io::BufRead;
 use crate::{structs, pair_structs};
 
-pub fn parse_beatmap(file_path: &str) -> structs::Beatmap {
+pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
     let mut found: Found = Found::FoundNone;
     let mut is_header: bool;
     let mut beatmap_data: structs::Beatmap = Default::default();
