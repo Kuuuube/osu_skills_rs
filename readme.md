@@ -8,15 +8,15 @@ osu!Skills calculator rewritten in rust.
 osu_skills_rs.exe {.osu file path} {calculation alg} {mod int}
 ```
 
-- **Calculation Alg:**
+- **Calculation Alg:** (optional)
 
-    ` ` or `0`: Modified alg with various fixes.
+    `0`: Modified alg with various fixes.
 
     `1`: Classic alg accurate to <0.01% of the original osu!Skills calculator.
 
     The osu!Skills website cannot be matched to as the calculation code is not public.
 
-- **Mod Int:**
+- **Mod Int:** (optional)
 
     To get the desired mod int, add up the values for the mods you want to use. The following mods are supported:
 
