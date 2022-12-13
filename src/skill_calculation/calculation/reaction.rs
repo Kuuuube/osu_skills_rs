@@ -115,7 +115,7 @@ pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64{
     let weight: f64 = 0.7; //this value comes from osu skills config file "AvgWeighting"
 
     for tick in &beatmap.target_points {
-        let val: f64 = get_reaction_skill_at(&beatmap.target_points, &tick, &beatmap.hit_objects, beatmap.cs as i32 as f64, beatmap.ar, hidden);
+        let val: f64 = get_reaction_skill_at(&beatmap.target_points, &tick, &beatmap.hit_objects, beatmap.cs, beatmap.ar, hidden);
 
         if val > max {
             max = val;

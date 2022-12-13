@@ -62,14 +62,14 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             }
             if !utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(prev.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
+                help_pixels = (size * utils::cs_to_px(beatmap.cs) as f64) as i32;
             } else {
                 let observable_time: i64 = cur.time - (utils::ar_to_ms(beatmap.ar) * 0.3) as i64;
                 if prev.time > observable_time {
                     j -= 1;
                     continue;
                 }
-                help_pixels = utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
+                help_pixels = utils::cs_to_px(beatmap.cs) as i32;
             }
             if is_observable_from(cur, observable_dist + help_pixels, &prev.pos) {
                 observable = true;
@@ -81,9 +81,9 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         if !observable {
             if !utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(old.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
+                help_pixels = (size * utils::cs_to_px(beatmap.cs) as f64) as i32;
             } else {
-                help_pixels = utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
+                help_pixels = utils::cs_to_px(beatmap.cs) as i32;
             }
 
             if utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::NewCombo) || utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::ColourHax) {
