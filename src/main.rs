@@ -11,26 +11,37 @@ fn main() {
     let mut filepath: String = Default::default();
     let mut alg: String = Default::default();
     let mut mod_int: i32 = Default::default();
-    let mut help: bool = false;
 
-    for arg in args {
+    let mut help: bool = false;
+    let mut unknown: bool = false;
+
+    let mut i: usize = 1;
+    while i < args.len() {
+        let arg = match args.get(i) {
+            Some(some) => some,
+            None => ""
+        };
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
             "--help" => { help = true; print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)\n") }
             "--file" => { filepath = split[1].to_string() },
             "--alg" => { alg = split[1].to_string() },
             "--mods" => { mod_int = safe_parse_i32(split[1]) },
-            _ => {}
+            _ => { unknown = true; print!("osu!Skills rs: unknown option {}\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n", split[0]) }
         }
+
+        i += 1;
     }
 
-    if filepath.len() == 0 && !help {
-        print!("osu!Skills rs: missing .osu file path\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n")
-    } else if !help {
-        match &alg.to_lowercase() as &str {
-            "classic" => classic_results(classic_process_beatmap(&filepath, mod_int)),
-            _ => results(process_beatmap(&filepath, mod_int))
-        };
+    if !help && !unknown {
+        if filepath.len() == 0 {
+            print!("osu!Skills rs: missing .osu file path\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n")
+        } else {
+            match &alg.to_lowercase() as &str {
+                "classic" => classic_results(classic_process_beatmap(&filepath, mod_int)),
+                _ => results(process_beatmap(&filepath, mod_int))
+            };
+        }
     }
 }
 
