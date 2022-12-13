@@ -21,9 +21,9 @@ fn main() {
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
             "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (`classic` or `default`)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)\n"); return }
-            "--file" => { filepath = split[1].to_string() },
-            "--alg" => { alg = split[1].to_string() },
-            "--mods" => { mod_int = safe_parse_i32(split[1]) },
+            "--file" => { filepath = safe_get_string(split, 1) },
+            "--alg" => { alg = safe_get_string(split, 1) },
+            "--mods" => { mod_int = safe_parse_i32(safe_get_string(split, 1)) },
             _ => { print!("osu!Skills rs: unknown option {}\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n", split[0]); return }
         }
 
@@ -106,10 +106,18 @@ fn results(beatmap: structs::Beatmap) {
     println!("Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}", beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory);
 }
 
-fn safe_parse_i32(input: &str) -> i32 {
+fn safe_parse_i32(input: String) -> i32 {
     let output = match input.parse::<i32>() {
         Ok(ok) => ok,
         Err(error) => { print!("osu!Skills rs: failed to parse --mods. Error: {error}: `{input}`\n\n"); 0 }
+    };
+    return output;
+}
+
+fn safe_get_string(input: Vec<&str>, index: usize) -> String {
+    let output = match input.get(index) {
+        Some(some) => some.to_string(),
+        None => "".to_string()
     };
     return output;
 }
