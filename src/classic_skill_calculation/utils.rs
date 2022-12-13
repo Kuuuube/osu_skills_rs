@@ -82,6 +82,10 @@ pub fn get_value(min: f64, max: f64, percent: f64) -> f64 {
 }
 
 pub fn get_value_pos(list: &Vec<f64>, value: &f64, order: bool) -> usize {
+    if list.len() == 0 {
+        return usize::MAX;
+    }
+
     if order == false {
         let mut i: usize = list.len() - 1;
         while i >= 1 {

@@ -56,6 +56,10 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
     while i < beatmap.hit_objects.len() {
         if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
             let timing_point_index: usize = utils::get_value_pos(&timing_point_offsets, &(beatmap.hit_objects[i].time as f64), true);
+            if timing_point_index == usize::MAX {
+                i += 1;
+                continue;
+            }
 
             beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i32;
             beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32 + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat;
