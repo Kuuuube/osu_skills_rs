@@ -23,16 +23,10 @@ fn main() {
         None => 0
     };
     
-    let beatmap: structs::Beatmap = match process_alg {
-        "0" => process_beatmap(get_path, mod_int),
-        "1" => classic_process_beatmap(get_path, mod_int),
-        _ => process_beatmap(get_path, mod_int)
-    };
-
     match process_alg {
-        "0" => results(beatmap),
-        "1" => classic_results(beatmap),
-        _ => results(beatmap)
+        "0" => results(process_beatmap(get_path, mod_int)),
+        "1" => classic_results(classic_process_beatmap(get_path, mod_int)),
+        _ => results(process_beatmap(get_path, mod_int))
     };
 }
 
