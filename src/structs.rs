@@ -185,8 +185,6 @@ pub struct Beatmap {
     pub beatmap_id: String,
     pub beatmap_set_id: String,
 
-    pub name: String, //beatmap.artist + " - " + beatmap.title + " (" + beatmap.creator + ") [" + beatmap.version + "]"
-
     pub hp: f64,
     pub cs: f64,
     pub od: f64,
@@ -203,8 +201,6 @@ pub struct Beatmap {
 
     pub spinners: i32,
 
-    pub time_mapper: Vec<pair_structs::Pairi32>,
-
     pub velocities: Vec<pair_structs::Pairf64>,
     pub velocities_change: Vec<pair_structs::Pairf64>,
     pub distances: Vec<f64>,
@@ -218,15 +214,11 @@ pub struct Beatmap {
     pub press_intervals: Vec<i32>,
     pub tap_strains: Vec<f64>,
 
-    pub test: Vec<Vec<i32>>,
-
     pub streams: Vec<pair_structs::Pairi32VectorVectori32>,
-    pub bursts: Vec<pair_structs::Pairi32VectorVectori32>,
 
     pub skills: Skills,
 
     pub mods: i32,
-    pub mods_string: String,
 
     pub compressed_stream: Vec<i32>,
     pub stream: Vec<i32>,
