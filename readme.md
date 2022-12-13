@@ -17,7 +17,8 @@ Optional:
 ```
 --alg=ALG                   calculation alg to use (`classic` or `default`)
 
---mod-int=MODS              sum of all mod values to apply (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)
+--mod-int=MODS              sum of all mod values to apply
+                            (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)
 ```
 
 Methods to process large amounts of maps will be added soon.
