@@ -19,7 +19,10 @@ pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
     let reader = std::io::BufReader::new(file);
 
     for (_index, line) in reader.lines().enumerate() {
-        let line_unwrap = line.unwrap();
+        let line_unwrap = match line {
+            Ok(ok) => ok,
+            Err(error) => { print!("osu!Skills rs: failed to parse .osu file. Error: {}. Path: `{}`\n\n", error, file_path.display().to_string()); return beatmap_data }
+        };
         
         if beatmap_data.format == "" {
             beatmap_data.format = line_unwrap;
@@ -225,7 +228,7 @@ fn trim_str_vec(mut input: Vec<&str>) -> Vec<&str> {
 fn safe_parse_f64(input: &str) -> f64 {
     let output = match input.parse::<f64>() {
         Ok(ok) => ok,
-        Err(error) => { println!("Failed to parse f64 in .osu file. Error: {error}: `{input}`"); -1.0 }
+        Err(error) => { print!("osu!Skills rs: failed to parse f64 in .osu file. Error: {}: `{}`\n\n", error, input); -1.0 }
     };
     return output;
 }
@@ -233,7 +236,7 @@ fn safe_parse_f64(input: &str) -> f64 {
 fn safe_parse_i32(input: &str) -> i32 {
     let output = match input.parse::<i32>() {
         Ok(ok) => ok,
-        Err(error) => { println!("Failed to parse i32 in .osu file. Error: {error}: `{input}`"); -1 }
+        Err(error) => { print!("osu!Skills rs: failed to parse i32 in .osu file. Error: {}: `{}`\n\n", error, input); -1 }
     };
     return output;
 }
@@ -241,7 +244,7 @@ fn safe_parse_i32(input: &str) -> i32 {
 fn safe_parse_i64(input: &str) -> i64 {
     let output = match input.parse::<i64>() {
         Ok(ok) => ok,
-        Err(error) => { println!("Failed to parse i64 in .osu file. Error: {error}: `{input}`"); -1 }
+        Err(error) => { print!("osu!Skills rs: failed to parse i64 in .osu file. Error: {}: `{}`\n\n", error, input); -1 }
     };
     return output;
 }
