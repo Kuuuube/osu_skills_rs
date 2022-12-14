@@ -43,9 +43,9 @@ pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
 
         if !is_header {
             match found {
-                Found::FoundGeneral => {},
+                Found::FoundGeneral => {beatmap_data = general_parser(beatmap_data, line_unwrap)},
                 Found::FoundEditor => {},
-                Found::FoundMetadata => {beatmap_data = metadata_parser(beatmap_data, line_unwrap);},
+                Found::FoundMetadata => {beatmap_data = metadata_parser(beatmap_data, line_unwrap)},
                 Found::FoundDifficulty => {beatmap_data = difficulty_parser(beatmap_data, line_unwrap)},
                 Found::FoundEvents => {},
                 Found::FoundTimingPoints => {beatmap_data = timing_points_parser(beatmap_data, line_unwrap)},
@@ -57,6 +57,19 @@ pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
     }
 
     return beatmap_data;
+}
+
+fn general_parser(mut beatmap: structs::Beatmap, line: String) -> structs::Beatmap {
+    let split: Vec<&str> = trim_str_vec(line.split(":").collect());
+
+    if split.len() >= 2 {
+        match split[0] {
+            "Mode" => beatmap.mode = safe_parse_i32(split[1]),
+            _ => ()
+        }
+    }
+
+    return beatmap;
 }
 
 fn metadata_parser(mut beatmap: structs::Beatmap, line: String) -> structs::Beatmap {
@@ -150,6 +163,14 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
             timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
             timing_point.meter = safe_parse_f64(split[2]);
+
+            //fixes parsing for some aspire maps that can cause heavy lag and oom panics
+            if timing_point.inherited == true && beatmap.timing_points.len() == 0 {
+                let mut placeholder_time: structs::TimingPoint = Default::default();
+                placeholder_time.inherited = false;
+                beatmap.timing_points.push(placeholder_time);
+            }
+
             timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
             beatmap.timing_points.push(timing_point);
         },
@@ -158,6 +179,14 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
             timing_point.beat_interval = safe_parse_f64(split[1]);
             timing_point.meter = safe_parse_f64(split[2]);
             timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
+
+            //fixes parsing for some aspire maps that can cause heavy lag and oom panics
+            if timing_point.inherited == true && beatmap.timing_points.len() == 0 {
+                let mut placeholder_time: structs::TimingPoint = Default::default();
+                placeholder_time.inherited = false;
+                beatmap.timing_points.push(placeholder_time);
+            }
+
             beatmap.timing_points.push(timing_point);
         },
         _ => (),
@@ -191,8 +220,14 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
             },
             structs::HitObjectType::Slider => {
                 let slider_split: Vec<&str> = trim_str_vec(split[5].split("|").collect());
-                hit_object.curve_type = safe_parse_curve_type(slider_split[0]);
                 
+                //removes some types of aspire sliders and sliders with slidertick art that can cause heavy lag and oom panics
+                if slider_split.len() > 200 {
+                    return beatmap;
+                }
+
+                hit_object.curve_type = safe_parse_curve_type(slider_split[0]);
+
                 let mut i: usize = 1;
                 while i < slider_split.len() {
                     let curve_split: Vec<&str> = trim_str_vec(slider_split[i].split(":").collect());
@@ -203,6 +238,12 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
                 }
                 hit_object.repeat = safe_parse_i32(split[6]);
                 hit_object.pixel_length = safe_parse_f64(split[7]);
+
+                //removes some types of aspire sliders that have negative lengths that cause oom panics
+                if hit_object.pixel_length < 0.0 {
+                    return beatmap;
+                }
+
                 beatmap.hit_objects.push(hit_object);
             },
             structs::HitObjectType::Spinner => {

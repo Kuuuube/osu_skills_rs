@@ -149,7 +149,7 @@ fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::B
     let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath);
     beatmap.mods = mod_int;
 
-    if beatmap.hit_objects.len() >= 2 {
+    if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
         beatmap = skill_calculation::utils::apply_mods(beatmap);
 
         beatmap = skill_calculation::calculation::generic::prepare_timing_points(beatmap);
@@ -177,7 +177,7 @@ fn classic_process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> st
     let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath);
     beatmap.mods = mod_int;
 
-    if beatmap.hit_objects.len() >= 2 {
+    if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
         beatmap = classic_skill_calculation::utils::apply_mods(beatmap);
 
         beatmap = classic_skill_calculation::calculation::generic::prepare_timing_points(beatmap);

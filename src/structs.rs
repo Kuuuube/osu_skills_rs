@@ -183,6 +183,7 @@ pub struct Beatmap {
     pub version: String,
     pub source: String,
     pub tags: String,
+    pub mode: i32,
     pub beatmap_id: String,
     pub beatmap_set_id: String,
 
