@@ -45,6 +45,7 @@ fn main() {
 
     let mut files: Vec<std::path::PathBuf> = Default::default();
 
+    print!("Collecting filenames\n");
     match &is_dir.to_lowercase() as &str {
         "dir" => {
             let paths = match fs::read_dir(osu_filepath) {
@@ -62,6 +63,7 @@ fn main() {
         _ => files.push(std::path::Path::new(&osu_filepath).to_path_buf())
     };
 
+    print!("Starting calculation\n");
     match &output_type.to_lowercase() as &str {
         "stdout" => { output_stdout(mod_int, alg, files) },
         "file-txt" => { output_file_txt(mod_int, alg, files, output_file_string) },
