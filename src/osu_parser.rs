@@ -166,8 +166,7 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
 
             //fixes parsing for some aspire maps that can cause heavy lag and oom panics
             if timing_point.inherited == true && beatmap.timing_points.len() == 0 {
-                let mut placeholder_time: structs::TimingPoint = Default::default();
-                placeholder_time.inherited = false;
+                let placeholder_time: structs::TimingPoint = Default::default();
                 beatmap.timing_points.push(placeholder_time);
             }
 
@@ -182,8 +181,7 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
 
             //fixes parsing for some aspire maps that can cause heavy lag and oom panics
             if timing_point.inherited == true && beatmap.timing_points.len() == 0 {
-                let mut placeholder_time: structs::TimingPoint = Default::default();
-                placeholder_time.inherited = false;
+                let placeholder_time: structs::TimingPoint = Default::default();
                 beatmap.timing_points.push(placeholder_time);
             }
 
@@ -271,6 +269,10 @@ fn safe_parse_f64(input: &str) -> f64 {
         Ok(ok) => ok,
         Err(error) => { print!("osu!Skills rs: failed to parse f64 in .osu file. Error: {}: `{}`\n\n", error, input); -1.0 }
     };
+    //simple hack to stop aspire maps from causing overflows
+    if output > f32::MAX as f64 || output < f32::MIN as f64 {
+        return 0.0;
+    }
     return output;
 }
 
@@ -279,6 +281,10 @@ fn safe_parse_i32(input: &str) -> i32 {
         Ok(ok) => ok,
         Err(error) => { print!("osu!Skills rs: failed to parse i32 in .osu file. Error: {}: `{}`\n\n", error, input); -1 }
     };
+    //simple hack to stop aspire maps from causing overflows
+    if output > i16::MAX as i32 || output < i16::MIN as i32 {
+        return 0;
+    }
     return output;
 }
 
@@ -287,6 +293,10 @@ fn safe_parse_i64(input: &str) -> i64 {
         Ok(ok) => ok,
         Err(error) => { print!("osu!Skills rs: failed to parse i64 in .osu file. Error: {}: `{}`\n\n", error, input); -1 }
     };
+    //simple hack to stop aspire maps from causing overflows
+    if output > i32::MAX as i64 || output < i32::MIN as i64 {
+        return 0;
+    }
     return output;
 }
 
