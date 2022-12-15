@@ -1,4 +1,5 @@
 use std::{fs, io::Write};
+use std::panic;
 
 mod algs;
 mod classic_skill_calculation;
@@ -8,6 +9,10 @@ mod pair_structs;
 mod osu_parser;
 
 fn main() {
+    panic::set_hook(Box::new(|_info| {
+        print!("{_info}\n")
+    }));
+
     let args: Vec<String> = std::env::args().collect();
 
     let mut osu_filepath: String = Default::default();
@@ -181,59 +186,73 @@ fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, ou
 }
 
 fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
-    let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath);
-    beatmap.mods = mod_int;
+    let result = panic::catch_unwind(|| {
+        let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
+        beatmap.mods = mod_int;
 
-    if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
-        beatmap = skill_calculation::utils::apply_mods(beatmap);
+        if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
+            beatmap = skill_calculation::utils::apply_mods(beatmap);
 
-        beatmap = skill_calculation::calculation::generic::prepare_timing_points(beatmap);
-        beatmap = skill_calculation::calculation::slider::approximate_slider_points(beatmap);
-        beatmap = skill_calculation::calculation::generic::bake_slider_data(beatmap);
+            beatmap = skill_calculation::calculation::generic::prepare_timing_points(beatmap);
+            beatmap = skill_calculation::calculation::slider::approximate_slider_points(beatmap);
+            beatmap = skill_calculation::calculation::generic::bake_slider_data(beatmap);
 
-        beatmap = skill_calculation::calculation::generic::prepare_aim_data(beatmap);
-        beatmap = skill_calculation::calculation::generic::prepare_tap_data(beatmap);
+            beatmap = skill_calculation::calculation::generic::prepare_aim_data(beatmap);
+            beatmap = skill_calculation::calculation::generic::prepare_tap_data(beatmap);
 
-        beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
-        beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
+            beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
+            beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
 
-        beatmap.skills.reaction = skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
-        beatmap.skills.stamina = skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
-        beatmap.skills.tenacity = skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
-        beatmap.skills.agility = skill_calculation::calculation::agility::calculate_agility(&beatmap);
-        beatmap.skills.precision = skill_calculation::calculation::precision::calculate_precision(&beatmap);
-        beatmap.skills.accuracy = skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
-        beatmap.skills.memory = skill_calculation::calculation::memory::calculate_memory(&beatmap);
+            beatmap.skills.reaction = skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
+            beatmap.skills.stamina = skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
+            beatmap.skills.tenacity = skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
+            beatmap.skills.agility = skill_calculation::calculation::agility::calculate_agility(&beatmap);
+            beatmap.skills.precision = skill_calculation::calculation::precision::calculate_precision(&beatmap);
+            beatmap.skills.accuracy = skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
+            beatmap.skills.memory = skill_calculation::calculation::memory::calculate_memory(&beatmap);
+        }
+        return beatmap;
+    });
+
+    match result {
+        Ok(ok) => return ok,
+        Err(_) => { print!("osu!Skills rs: failed to process map `{}`\n", osu_filepath.display().to_string()); return structs::Beatmap::default()}
     }
-    return beatmap;
 }
 
 fn classic_process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
-    let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath);
-    beatmap.mods = mod_int;
+    let result = panic::catch_unwind(|| {
+        let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
+        beatmap.mods = mod_int;
 
-    if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
-        beatmap = classic_skill_calculation::utils::apply_mods(beatmap);
+        if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
+            beatmap = classic_skill_calculation::utils::apply_mods(beatmap);
 
-        beatmap = classic_skill_calculation::calculation::generic::prepare_timing_points(beatmap);
-        beatmap = classic_skill_calculation::calculation::slider::approximate_slider_points(beatmap);
-        beatmap = classic_skill_calculation::calculation::generic::bake_slider_data(beatmap);
+            beatmap = classic_skill_calculation::calculation::generic::prepare_timing_points(beatmap);
+            beatmap = classic_skill_calculation::calculation::slider::approximate_slider_points(beatmap);
+            beatmap = classic_skill_calculation::calculation::generic::bake_slider_data(beatmap);
 
-        beatmap = classic_skill_calculation::calculation::generic::prepare_aim_data(beatmap);
-        beatmap = classic_skill_calculation::calculation::generic::prepare_tap_data(beatmap);
+            beatmap = classic_skill_calculation::calculation::generic::prepare_aim_data(beatmap);
+            beatmap = classic_skill_calculation::calculation::generic::prepare_tap_data(beatmap);
 
-        beatmap = classic_skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
-        beatmap = classic_skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
+            beatmap = classic_skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
+            beatmap = classic_skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
 
-        beatmap.skills.reaction = classic_skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
-        beatmap.skills.stamina = classic_skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
-        beatmap.skills.tenacity = classic_skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
-        beatmap.skills.agility = classic_skill_calculation::calculation::agility::calculate_agility(&beatmap);
-        beatmap.skills.precision = classic_skill_calculation::calculation::precision::calculate_precision(&beatmap);
-        beatmap.skills.accuracy = classic_skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
-        beatmap.skills.memory = classic_skill_calculation::calculation::memory::calculate_memory(&beatmap);
+            beatmap.skills.reaction = classic_skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
+            beatmap.skills.stamina = classic_skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
+            beatmap.skills.tenacity = classic_skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
+            beatmap.skills.agility = classic_skill_calculation::calculation::agility::calculate_agility(&beatmap);
+            beatmap.skills.precision = classic_skill_calculation::calculation::precision::calculate_precision(&beatmap);
+            beatmap.skills.accuracy = classic_skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
+            beatmap.skills.memory = classic_skill_calculation::calculation::memory::calculate_memory(&beatmap);
+        }
+        return beatmap;
+    });
+
+    match result {
+        Ok(ok) => return ok,
+        Err(_) => { print!("osu!Skills rs: failed to process .osu file. Path: `{}`\n", osu_filepath.display().to_string()); return structs::Beatmap::default()}
     }
-    return beatmap;
 }
 
 fn safe_parse_i32(input: String) -> i32 {
