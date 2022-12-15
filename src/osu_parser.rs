@@ -6,10 +6,19 @@ pub fn parse_beatmap(file_path: std::path::PathBuf) -> structs::Beatmap {
     let mut is_header: bool;
     let mut beatmap_data: structs::Beatmap = Default::default();
 
-    beatmap_data.beatmap_md5 = match std::fs::read(&file_path) {
-        Ok(ok) => format!("{:x}", md5::compute(ok)),
-        Err(_) => "".to_string()
+    let file_data: Vec<u8> = match std::fs::read(&file_path) {
+        Ok(ok) => ok,
+        Err(_) => vec![]
     };
+
+    if file_data.len() >= 3 {
+        let magic_number = file_data[0..3].to_vec();
+        if magic_number != vec![0xEF, 0xBB, 0xBF] /* UTF-8 */ && magic_number != vec![0x6F, 0x73, 0x75] /* osu */ {
+            return beatmap_data;
+        }
+    }
+
+    beatmap_data.beatmap_md5 = format!("{:x}", md5::compute(file_data));
 
     let file = match std::fs::File::open(&file_path) {
         Ok(x) => x,
