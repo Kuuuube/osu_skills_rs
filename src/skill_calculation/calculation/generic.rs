@@ -93,11 +93,11 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     for hit_obj in &beatmap.hit_objects {
         if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
-            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time as i32, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointCircle });
+            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointCircle });
         } else if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
-            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time as i32, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointSlider });
+            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointSlider });
 
-            let end_time: i32 = utils::get_last_tick_time(hit_obj);
+            let end_time: i64 = utils::get_last_tick_time(hit_obj);
             let end_pos: pair_structs::Pairf64 = skill_calculation::calculation::slider::get_slider_pos(hit_obj, end_time);
 
             if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs) as f64 {

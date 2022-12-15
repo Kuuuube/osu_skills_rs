@@ -69,7 +69,7 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
 
         if i != 0 {
             let distance: f64 = get_weighted_aim_distance(pair_structs::get_distance_from(&beatmap.aim_points[i].pos, &beatmap.aim_points[i - 1].pos));
-            let interval: i32 = beatmap.aim_points[i].time - beatmap.aim_points[i - 1].time;
+            let interval: i64 = beatmap.aim_points[i].time - beatmap.aim_points[i - 1].time;
             let time: f64 = get_weighted_aim_time(interval as f64);
             let mut angle_bonus: f64 = 1.0;
 

@@ -148,23 +148,23 @@ pub fn lerp(a: f64, b: f64, t: f64) -> f64 {
     return a * (1.0 - t) + b * t;
 }
 
-pub fn get_last_tick_time(hit_obj: &structs::HitObject) -> i32 {
+pub fn get_last_tick_time(hit_obj: &structs::HitObject) -> i64 {
     if hit_obj.ticks.len() == 0 {
         if hit_obj.repeat > 1 {
-            let last_in_vec: i32 = match hit_obj.repeat_times.last() {
+            let last_in_vec: i64 = match hit_obj.repeat_times.last() {
                 Some(some) => *some,
                 None => Default::default()
             };
-            return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec) as f64 / 2.0) as i32;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0) as i64;
         } else {
-            return (hit_obj.end_time as f64 - (hit_obj.end_time - hit_obj.time as i32) as f64 / 2.0) as i32;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - hit_obj.time as i64) as f64 / 2.0) as i64;
         }
     } else {
-        let last_in_vec: i32 = match hit_obj.ticks.last() {
+        let last_in_vec: i64 = match hit_obj.ticks.last() {
             Some(some) => *some,
             None => Default::default()
         };
-        return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec) as f64 / 2.0) as i32;
+        return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0) as i64;
     }
 }
 

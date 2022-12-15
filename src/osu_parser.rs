@@ -209,7 +209,7 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
         hit_object.pos.y = safe_parse_f64(split[1]);
         hit_object.time = safe_parse_i64(split[2]);
         hit_object.hit_object_type = safe_parse_i32(split[3]);
-        hit_object.end_time = hit_object.time as i32;
+        hit_object.end_time = hit_object.time;
 
         let match_hit_object_type = hit_object_type_checker(hit_object.hit_object_type);
 

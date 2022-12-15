@@ -2,7 +2,7 @@ use crate::structs;
 use crate::classic_skill_calculation::utils;
 use crate::pair_structs;
 
-pub fn get_slider_pos(hit_object: &structs::HitObject, time: i32) -> pair_structs::Pairf64 {
+pub fn get_slider_pos(hit_object: &structs::HitObject, time: i64) -> pair_structs::Pairf64 {
     if utils::is_hit_object_type(&hit_object.hit_object_type, structs::HitObjectType::Slider) {
         let mut percent: f64;
         if time as i64 <= hit_object.time {
@@ -10,8 +10,8 @@ pub fn get_slider_pos(hit_object: &structs::HitObject, time: i32) -> pair_struct
         } else if time > hit_object.end_time {
             percent = 1.0;
         } else {
-            let time_length: i32 = time - hit_object.time as i32;
-            let repeats_done: i32 = time_length / hit_object.to_repeat_time;
+            let time_length: i64 = time - hit_object.time;
+            let repeats_done: i64 = time_length / hit_object.to_repeat_time;
             percent = (time_length - hit_object.to_repeat_time * repeats_done) as f64 / hit_object.to_repeat_time as f64;
             if repeats_done % 2 != 0 {
                 percent = 1.0 - percent;
@@ -61,11 +61,11 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 continue;
             }
 
-            beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i32;
-            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32 + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat;
+            beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i64;
+            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
 
             if beatmap.hit_objects[i].repeat > 1 {
-                let mut j: i32 = beatmap.hit_objects[i].time as i32;
+                let mut j: i64 = beatmap.hit_objects[i].time;
                 while j < beatmap.hit_objects[i].end_time {
                     if j > beatmap.hit_objects[i].end_time {
                         break;
@@ -81,7 +81,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
             let mut j: i32 = 1;
 
             let mut k: usize = (beatmap.hit_objects[i].time + tick_interval as i64) as usize;
-            while k < (beatmap.hit_objects[i].end_time - err_interval) as usize {
+            while k < (beatmap.hit_objects[i].end_time - err_interval as i64) as usize {
                 if k > beatmap.hit_objects[i].end_time as usize {
                     break;
                 }
@@ -91,7 +91,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                     break;
                 }
 
-                beatmap.hit_objects[i].ticks.push(tick_time as i32);
+                beatmap.hit_objects[i].ticks.push(tick_time);
 
                 k += tick_interval as usize;
                 j += 1;
@@ -103,8 +103,8 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 hit_object_new.pos = beatmap.hit_objects[i].pos;
                 hit_object_new.hit_object_type = beatmap.hit_objects[i].hit_object_type;
                 hit_object_new.time = beatmap.hit_objects[i].time;
-                hit_object_new.end_time = beatmap.hit_objects[i].time as i32 + 101;
-                hit_object_new.to_repeat_time = beatmap.hit_objects[i].time as i32 + 101;
+                hit_object_new.end_time = beatmap.hit_objects[i].time + 101;
+                hit_object_new.to_repeat_time = beatmap.hit_objects[i].time + 101;
                 hit_object_new.repeat = 1;
                 hit_object_new.pixel_length = 100.0;
                 hit_object_new.curve_type = structs::CurveType::LinearCurve;
@@ -114,7 +114,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 beatmap.hit_objects[i] = combine_slider_hit_object(hit_object_new, slider);
             }
         } else {
-            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time as i32;
+            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time;
         }
         i += 1;
     }

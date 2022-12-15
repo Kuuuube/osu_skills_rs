@@ -108,12 +108,12 @@ pub struct HitObject {
     pub lerp_points: Vec<pair_structs::Pairf64>,
     pub ncurve: i32,
     pub repeat: i32,
-    pub repeat_times: Vec<i32>,
+    pub repeat_times: Vec<i64>,
     pub pixel_length: f64,
-    pub end_time: i32,
-    pub to_repeat_time: i32,
+    pub end_time: i64,
+    pub to_repeat_time: i64,
     pub end_point: pair_structs::Pairf64,
-    pub ticks: Vec<i32>
+    pub ticks: Vec<i64>
 }
 
 #[derive(Default)]
@@ -154,7 +154,7 @@ impl Default for AimPointTypes {
 
 #[derive(PartialEq)]
 pub struct AimPoint {
-    pub time: i32,
+    pub time: i64,
     pub pos: pair_structs::Pairf64,
     pub aim_point_type: AimPointTypes
 }
