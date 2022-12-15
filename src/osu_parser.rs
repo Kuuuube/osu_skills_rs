@@ -243,8 +243,16 @@ fn hit_objects_parser(mut beatmap: structs::Beatmap, line: String) -> structs::B
 
                     i += 1;
                 }
+
+                //removes some types of aspire sliders that can cause heavy lag and oom panics
                 hit_object.repeat = safe_parse_i32(split[6]);
+                if hit_object.repeat > 1000 {
+                    return beatmap;
+                }
                 hit_object.pixel_length = safe_parse_f64(split[7]);
+                if hit_object.pixel_length > 1000.0 {
+                    return beatmap;
+                }
 
                 //removes some types of aspire sliders that have negative lengths that cause oom panics
                 if hit_object.pixel_length < 0.0 {
