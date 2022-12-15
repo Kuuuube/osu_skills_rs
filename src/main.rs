@@ -59,7 +59,38 @@ fn main() {
                 }
             }
         },
-        "subdir" => { print!("osu!Skills rs: subdir option currently unimplemented.\n"); return },
+        "subdir" => {
+            let mut dirs: Vec<std::path::PathBuf> = Default::default();
+            let paths = match fs::read_dir(osu_filepath) {
+                Ok(ok) => ok,
+                Err(_) => return
+            };
+            for path in paths {
+                let unwrapped_path = path.unwrap().path();
+                if fs::metadata(unwrapped_path.clone()).unwrap().is_file() {
+                    files.push(unwrapped_path);
+                } else if fs::metadata(unwrapped_path.clone()).unwrap().is_dir() {
+                    dirs.push(unwrapped_path);
+                }
+            }
+            let mut i: usize = 0;
+            while i < dirs.len() {
+                let rec_paths = match fs::read_dir(dirs[i].clone()) {
+                    Ok(ok) => ok,
+                    Err(_) => return
+                };
+
+                for rec_path in rec_paths {
+                    let unwrapped_rec_path = rec_path.unwrap().path();
+                    if fs::metadata(unwrapped_rec_path.clone()).unwrap().is_file() {
+                        files.push(unwrapped_rec_path);
+                    } else if fs::metadata(unwrapped_rec_path.clone()).unwrap().is_dir() {
+                        dirs.push(unwrapped_rec_path);
+                    }
+                }
+                i += 1;
+            }
+        },
         _ => files.push(std::path::Path::new(&osu_filepath).to_path_buf())
     };
 
