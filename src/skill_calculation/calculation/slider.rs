@@ -87,7 +87,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 }
 
                 let tick_time: i64 = beatmap.hit_objects[i].time + tick_interval * j;
-                if tick_time < 0 {
+                if tick_time < 0 || tick_interval < 10 {
                     break;
                 }
 
