@@ -76,11 +76,7 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
             if beatmap.hit_objects[i].repeat > 1 {
                 let mut j: i64 = beatmap.hit_objects[i].time;
                 while j < beatmap.hit_objects[i].end_time {
-                    if j > beatmap.hit_objects[i].end_time {
-                        break;
-                    }
                     beatmap.hit_objects[i].repeat_times.push(j);
-
                     j += beatmap.hit_objects[i].to_repeat_time;
                 }
             }
@@ -91,10 +87,6 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
 
             let mut k: usize = (beatmap.hit_objects[i].time + tick_interval) as usize;
             while k < (beatmap.hit_objects[i].end_time - err_interval) as usize {
-                if k > beatmap.hit_objects[i].end_time as usize {
-                    break;
-                }
-
                 let tick_time: i64 = beatmap.hit_objects[i].time + tick_interval * j;
                 if tick_time < 0 || tick_interval < 10 {
                     break;
