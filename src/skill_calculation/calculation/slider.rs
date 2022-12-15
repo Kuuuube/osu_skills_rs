@@ -62,7 +62,16 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
             }
 
             beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i64;
-            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
+
+            //stop some aspire maps from causing ooms by catching overflows, unnested operation in the below comment
+            //beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
+            beatmap.hit_objects[i].end_time = match beatmap.hit_objects[i].to_repeat_time.checked_mul(beatmap.hit_objects[i].repeat as i64) {
+                Some(some) => match beatmap.hit_objects[i].time.checked_add(some) {
+                    Some(some) => some,
+                    None => panic!("slider overflow detected, aborting calculation")
+                },
+                None => panic!("slider overflow detected, aborting calculation")
+            };
 
             if beatmap.hit_objects[i].repeat > 1 {
                 let mut j: i64 = beatmap.hit_objects[i].time;
