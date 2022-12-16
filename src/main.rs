@@ -103,6 +103,12 @@ fn main() {
                 for rec_path in rec_paths {
                     let unwrapped_rec_path = rec_path.unwrap().path();
                     if fs::metadata(unwrapped_rec_path.clone()).unwrap().is_file() {
+                        let path_as_string = unwrapped_rec_path.to_string_lossy().to_string();
+                        if !no_ext && path_as_string.len() > 3 {
+                            if path_as_string.split(".").last().unwrap().to_lowercase() != "osu".to_string() {
+                                continue;
+                            }
+                        }
                         files.push(unwrapped_rec_path);
                     } else if fs::metadata(unwrapped_rec_path.clone()).unwrap().is_dir() {
                         dirs.push(unwrapped_rec_path);
