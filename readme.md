@@ -18,7 +18,7 @@ Optional:
 
 ```
 --alg=ALG                   calculation alg to use 
-                            (`classic` or `default`)
+                            (classic|default)
 
 --mods=MODS                 integer sum of all mod values to apply
                             (`2`: EZ, `8`: HD, `16`: HR, `64`: DT, `256`: HT)
