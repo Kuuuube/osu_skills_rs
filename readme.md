@@ -31,6 +31,8 @@ Optional:
 
 --out=FILE                  output to FILE
                             (output-type must be file-txt or file-csv)
+
+--no-ext                    removes file extension check for .osu files
 ```
 
 ## Building
