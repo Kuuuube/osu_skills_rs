@@ -62,7 +62,16 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
             }
 
             beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i64;
-            beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
+
+            //stop some aspire maps from causing ooms by catching overflows, unnested operation in the below comment
+            //beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
+            beatmap.hit_objects[i].end_time = match beatmap.hit_objects[i].to_repeat_time.checked_mul(beatmap.hit_objects[i].repeat as i64) {
+                Some(some) => match beatmap.hit_objects[i].time.checked_add(some) {
+                    Some(some) => some,
+                    None => panic!("slider overflow detected, aborting calculation")
+                },
+                None => panic!("slider overflow detected, aborting calculation")
+            };
 
             if beatmap.hit_objects[i].repeat > 1 {
                 let mut j: i64 = beatmap.hit_objects[i].time;
@@ -76,18 +85,18 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 }
             }
 
-            let tick_interval: i32 = (beat_lengths[timing_point_index] / beatmap.st) as i32;
-            let err_interval: i32 = 10;
-            let mut j: i32 = 1;
+            let tick_interval: i64 = (beat_lengths[timing_point_index] / beatmap.st) as i64;
+            let err_interval: i64 = 10;
+            let mut j: i64 = 1;
 
-            let mut k: usize = (beatmap.hit_objects[i].time + tick_interval as i64) as usize;
-            while k < (beatmap.hit_objects[i].end_time - err_interval as i64) as usize {
+            let mut k: usize = (beatmap.hit_objects[i].time + tick_interval) as usize;
+            while k < (beatmap.hit_objects[i].end_time - err_interval) as usize {
                 if k > beatmap.hit_objects[i].end_time as usize {
                     break;
                 }
 
-                let tick_time: i64 = beatmap.hit_objects[i].time + (tick_interval * j) as i64;
-                if tick_time < 0 {
+                let tick_time: i64 = beatmap.hit_objects[i].time + (tick_interval * j);
+                if tick_time < 0 || tick_interval < 10 {
                     break;
                 }
 
