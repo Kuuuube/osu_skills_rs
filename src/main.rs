@@ -22,6 +22,7 @@ fn main() {
     let mut is_dir: String = Default::default();
     let mut output_file_string: String = Default::default();
     let mut output_type: String = "stdout".to_string();
+    let mut no_ext: bool = false;
 
     let mut i: usize = 1;
     while i < args.len() {
@@ -31,13 +32,14 @@ fn main() {
         };
         let split: Vec<&str> = arg.split("=").collect();
         match &split[0].to_lowercase() as &str {
-            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (classic|default)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir=TYPE               set FILE to DIR or SUBDIR (recursive) and parse all .osu files in (DIR|SUBDIR)\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n"); return }
+            "--help" => { print!("osu!Skills rs\nUsage: osu_skills_rs [OPTION]...\n\nMandatory:\n     --file=FILE                 path to .osu file to parse\n\nOptional:\n     --alg=ALG                   calculation alg to use (classic|default)\n     --mods=MODS                 integer sum of all mod values to apply (`2`: EZ|`8`: HD|`16`: HR|`64`: DT|`256`: HT)\n     --is-dir=TYPE               set FILE to DIR or SUBDIR (recursive) and parse all .osu files in (DIR|SUBDIR)\n     --output-type=TYPE          output stream and type (stdout|file-txt|file-csv)\n     --out=FILE                  set output FILE (output-type must be file-txt or file-csv)\n     --no-ext                    removes file extension check for .osu files\n"); return }
             "--file" => { osu_filepath = safe_get_string(split, 1) },
             "--alg" => { alg = safe_get_string(split, 1) },
             "--mods" => { mod_int = safe_parse_i32(safe_get_string(split, 1)) },
             "--is-dir" => { is_dir = safe_get_string(split, 1) },
             "--out" => { output_file_string = safe_get_string(split, 1) },
             "--output-type" => { output_type = safe_get_string(split, 1) },
+            "--no-ext" => { no_ext = true },
             _ => { print!("osu!Skills rs: unknown option {}\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n", split[0]); return }
         }
 
@@ -60,6 +62,12 @@ fn main() {
             };
             for path in paths {
                 let unwrapped_path = path.unwrap().path();
+                let path_as_string = unwrapped_path.to_string_lossy().to_string();
+                if !no_ext && path_as_string.len() > 3 {
+                    if path_as_string.split(".").last().unwrap().to_lowercase() != "osu".to_string() {
+                        continue;
+                    }
+                }
                 if fs::metadata(unwrapped_path.clone()).unwrap().is_file() {
                     files.push(unwrapped_path);
                 }
@@ -74,6 +82,12 @@ fn main() {
             for path in paths {
                 let unwrapped_path = path.unwrap().path();
                 if fs::metadata(unwrapped_path.clone()).unwrap().is_file() {
+                    let path_as_string = unwrapped_path.to_string_lossy().to_string();
+                    if !no_ext && path_as_string.len() > 3 {
+                        if path_as_string.split(".").last().unwrap().to_lowercase() != "osu".to_string() {
+                            continue;
+                        }
+                    }
                     files.push(unwrapped_path);
                 } else if fs::metadata(unwrapped_path.clone()).unwrap().is_dir() {
                     dirs.push(unwrapped_path);
