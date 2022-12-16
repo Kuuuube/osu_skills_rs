@@ -100,6 +100,11 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                     break;
                 }
 
+                //removes some types of aspire sliders that have infinite sliderticks that cause oom panics
+                if j > 1000 {
+                    break;
+                }
+
                 beatmap.hit_objects[i].ticks.push(tick_time);
 
                 k += tick_interval as usize;
