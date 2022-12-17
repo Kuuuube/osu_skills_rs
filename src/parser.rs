@@ -53,7 +53,7 @@ fn write_collectionconverter_csv(collections: Vec<Collection>, output_filepath: 
             }
 
         for beatmap in collection.beatmap_data {
-            let formatted_string: String = format!("{},{},{},{},{},{},{},{},{},{},{}\n", name, beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version, -1);
+            let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", name, beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version, -1);
             match output_file.write(formatted_string.as_bytes()) {
                 Ok(_) => (),
                 Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
@@ -82,13 +82,13 @@ fn read_arg(arg: String) -> Vec<Collection> {
         
         for arg_type in args_per_type {
             let args_per_value: Vec<&str> = arg_type.split(":").collect();
-            let value_1: String = safe_get_string(&args_per_value, 1);
+            let value_1: String = safe_get_slice(&args_per_value, 1);
             let split_min_max: Vec<&str> = value_1.split("-").collect();
             match &args_per_value[0].to_lowercase() as &str {
-                "name" => { collections[i].collection_name = safe_get_string(&args_per_value, 1) },
+                "name" => { collections[i].collection_name = safe_get_slice(&args_per_value, 1) },
                 "stamina" => {
-                    collections[i].collection_filter.stamina_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.stamina_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.stamina_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.stamina_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.stamina_min, collections[i].collection_filter.stamina_max);
                     } else {
@@ -96,8 +96,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "tenacity"|"streams" => {
-                    collections[i].collection_filter.tenacity_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.tenacity_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.tenacity_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.tenacity_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.tenacity_min, collections[i].collection_filter.tenacity_max);
                     } else {
@@ -105,8 +105,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "agility"|"aim" => {
-                    collections[i].collection_filter.agility_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.agility_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.agility_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.agility_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.agility_min, collections[i].collection_filter.agility_max);
                     } else {
@@ -114,8 +114,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "accuracy" => {
-                    collections[i].collection_filter.accuracy_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.accuracy_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.accuracy_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.accuracy_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.accuracy_min, collections[i].collection_filter.accuracy_max);
                     } else {
@@ -123,8 +123,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "precision" => {
-                    collections[i].collection_filter.precision_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.precision_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.precision_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.precision_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.precision_min, collections[i].collection_filter.precision_max);
                     } else {
@@ -132,8 +132,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "reaction" => {
-                    collections[i].collection_filter.reaction_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.reaction_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.reaction_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.reaction_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.reaction_min, collections[i].collection_filter.reaction_max);
                     } else {
@@ -141,8 +141,8 @@ fn read_arg(arg: String) -> Vec<Collection> {
                     }
                 },
                 "memory"|"flashlight" => {
-                    collections[i].collection_filter.memory_min = safe_parse_f64(safe_get_string(&split_min_max, 0));
-                    collections[i].collection_filter.memory_max = safe_parse_f64(safe_get_string(&split_min_max, 1));
+                    collections[i].collection_filter.memory_min = safe_parse_f64(safe_get_slice(&split_min_max, 0));
+                    collections[i].collection_filter.memory_max = safe_parse_f64(safe_get_slice(&split_min_max, 1));
                     if collections[i].default_name == String::default() {
                         collections[i].default_name = format!("{}_{}-{}", args_per_value[0], collections[i].collection_filter.memory_min, collections[i].collection_filter.memory_max);
                     } else {
@@ -196,23 +196,54 @@ fn read_maps(input_filepath: String) -> Vec<BeatmapData> {
             continue;
         }
 
-        let line_split: Vec<&str> = line_unwrap.split(",").collect();
-        let beatmap: BeatmapData = BeatmapData { 
-            beatmap_id: safe_get_string(&line_split, 0), 
-            beatmap_set_id: safe_get_string(&line_split, 1), 
-            beatmap_md5: safe_get_string(&line_split, 2), 
-            stamina: safe_parse_f64(safe_get_string(&line_split, 3)), 
-            tenacity: safe_parse_f64(safe_get_string(&line_split, 4)), 
-            agility: safe_parse_f64(safe_get_string(&line_split, 5)), 
-            precision: safe_parse_f64(safe_get_string(&line_split, 6)), 
-            memory: safe_parse_f64(safe_get_string(&line_split, 7)), 
-            accuracy: safe_parse_f64(safe_get_string(&line_split, 8)), 
-            reaction: safe_parse_f64(safe_get_string(&line_split, 9)), 
-            title: safe_get_string(&line_split, 10), 
-            title_unicode: safe_get_string(&line_split, 11), 
-            artist: safe_get_string(&line_split, 12), 
-            artist_unicode: safe_get_string(&line_split, 13), 
-            version: safe_get_string(&line_split, 14), 
+        let mut chars_vec: Vec<char> = Default::default();
+        let line_chars: Vec<char> = line_unwrap.chars().collect();
+        let mut line_split: Vec<String> = Default::default();
+        let mut found_quote: bool = false;
+        let mut i: usize = 0;
+        while i < line_chars.len() {
+            let current_char = safe_get_char(&line_chars, i);
+            let next_char = safe_get_char(&line_chars, i + 1);
+            match (current_char, next_char, found_quote) {
+                (',', _, false) => {
+                    line_split.push(chars_vec.into_iter().collect());
+                    chars_vec = Default::default();
+                },
+                ('"', '"', _) => {
+                    chars_vec.push(current_char);
+                    i += 1;
+                },
+                ('"', _, false) => {
+                    found_quote = true;
+                },
+                ('"', _, true) => {
+                    found_quote = false;
+                },
+                _ => { chars_vec.push(current_char) }
+            }
+            i += 1;
+            if i == line_chars.len() {
+                line_split.push(chars_vec.into_iter().collect());
+                chars_vec = Default::default();
+            }
+        }
+
+        let beatmap: BeatmapData = BeatmapData {
+            beatmap_id: safe_get_string(&line_split, 0),
+            beatmap_set_id: safe_get_string(&line_split, 1),
+            beatmap_md5: safe_get_string(&line_split, 2),
+            stamina: safe_parse_f64(safe_get_string(&line_split, 3)),
+            tenacity: safe_parse_f64(safe_get_string(&line_split, 4)),
+            agility: safe_parse_f64(safe_get_string(&line_split, 5)),
+            precision: safe_parse_f64(safe_get_string(&line_split, 6)),
+            memory: safe_parse_f64(safe_get_string(&line_split, 7)),
+            accuracy: safe_parse_f64(safe_get_string(&line_split, 8)),
+            reaction: safe_parse_f64(safe_get_string(&line_split, 9)),
+            title: safe_get_string(&line_split, 10),
+            title_unicode: safe_get_string(&line_split, 11),
+            artist: safe_get_string(&line_split, 12),
+            artist_unicode: safe_get_string(&line_split, 13),
+            version: safe_get_string(&line_split, 14),
         };
         
         beatmaps_parsed.push(beatmap);
@@ -277,10 +308,26 @@ impl Default for Filter {
     }
 }
 
-fn safe_get_string(input: &Vec<&str>, index: usize) -> String {
+fn safe_get_slice(input: &Vec<&str>, index: usize) -> String {
     let output = match input.get(index) {
         Some(some) => some.to_string(),
         None => "".to_string()
+    };
+    return output;
+}
+
+fn safe_get_string(input: &Vec<String>, index: usize) -> String {
+    let output = match input.get(index) {
+        Some(some) => some.to_string(),
+        None => "".to_string()
+    };
+    return output;
+}
+
+fn safe_get_char(input: &Vec<char>, index: usize) -> char {
+    let output = match input.get(index) {
+        Some(some) => some.to_owned(),
+        None => char::default().to_owned()
     };
     return output;
 }
