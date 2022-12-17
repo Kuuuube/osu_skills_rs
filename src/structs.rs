@@ -165,7 +165,6 @@ pub struct Skills {
     pub tenacity: f64,
     pub agility: f64,
     pub precision: f64,
-    pub reading: f64,
     pub memory: f64,
     pub accuracy: f64,
     pub reaction: f64,
