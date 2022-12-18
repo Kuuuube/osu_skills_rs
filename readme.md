@@ -45,6 +45,7 @@ Mandatory:
 --parser=ARGS               args for the parser in the following format:
                             collections separated by `;`, filters separated by `,`
                             fiters separated from values by `:`, min and max values separated by `-`
+                            optionally, use the `name:` filter to give collections custom names
                             example: "stamina:1-100,tenacity:100-200;precision:900-1000"
 
 --in=FILE                   path to input file
