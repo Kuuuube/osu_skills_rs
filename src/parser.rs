@@ -53,7 +53,7 @@ fn write_collectionconverter_csv(collections: Vec<Collection>, output_filepath: 
             }
 
         for beatmap in collection.beatmap_data {
-            let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", name, beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version, -1);
+            let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", name, beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version, "-1");
             match output_file.write(formatted_string.as_bytes()) {
                 Ok(_) => (),
                 Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
@@ -209,7 +209,7 @@ fn read_maps(input_filepath: String) -> Vec<BeatmapData> {
                     line_split.push(chars_vec.into_iter().collect());
                     chars_vec = Default::default();
                 },
-                ('"', '"', _) => {
+                ('"', '"', true) => {
                     chars_vec.push(current_char);
                     i += 1;
                 },
@@ -235,15 +235,16 @@ fn read_maps(input_filepath: String) -> Vec<BeatmapData> {
             stamina: safe_parse_f64(safe_get_string(&line_split, 3)),
             tenacity: safe_parse_f64(safe_get_string(&line_split, 4)),
             agility: safe_parse_f64(safe_get_string(&line_split, 5)),
-            precision: safe_parse_f64(safe_get_string(&line_split, 6)),
-            memory: safe_parse_f64(safe_get_string(&line_split, 7)),
-            accuracy: safe_parse_f64(safe_get_string(&line_split, 8)),
-            reaction: safe_parse_f64(safe_get_string(&line_split, 9)),
-            title: safe_get_string(&line_split, 10),
-            title_unicode: safe_get_string(&line_split, 11),
-            artist: safe_get_string(&line_split, 12),
-            artist_unicode: safe_get_string(&line_split, 13),
-            version: safe_get_string(&line_split, 14),
+            accuracy: safe_parse_f64(safe_get_string(&line_split, 6)),
+            precision: safe_parse_f64(safe_get_string(&line_split, 7)),
+            reaction: safe_parse_f64(safe_get_string(&line_split, 8)),
+            memory: safe_parse_f64(safe_get_string(&line_split, 9)),
+            //mode
+            artist: safe_get_string(&line_split, 11),
+            artist_unicode: safe_get_string(&line_split, 12),
+            title: safe_get_string(&line_split, 13),
+            title_unicode: safe_get_string(&line_split, 14),
+            version: safe_get_string(&line_split, 15),
         };
         
         beatmaps_parsed.push(beatmap);
