@@ -56,7 +56,7 @@ pub fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>
     };
 
     let header: &str = match &alg as &str {
-        "classic" => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Artist,Mode\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
+        "classic" => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
         _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
     };
 
