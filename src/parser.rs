@@ -239,12 +239,13 @@ fn read_maps(input_filepath: String) -> Vec<BeatmapData> {
             precision: safe_parse_f64(safe_get_string(&line_split, 7)),
             reaction: safe_parse_f64(safe_get_string(&line_split, 8)),
             memory: safe_parse_f64(safe_get_string(&line_split, 9)),
-            //mode
-            artist: safe_get_string(&line_split, 11),
-            artist_unicode: safe_get_string(&line_split, 12),
-            title: safe_get_string(&line_split, 13),
-            title_unicode: safe_get_string(&line_split, 14),
-            version: safe_get_string(&line_split, 15),
+            //mods - index 10
+            //mode - index 11
+            artist: safe_get_string(&line_split, 12),
+            artist_unicode: safe_get_string(&line_split, 13),
+            title: safe_get_string(&line_split, 14),
+            title_unicode: safe_get_string(&line_split, 15),
+            version: safe_get_string(&line_split, 16),
         };
         
         beatmaps_parsed.push(beatmap);
