@@ -26,7 +26,11 @@ Optional:
 
 - `--no-ext`: Removes file extension check for .osu files. This can be used to calculate lazer songs folders.
 
-- `--alg=ALG`: (classic|default) Calculation alg to use: `classic` or `default`. Classic matches the [osuSkills Calculator](https://github.com/Kert/osuSkills). Default contains various fixes for weird decisions made in the classic alg.
+- `--alg=ALG`: (classic|default) Calculation alg to use: `classic` or `default`. 
+
+    Classic matches the [osuSkills Calculator](https://github.com/Kert/osuSkills). 
+
+    Default contains various fixes for weird decisions made in the classic alg.
 
 ### Skill File Parser
 
@@ -36,7 +40,9 @@ Mandatory:
 
     The following filters are supported:
 
-    `name`: A custom name for the collection to be filtered. If unset, a default name will be generated using the other filters. Using the same name for two or more collections can also be used to combine multiple sets of filters into one collection.
+    `name`: A custom name for the collection to be filtered. 
+
+    If unset, a default name will be generated using the other filters. Using the same name for two or more collections can also be used to combine multiple sets of filters into one collection.
 
     `stamina`: The stamina value of a map.
 
