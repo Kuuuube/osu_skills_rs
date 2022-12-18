@@ -172,6 +172,7 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
             timing_point.offset = safe_parse_f64(split[0]);
             timing_point.beat_interval = safe_parse_f64(split[1]);
             timing_point.meter = safe_parse_f64(split[2]);
+            timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
 
             //fixes parsing for some aspire maps that can cause heavy lag and oom panics
             if timing_point.inherited == true && beatmap.timing_points.len() == 0 {
@@ -179,7 +180,6 @@ fn timing_points_parser(mut beatmap: structs::Beatmap, line: String) -> structs:
                 beatmap.timing_points.push(placeholder_time);
             }
 
-            timing_point.inherited = safe_parse_f64(split[6]) == 0.0;
             beatmap.timing_points.push(timing_point);
         },
         8 => { /* osu file format v6-14 */
