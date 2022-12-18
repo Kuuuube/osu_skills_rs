@@ -52,6 +52,8 @@ Mandatory:
 --out=FILE                  path to output file
 ```
 
+Currently parsed files can only be converted into collections using [osu! Collection Converter](https://github.com/Kuuuube/osu_CollectionConverter).
+
 ## Building
 
 ```
