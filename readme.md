@@ -57,5 +57,5 @@ Currently parsed files can only be converted into collections using [osu! Collec
 ## Building
 
 ```
-cargo build
+cargo build --release
 ```
