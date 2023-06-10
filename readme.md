@@ -36,7 +36,7 @@ Optional:
 
 Mandatory:
 
-- `--parser=ARGS`: Args for the parser in the following format: Collections separated by `;`, filters separated by `,`, fiters separated from values by `:`, min and max values separated by `-`. 
+- `--parser=ARGS`: Args for the parser in the following format: Collections separated by `;`, filters separated by `,`, filters separated from values by `:`, min and max values separated by `-`. 
 
     The following filters are supported:
 
