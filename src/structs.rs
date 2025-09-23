@@ -26,7 +26,7 @@ impl std::fmt::Display for OutputType {
     }
 }
 
-#[derive(Default, PartialEq)]
+#[derive(Default, PartialEq, Debug)]
 pub struct Timing {
     pub time: i64,
     pub data: f64,
@@ -59,7 +59,7 @@ impl Default for Mods {
     }
 }
 
-#[derive(Default, Copy, Clone, PartialEq)]
+#[derive(Default, Copy, Clone, PartialEq, Debug)]
 pub struct TimingPoint {
     pub offset: f64,
     pub beat_interval: f64,
@@ -90,7 +90,7 @@ impl Default for HitObjectType {
     }
 }
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum CurveType {
     None,
     PerfectCurve,
@@ -128,7 +128,7 @@ pub struct CircumscribedCircle {
     pub mid_ang: f64,
 }
 
-#[derive(Default, Clone, PartialEq)]
+#[derive(Default, Clone, PartialEq, Debug)]
 pub struct HitObject {
     pub pos: pair_structs::Pairf64,
     pub time: i64,
@@ -170,7 +170,7 @@ pub struct Stream {
     pub length: i32,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum AimPointTypes {
     AimPointNone,
     AimPointCircle,
@@ -185,14 +185,14 @@ impl Default for AimPointTypes {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub struct AimPoint {
     pub time: i64,
     pub pos: pair_structs::Pairf64,
     pub aim_point_type: AimPointTypes,
 }
 
-#[derive(Default, PartialEq)]
+#[derive(Default, PartialEq, Debug)]
 pub struct Skills {
     pub stamina: f64,
     pub tenacity: f64,
@@ -203,7 +203,7 @@ pub struct Skills {
     pub reaction: f64,
 }
 
-#[derive(Default, PartialEq)]
+#[derive(Default, PartialEq, Debug)]
 pub struct Beatmap {
     pub format: String,
 
