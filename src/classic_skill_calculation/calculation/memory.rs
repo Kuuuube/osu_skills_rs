@@ -1,9 +1,9 @@
-use crate::classic_skill_calculation::utils;
+use crate::calculation_utils;
 use crate::structs;
 use crate::pair_structs;
 
 fn get_approach_relative_size(time: f64, hit_time: f64, ar: f64) -> f64 {
-    let ar_ms: f64 = utils::ar_to_ms(ar);
+    let ar_ms: f64 = calculation_utils::ar_to_ms(ar);
     
     if hit_time < time {
         return 1.0;
@@ -47,7 +47,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
 
         let mut slider_bonus_factor: f64 = 1.0;
 
-        if utils::is_hit_object_type(&old.hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&old.hit_object_type, structs::HitObjectType::Slider) {
             slider_bonus_factor = 1.1; //this value comes from osu skills config file "SliderBuff"
         }
 
@@ -57,19 +57,19 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         let mut j: usize = i - 1;
         while j > 0 {
             let prev: &structs::HitObject = &beatmap.hit_objects[j];
-            if cur.time - prev.time > utils::ar_to_ms(beatmap.ar) as i64 {
+            if cur.time - prev.time > calculation_utils::ar_to_ms(beatmap.ar) as i64 {
                 break;
             }
-            if !utils::has_mod(&beatmap, structs::Mods::HD) {
+            if !calculation_utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(prev.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
+                help_pixels = (size * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
             } else {
-                let observable_time: i64 = cur.time - (utils::ar_to_ms(beatmap.ar) * 0.3) as i64;
+                let observable_time: i64 = cur.time - (calculation_utils::ar_to_ms(beatmap.ar) * 0.3) as i64;
                 if prev.time > observable_time {
                     j -= 1;
                     continue;
                 }
-                help_pixels = utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
+                help_pixels = calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
             }
             if is_observable_from(cur, observable_dist + help_pixels, &prev.pos) {
                 observable = true;
@@ -79,14 +79,14 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         }
 
         if !observable {
-            if !utils::has_mod(&beatmap, structs::Mods::HD) {
+            if !calculation_utils::has_mod(&beatmap, structs::Mods::HD) {
                 let size: f64 = get_approach_relative_size(old.end_time as f64, cur.time as f64, beatmap.ar);
-                help_pixels = (size * utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
+                help_pixels = (size * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64) as i32;
             } else {
-                help_pixels = utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
+                help_pixels = calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as i32;
             }
 
-            if utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::NewCombo) || utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::ColourHax) {
+            if calculation_utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::NewCombo) || calculation_utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::ColourHax) {
                 let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.end_point);
                 if dist > (observable_dist + help_pixels) as f64 {
                     mem_points = slider_bonus_factor * (dist / (cur.time - old.time) as f64);
@@ -100,9 +100,9 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             }
         }
 
-        if utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Spinner) {
+        if calculation_utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Spinner) {
             combo += 1;
-        } else if utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Slider) {
+        } else if calculation_utils::is_hit_object_type(&cur.hit_object_type, structs::HitObjectType::Slider) {
             combo += (cur.ticks.len() + 2) as i32;
         }
 

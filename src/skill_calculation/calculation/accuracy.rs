@@ -1,16 +1,16 @@
 use crate::algs::erf;
 use crate::structs;
-use crate::skill_calculation::utils;
+use crate::calculation_utils;
 
 pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let mut circles: f64 = 0.0;
     for obj in &beatmap.hit_objects {
-        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Normal) {
+        if calculation_utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Normal) {
             circles += 1.0;
         }
     }
 
-    let od_ms: f64 = utils::od_to_ms(beatmap.od);
+    let od_ms: f64 = calculation_utils::od_to_ms(beatmap.od);
 
     let tapping: f64;
     let acc_scale: f64 = 0.01; //this value comes from osu skills config file "AccScale"

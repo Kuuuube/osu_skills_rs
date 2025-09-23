@@ -1,9 +1,9 @@
 use crate::structs;
-use crate::skill_calculation::utils;
+use crate::calculation_utils;
 use crate::pair_structs;
 
 fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity_start: f64, opacity_end: f64) -> pair_structs::Pairi64 {
-    let ar_ms: f64 = utils::ar_to_ms(ar);
+    let ar_ms: f64 = calculation_utils::ar_to_ms(ar);
     let preamp_time: f64 = obj.time as f64 - ar_ms;
     let mut times: pair_structs::Pairi64 = Default::default();
 
@@ -11,27 +11,27 @@ fn get_visibility_times(obj: &structs::HitObject, ar: f64, hidden: bool, opacity
         let fade_in_duration: f64 = 0.4 * ar_ms;
         let fade_in_time_end: f64 = preamp_time + fade_in_duration;
 
-        times.x = utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
+        times.x = calculation_utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
 
-        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
             let fade_out_duration: f64 = obj.end_time as f64 - fade_in_time_end;
             let fade_out_time_end: f64 = fade_in_time_end + fade_out_duration;
-            times.y = utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_end) as i64;
+            times.y = calculation_utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_end) as i64;
 
             return times;
         } else {
             let fade_out_duration: f64 = 0.7 * (obj.end_time as f64 - fade_in_time_end);
             let fade_out_time_end: f64 = fade_in_time_end + fade_out_duration;
-            times.y = utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_start) as i64;
+            times.y = calculation_utils::get_value(fade_in_time_end, fade_out_time_end, 1.0 - opacity_start) as i64;
             return times;
         }
     } else {
-        let fade_in_duration: f64 = f64::min(utils::ar_to_ms(ar), 400.0);
+        let fade_in_duration: f64 = f64::min(calculation_utils::ar_to_ms(ar), 400.0);
         let fade_in_time_end: f64 = preamp_time + fade_in_duration;
 
-        times.x = utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
+        times.x = calculation_utils::get_value(preamp_time, fade_in_time_end, opacity_start) as i64;
 
-        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Slider) {
             times.y = obj.end_time as i64;
             return times;
         } else {
@@ -50,7 +50,7 @@ fn pattern_req(p1: &structs::Timing, p2: &structs::Timing, p3: &structs::Timing,
     let dist_23: f64 = pair_structs::get_distance_from(&point2, &point3);
     let dist: f64 = dist_12 + dist_23;
 
-    let angle: f64 = utils::get_angle(point1, point2, point3);
+    let angle: f64 = calculation_utils::get_angle(point1, point2, point3);
     
     let mut time = (p3.time - p1.time).abs();
 
@@ -78,10 +78,10 @@ fn react_to_skill(time_to_react: f64) -> f64 {
 fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &structs::Timing, hit_objects: &Vec<structs::HitObject>, cs: f64, ar: f64, hidden: bool) -> f64 {
     let mut time_to_react = 0.0;
     let fade_in_react_req = 0.1; //this value comes from osu skills config file "FadeinPercent"
-    let index: i32 = utils::find_timing_at(&target_points, target_point.time);
+    let index: i32 = calculation_utils::find_timing_at(&target_points, target_point.time);
 
     if index >= (target_points.len() as i32) - 2 {
-        time_to_react = utils::ar_to_ms(ar);
+        time_to_react = calculation_utils::ar_to_ms(ar);
     } else if index < 3 {
         let visibility_times: pair_structs::Pairi64 = get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         time_to_react = (hit_objects[0].time - visibility_times.x) as f64;
@@ -99,7 +99,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
         let visibility_times: pair_structs::Pairi64 = get_visibility_times(&hit_objects[0], ar, hidden, fade_in_react_req, 1.0);
         let actual_ar_time: f64 = ((hit_objects[0].time - visibility_times.x) as f64) + time_since_start;
 
-        let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, utils::cs_to_px(cs) as f64);
+        let result: f64 = pattern_to_reaction(t1, t2, t3, actual_ar_time, calculation_utils::cs_to_px(cs) as f64);
         time_to_react = f64::sqrt(time_to_react * time_to_react + result * result);
     }
 
@@ -109,7 +109,7 @@ fn get_reaction_skill_at(target_points: &Vec<structs::Timing>, target_point: &st
 }
 
 pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64{
-    let hidden: bool = utils::has_mod(beatmap, structs::Mods::HD);
+    let hidden: bool = calculation_utils::has_mod(beatmap, structs::Mods::HD);
     let mut max: f64 = 0.0;
     let mut avg: f64 = 0.0;
     let weight: f64 = 0.7; //this value comes from osu skills config file "AvgWeighting"

@@ -1,6 +1,6 @@
 use crate::structs;
 use crate::pair_structs;
-use crate::classic_skill_calculation::utils;
+use crate::calculation_utils;
 use crate::classic_skill_calculation;
 
 pub fn prepare_aim_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
@@ -23,9 +23,9 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if (utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
+        if (calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
             let mut distance: f64 = pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
-            let rad_subtract: f64 = 2.0 * utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
+            let rad_subtract: f64 = 2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
             let interval: f64 = (beatmap.hit_objects[i].time - previous_time) as f64;
 
             if distance >= rad_subtract {
@@ -39,7 +39,7 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             beatmap.velocities.push(pair_structs::Pairf64{x: dist_xy.x / interval, y: dist_xy.y / interval});
         }
 
-        if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
             previous_pos = beatmap.hit_objects[i].pos;
             previous_time = beatmap.hit_objects[i].time;
         }
@@ -74,11 +74,11 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         }
         prev_time = hit_obj.time;
 
-        if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
+        if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
             target_point = structs::Timing{time: hit_obj.time, pos: hit_obj.pos, key: i, press: false, data: Default::default()};
 
             beatmap.target_points.push(target_point);
-        } else if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
+        } else if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
             for tick in &hit_obj.ticks {
                 target_point = structs::Timing{time: *tick as i64, pos: classic_skill_calculation::calculation::slider::get_slider_pos(hit_obj, *tick), key: i, press: true, data: Default::default()};
 
@@ -92,15 +92,15 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
 fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     for hit_obj in &beatmap.hit_objects {
-        if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
+        if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
             beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointCircle });
-        } else if utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
+        } else if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
             beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointSlider });
 
-            let end_time: i64 = utils::get_last_tick_time(hit_obj);
+            let end_time: i64 = calculation_utils::get_last_tick_time(hit_obj);
             let end_pos: pair_structs::Pairf64 = classic_skill_calculation::calculation::slider::get_slider_pos(hit_obj, end_time);
 
-            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * utils::cs_to_px(beatmap.cs as i32 as f64) as f64 {
+            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64 {
                 beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
             }
         }
@@ -111,7 +111,7 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut i: usize = 0;
     while i + 2 < beatmap.aim_points.len() {
-        let angle: f64 = utils::get_dir_angle(beatmap.aim_points[i].pos, beatmap.aim_points[i + 1].pos, beatmap.aim_points[i + 2].pos);
+        let angle: f64 = calculation_utils::get_dir_angle(beatmap.aim_points[i].pos, beatmap.aim_points[i + 1].pos, beatmap.aim_points[i + 2].pos);
         beatmap.angles.push(angle);
 
         i += 1;
@@ -124,17 +124,17 @@ fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             let angle_deref = *angle;
             let bonus: f64;
             let absd: f64 = f64::abs(angle_deref);
-            if utils::sign(angle_deref) == utils::sign(old_angle) {
+            if calculation_utils::sign(angle_deref) == calculation_utils::sign(old_angle) {
                 if absd < 90.0 {
-                    bonus = f64::sin(utils::deg_to_rad(absd) * 0.784 + 0.339837);
+                    bonus = f64::sin(calculation_utils::deg_to_rad(absd) * 0.784 + 0.339837);
                 } else {
-                    bonus = f64::sin(utils::deg_to_rad(absd));
+                    bonus = f64::sin(calculation_utils::deg_to_rad(absd));
                 }
             } else {
                 if absd < 90.0 {
-                    bonus = f64::sin(utils::deg_to_rad(absd) * 0.536 + 0.72972);
+                    bonus = f64::sin(calculation_utils::deg_to_rad(absd) * 0.536 + 0.72972);
                 } else {
-                    bonus = f64::sin(utils::deg_to_rad(absd)) / 2.0;
+                    bonus = f64::sin(calculation_utils::deg_to_rad(absd)) / 2.0;
                 }
             }
             beatmap.angle_bonuses.push(bonus);
@@ -187,7 +187,7 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
 pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
 
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
@@ -246,7 +246,7 @@ fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     let mut previous_time: i64 = -1;
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
             if i > 0 {
                 beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as i32);
             }

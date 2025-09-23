@@ -12,6 +12,7 @@ mod pair_structs;
 mod osu_parser;
 mod output;
 mod parser;
+mod calculation_utils;
 
 fn main() {
     panic::set_hook(Box::new(|_info| {

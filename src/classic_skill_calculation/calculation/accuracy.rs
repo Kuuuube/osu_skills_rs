@@ -1,19 +1,19 @@
 use crate::algs::erf;
 use crate::structs;
-use crate::classic_skill_calculation::utils;
+use crate::calculation_utils;
 
 pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let mut circles: f64 = 0.0;
     for obj in &beatmap.hit_objects {
-        if utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Normal) {
+        if calculation_utils::is_hit_object_type(&obj.hit_object_type, structs::HitObjectType::Normal) {
             circles += 1.0;
         }
     }
 
-    let mut od_ms: f64 = utils::od_to_ms(beatmap.od as i32 as f64);
-    if utils::has_mod(&beatmap, structs::Mods::DT) {
+    let mut od_ms: f64 = calculation_utils::od_to_ms(beatmap.od as i32 as f64);
+    if calculation_utils::has_mod(&beatmap, structs::Mods::DT) {
         od_ms /= 1.5;
-    } else if utils::has_mod(&beatmap, structs::Mods::HT) {
+    } else if calculation_utils::has_mod(&beatmap, structs::Mods::HT) {
         od_ms /= 0.75;
     }
 
