@@ -2,20 +2,20 @@ use std::{fs, io::Write};
 use std::panic;
 
 use crate::osu_parser;
-use crate::structs;
+use crate::structs::{self, CalculationAlgorithm};
 use crate::classic_skill_calculation;
 use crate::skill_calculation;
 
-pub fn output_stdout(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>) {
+pub fn output_stdout(mod_int: i32, alg: CalculationAlgorithm, files: Vec<std::path::PathBuf>) {
     for osu_filepath in files {
-        let beatmap: structs::Beatmap = match &alg.to_lowercase() as &str {
-            "classic" => classic_process_beatmap(osu_filepath, mod_int),
+        let beatmap: structs::Beatmap = match alg {
+            CalculationAlgorithm::Classic => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
 
         if beatmap.skills != structs::Beatmap::default().skills {
-            let formatted_string: String = match &alg as &str {
-                "classic" => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+            let formatted_string: String = match alg {
+                CalculationAlgorithm::Classic => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
                 _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
             };
 
@@ -24,20 +24,20 @@ pub fn output_stdout(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>) 
     }
 }
 
-pub fn output_file_txt(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, output_file_string: String) {
+pub fn output_file_txt(mod_int: i32, alg: CalculationAlgorithm, files: Vec<std::path::PathBuf>, output_file_string: String) {
     let mut output_file = match fs::OpenOptions::new().create(true).write(true).truncate(true).open(output_file_string) {
         Ok(ok) => ok,
         Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error)
     };
 
     for osu_filepath in files {
-        let beatmap: structs::Beatmap = match &alg.to_lowercase() as &str {
-            "classic" => classic_process_beatmap(osu_filepath, mod_int),
+        let beatmap: structs::Beatmap = match alg {
+            CalculationAlgorithm::Classic => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
         if beatmap.skills != structs::Beatmap::default().skills {
-            let formatted_string: String = match &alg as &str {
-                "classic" => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+            let formatted_string: String = match alg {
+                CalculationAlgorithm::Classic => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
                 _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
             };
 
@@ -49,14 +49,14 @@ pub fn output_file_txt(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>
     }
 }
 
-pub fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>, output_file_string: String) {
+pub fn output_file_csv(mod_int: i32, alg: CalculationAlgorithm, files: Vec<std::path::PathBuf>, output_file_string: String) {
     let mut output_file = match fs::OpenOptions::new().create(true).write(true).truncate(true).open(output_file_string) {
         Ok(ok) => ok,
         Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error)
     };
 
-    let header: &str = match &alg as &str {
-        "classic" => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
+    let header: &str = match alg {
+        CalculationAlgorithm::Classic => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
         _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
     };
 
@@ -66,8 +66,8 @@ pub fn output_file_csv(mod_int: i32, alg: String, files: Vec<std::path::PathBuf>
     };
 
     for osu_filepath in files {
-        let beatmap: structs::Beatmap = match &alg.to_lowercase() as &str {
-            "classic" => classic_process_beatmap(osu_filepath, mod_int),
+        let beatmap: structs::Beatmap = match alg {
+            CalculationAlgorithm::Classic => classic_process_beatmap(osu_filepath, mod_int),
             _ => process_beatmap(osu_filepath, mod_int)
         };
         if beatmap.skills != structs::Beatmap::default().skills {

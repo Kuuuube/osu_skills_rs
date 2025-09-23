@@ -1,5 +1,31 @@
 use crate::pair_structs;
 
+#[derive(Default)]
+pub enum CalculationAlgorithm {
+    #[default]
+    Default,
+    Classic,
+    Rebalance1,
+}
+
+#[derive(Default)]
+pub enum OutputType {
+    #[default]
+    Stdout,
+    Txt,
+    Csv,
+}
+
+impl std::fmt::Display for OutputType {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+       match self {
+           OutputType::Stdout => write!(f, "stdout"),
+           OutputType::Txt => write!(f, "txt"),
+           OutputType::Csv => write!(f, "csv"),
+       }
+    }
+}
+
 #[derive(Default, PartialEq)]
 pub struct Timing {
     pub time: i64,
