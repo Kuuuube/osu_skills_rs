@@ -1,5 +1,5 @@
-use crate::structs;
 use crate::pair_structs;
+use crate::structs;
 
 pub fn deg_to_rad(degrees: f64) -> f64 {
     return degrees * std::f64::consts::PI / 180.0;
@@ -9,9 +9,19 @@ pub fn btwn(lss: &i64, val: &i64, gtr: &i64) -> bool {
     return (&i64::min(*lss, *gtr) <= val) && (val <= &i64::max(*lss, *gtr));
 }
 
-pub fn get_dir_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_structs::Pairf64) -> f64 {
-    let ab = pair_structs::Pairf64 {x: b.x - a.x, y: b.y - a.y};
-    let cb = pair_structs::Pairf64 {x: b.x - c.x, y: b.y - c.y};
+pub fn get_dir_angle(
+    a: pair_structs::Pairf64,
+    b: pair_structs::Pairf64,
+    c: pair_structs::Pairf64,
+) -> f64 {
+    let ab = pair_structs::Pairf64 {
+        x: b.x - a.x,
+        y: b.y - a.y,
+    };
+    let cb = pair_structs::Pairf64 {
+        x: b.x - c.x,
+        y: b.y - c.y,
+    };
 
     let dot: f64 = ab.x * cb.x + ab.y * cb.y;
     let cross: f64 = ab.x * cb.y - ab.y * cb.x;
@@ -19,7 +29,11 @@ pub fn get_dir_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair
     return f64::atan2(cross, dot) * 180.0 / std::f64::consts::PI;
 }
 
-pub fn get_angle(a: pair_structs::Pairf64, b: pair_structs::Pairf64, c: pair_structs::Pairf64) -> f64 {
+pub fn get_angle(
+    a: pair_structs::Pairf64,
+    b: pair_structs::Pairf64,
+    c: pair_structs::Pairf64,
+) -> f64 {
     return deg_to_rad(get_dir_angle(a, b, c)).abs();
 }
 
@@ -37,9 +51,9 @@ pub fn ar_to_ms(ar: f64) -> f64 {
 
 fn ms_to_ar(ms: f64) -> f64 {
     if ms >= 1200.0 {
-        return (1800.0 - ms) / 120.0
+        return (1800.0 - ms) / 120.0;
     } else {
-        return (1950.0 - ms) / 150.0
+        return (1950.0 - ms) / 150.0;
     }
 }
 
@@ -55,7 +69,11 @@ pub fn find_timing_at(timings: &Vec<structs::Timing>, time: i64) -> i32 {
     while start <= end {
         mid = (start + end) / 2;
 
-        if btwn(&timings[mid as usize].time, &time, &timings[(mid + 1) as usize].time) {
+        if btwn(
+            &timings[mid as usize].time,
+            &time,
+            &timings[(mid + 1) as usize].time,
+        ) {
             return mid + 1;
         }
 
@@ -121,7 +139,7 @@ pub fn get_weighted_value_2(vals: Vec<f64>, decay: f64) -> f64 {
     return result;
 }
 
-pub fn get_peak_vals(vals: &Vec<f64>) -> Vec<f64>{
+pub fn get_peak_vals(vals: &Vec<f64>) -> Vec<f64> {
     let mut output: Vec<f64> = Default::default();
     let mut i: usize = 1;
     if vals.len() >= 3 {
@@ -153,18 +171,21 @@ pub fn get_last_tick_time(hit_obj: &structs::HitObject) -> i64 {
         if hit_obj.repeat > 1 {
             let last_in_vec: i64 = match hit_obj.repeat_times.last() {
                 Some(some) => *some,
-                None => Default::default()
+                None => Default::default(),
             };
-            return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0) as i64;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0)
+                as i64;
         } else {
-            return (hit_obj.end_time as f64 - (hit_obj.end_time - hit_obj.time as i64) as f64 / 2.0) as i64;
+            return (hit_obj.end_time as f64 - (hit_obj.end_time - hit_obj.time as i64) as f64 / 2.0)
+                as i64;
         }
     } else {
         let last_in_vec: i64 = match hit_obj.ticks.last() {
             Some(some) => *some,
-            None => Default::default()
+            None => Default::default(),
         };
-        return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0) as i64;
+        return (hit_obj.end_time as f64 - (hit_obj.end_time - last_in_vec as i64) as f64 / 2.0)
+            as i64;
     }
 }
 
@@ -207,8 +228,9 @@ pub fn apply_mods(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() - 1 {
-        beatmap.hit_objects[i].time = (f64::ceil(beatmap.hit_objects[i].time as f64 / speed)) as i64;
-        
+        beatmap.hit_objects[i].time =
+            (f64::ceil(beatmap.hit_objects[i].time as f64 / speed)) as i64;
+
         i += 1;
     }
 
@@ -219,7 +241,7 @@ fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
         }
 
         beatmap.timing_points[i].offset = f64::ceil(beatmap.timing_points[i].offset as f64 / speed);
-        
+
         i += 1;
     }
 
@@ -228,7 +250,9 @@ fn apply_speed(mut beatmap: structs::Beatmap, speed: f64) -> structs::Beatmap {
 }
 
 pub fn bernstien(i: i64, n: i64, t: f64) -> f64 {
-    return binomial_coef(n, i) as f64 * f64::powf(t, i as f64) * f64::powf(1.0 - t, (n - i) as f64);
+    return binomial_coef(n, i) as f64
+        * f64::powf(t, i as f64)
+        * f64::powf(1.0 - t, (n - i) as f64);
 }
 
 fn binomial_coef(n: i64, k: i64) -> i64 {

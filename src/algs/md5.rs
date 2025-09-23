@@ -32,7 +32,6 @@ use std::convert;
 use std::fmt;
 use std::ops;
 
-
 /// A digest.
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Digest(pub [u8; 16]);
@@ -136,18 +135,18 @@ impl Context {
         );
         let mut j = 0;
         for i in 0..14 {
-            input[i] = ((self.buffer[j + 3] as u32) << 24) |
-                       ((self.buffer[j + 2] as u32) << 16) |
-                       ((self.buffer[j + 1] as u32) <<  8) |
-                       ((self.buffer[j    ] as u32)      );
+            input[i] = ((self.buffer[j + 3] as u32) << 24)
+                | ((self.buffer[j + 2] as u32) << 16)
+                | ((self.buffer[j + 1] as u32) << 8)
+                | (self.buffer[j] as u32);
             j += 4;
         }
         transform(&mut self.state, &input);
         let mut digest = [0u8; 16];
         let mut j = 0;
         for i in 0..4 {
-            digest[j    ] = ((self.state[i]      ) & 0xff) as u8;
-            digest[j + 1] = ((self.state[i] >>  8) & 0xff) as u8;
+            digest[j] = ((self.state[i]) & 0xff) as u8;
+            digest[j + 1] = ((self.state[i] >> 8) & 0xff) as u8;
             digest[j + 2] = ((self.state[i] >> 16) & 0xff) as u8;
             digest[j + 3] = ((self.state[i] >> 24) & 0xff) as u8;
             j += 4;
@@ -207,10 +206,10 @@ fn consume(
         if k == 0x40 {
             let mut j = 0;
             for i in 0..16 {
-                input[i] = ((buffer[j + 3] as u32) << 24) |
-                           ((buffer[j + 2] as u32) << 16) |
-                           ((buffer[j + 1] as u32) <<  8) |
-                           ((buffer[j    ] as u32)      );
+                input[i] = ((buffer[j + 3] as u32) << 24)
+                    | ((buffer[j + 2] as u32) << 16)
+                    | ((buffer[j + 1] as u32) << 8)
+                    | (buffer[j] as u32);
                 j += 4;
             }
             transform(state, &input);
@@ -238,20 +237,20 @@ fn transform(state: &mut [u32; 4], input: &[u32; 16]) {
                 $a = add!($a, $b);
             });
         );
-        const S1: u32 =  7;
+        const S1: u32 = 7;
         const S2: u32 = 12;
         const S3: u32 = 17;
         const S4: u32 = 22;
-        T!(a, b, c, d, input[ 0], S1, 3614090360);
-        T!(d, a, b, c, input[ 1], S2, 3905402710);
-        T!(c, d, a, b, input[ 2], S3,  606105819);
-        T!(b, c, d, a, input[ 3], S4, 3250441966);
-        T!(a, b, c, d, input[ 4], S1, 4118548399);
-        T!(d, a, b, c, input[ 5], S2, 1200080426);
-        T!(c, d, a, b, input[ 6], S3, 2821735955);
-        T!(b, c, d, a, input[ 7], S4, 4249261313);
-        T!(a, b, c, d, input[ 8], S1, 1770035416);
-        T!(d, a, b, c, input[ 9], S2, 2336552879);
+        T!(a, b, c, d, input[0], S1, 3614090360);
+        T!(d, a, b, c, input[1], S2, 3905402710);
+        T!(c, d, a, b, input[2], S3, 606105819);
+        T!(b, c, d, a, input[3], S4, 3250441966);
+        T!(a, b, c, d, input[4], S1, 4118548399);
+        T!(d, a, b, c, input[5], S2, 1200080426);
+        T!(c, d, a, b, input[6], S3, 2821735955);
+        T!(b, c, d, a, input[7], S4, 4249261313);
+        T!(a, b, c, d, input[8], S1, 1770035416);
+        T!(d, a, b, c, input[9], S2, 2336552879);
         T!(c, d, a, b, input[10], S3, 4294925233);
         T!(b, c, d, a, input[11], S4, 2304563134);
         T!(a, b, c, d, input[12], S1, 1804603682);
@@ -270,25 +269,25 @@ fn transform(state: &mut [u32; 4], input: &[u32; 16]) {
                 $a = add!($a, $b);
             });
         );
-        const S1: u32 =  5;
-        const S2: u32 =  9;
+        const S1: u32 = 5;
+        const S2: u32 = 9;
         const S3: u32 = 14;
         const S4: u32 = 20;
-        T!(a, b, c, d, input[ 1], S1, 4129170786);
-        T!(d, a, b, c, input[ 6], S2, 3225465664);
-        T!(c, d, a, b, input[11], S3,  643717713);
-        T!(b, c, d, a, input[ 0], S4, 3921069994);
-        T!(a, b, c, d, input[ 5], S1, 3593408605);
-        T!(d, a, b, c, input[10], S2,   38016083);
+        T!(a, b, c, d, input[1], S1, 4129170786);
+        T!(d, a, b, c, input[6], S2, 3225465664);
+        T!(c, d, a, b, input[11], S3, 643717713);
+        T!(b, c, d, a, input[0], S4, 3921069994);
+        T!(a, b, c, d, input[5], S1, 3593408605);
+        T!(d, a, b, c, input[10], S2, 38016083);
         T!(c, d, a, b, input[15], S3, 3634488961);
-        T!(b, c, d, a, input[ 4], S4, 3889429448);
-        T!(a, b, c, d, input[ 9], S1,  568446438);
+        T!(b, c, d, a, input[4], S4, 3889429448);
+        T!(a, b, c, d, input[9], S1, 568446438);
         T!(d, a, b, c, input[14], S2, 3275163606);
-        T!(c, d, a, b, input[ 3], S3, 4107603335);
-        T!(b, c, d, a, input[ 8], S4, 1163531501);
+        T!(c, d, a, b, input[3], S3, 4107603335);
+        T!(b, c, d, a, input[8], S4, 1163531501);
         T!(a, b, c, d, input[13], S1, 2850285829);
-        T!(d, a, b, c, input[ 2], S2, 4243563512);
-        T!(c, d, a, b, input[ 7], S3, 1735328473);
+        T!(d, a, b, c, input[2], S2, 4243563512);
+        T!(c, d, a, b, input[7], S3, 1735328473);
         T!(b, c, d, a, input[12], S4, 2368359562);
     }
     {
@@ -302,26 +301,26 @@ fn transform(state: &mut [u32; 4], input: &[u32; 16]) {
                 $a = add!($a, $b);
             });
         );
-        const S1: u32 =  4;
+        const S1: u32 = 4;
         const S2: u32 = 11;
         const S3: u32 = 16;
         const S4: u32 = 23;
-        T!(a, b, c, d, input[ 5], S1, 4294588738);
-        T!(d, a, b, c, input[ 8], S2, 2272392833);
+        T!(a, b, c, d, input[5], S1, 4294588738);
+        T!(d, a, b, c, input[8], S2, 2272392833);
         T!(c, d, a, b, input[11], S3, 1839030562);
         T!(b, c, d, a, input[14], S4, 4259657740);
-        T!(a, b, c, d, input[ 1], S1, 2763975236);
-        T!(d, a, b, c, input[ 4], S2, 1272893353);
-        T!(c, d, a, b, input[ 7], S3, 4139469664);
+        T!(a, b, c, d, input[1], S1, 2763975236);
+        T!(d, a, b, c, input[4], S2, 1272893353);
+        T!(c, d, a, b, input[7], S3, 4139469664);
         T!(b, c, d, a, input[10], S4, 3200236656);
-        T!(a, b, c, d, input[13], S1,  681279174);
-        T!(d, a, b, c, input[ 0], S2, 3936430074);
-        T!(c, d, a, b, input[ 3], S3, 3572445317);
-        T!(b, c, d, a, input[ 6], S4,   76029189);
-        T!(a, b, c, d, input[ 9], S1, 3654602809);
+        T!(a, b, c, d, input[13], S1, 681279174);
+        T!(d, a, b, c, input[0], S2, 3936430074);
+        T!(c, d, a, b, input[3], S3, 3572445317);
+        T!(b, c, d, a, input[6], S4, 76029189);
+        T!(a, b, c, d, input[9], S1, 3654602809);
         T!(d, a, b, c, input[12], S2, 3873151461);
-        T!(c, d, a, b, input[15], S3,  530742520);
-        T!(b, c, d, a, input[ 2], S4, 3299628645);
+        T!(c, d, a, b, input[15], S3, 530742520);
+        T!(b, c, d, a, input[2], S4, 3299628645);
     }
     {
         macro_rules! F(
@@ -334,26 +333,26 @@ fn transform(state: &mut [u32; 4], input: &[u32; 16]) {
                 $a = add!($a, $b);
             });
         );
-        const S1: u32 =  6;
+        const S1: u32 = 6;
         const S2: u32 = 10;
         const S3: u32 = 15;
         const S4: u32 = 21;
-        T!(a, b, c, d, input[ 0], S1, 4096336452);
-        T!(d, a, b, c, input[ 7], S2, 1126891415);
+        T!(a, b, c, d, input[0], S1, 4096336452);
+        T!(d, a, b, c, input[7], S2, 1126891415);
         T!(c, d, a, b, input[14], S3, 2878612391);
-        T!(b, c, d, a, input[ 5], S4, 4237533241);
+        T!(b, c, d, a, input[5], S4, 4237533241);
         T!(a, b, c, d, input[12], S1, 1700485571);
-        T!(d, a, b, c, input[ 3], S2, 2399980690);
+        T!(d, a, b, c, input[3], S2, 2399980690);
         T!(c, d, a, b, input[10], S3, 4293915773);
-        T!(b, c, d, a, input[ 1], S4, 2240044497);
-        T!(a, b, c, d, input[ 8], S1, 1873313359);
+        T!(b, c, d, a, input[1], S4, 2240044497);
+        T!(a, b, c, d, input[8], S1, 1873313359);
         T!(d, a, b, c, input[15], S2, 4264355552);
-        T!(c, d, a, b, input[ 6], S3, 2734768916);
+        T!(c, d, a, b, input[6], S3, 2734768916);
         T!(b, c, d, a, input[13], S4, 1309151649);
-        T!(a, b, c, d, input[ 4], S1, 4149444226);
+        T!(a, b, c, d, input[4], S1, 4149444226);
         T!(d, a, b, c, input[11], S2, 3174756917);
-        T!(c, d, a, b, input[ 2], S3,  718787259);
-        T!(b, c, d, a, input[ 9], S4, 3951481745);
+        T!(c, d, a, b, input[2], S3, 718787259);
+        T!(b, c, d, a, input[9], S4, 3951481745);
     }
     state[0] = add!(state[0], a);
     state[1] = add!(state[1], b);

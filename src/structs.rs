@@ -18,11 +18,11 @@ pub enum OutputType {
 
 impl std::fmt::Display for OutputType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-       match self {
-           OutputType::Stdout => write!(f, "stdout"),
-           OutputType::Txt => write!(f, "txt"),
-           OutputType::Csv => write!(f, "csv"),
-       }
+        match self {
+            OutputType::Stdout => write!(f, "stdout"),
+            OutputType::Txt => write!(f, "txt"),
+            OutputType::Csv => write!(f, "csv"),
+        }
     }
 }
 
@@ -33,7 +33,7 @@ pub struct Timing {
     pub key: i32,
     pub press: bool,
 
-    pub pos: pair_structs::Pairf64
+    pub pos: pair_structs::Pairf64,
 }
 
 #[derive(Copy, Clone)]
@@ -54,7 +54,9 @@ pub enum Mods {
 }
 
 impl Default for Mods {
-    fn default() -> Self {Mods::NM}
+    fn default() -> Self {
+        Mods::NM
+    }
 }
 
 #[derive(Default, Copy, Clone, PartialEq)]
@@ -64,7 +66,7 @@ pub struct TimingPoint {
     pub meter: f64,
     pub inherited: bool,
     pub sm: f64,
-    pub bpm: f64
+    pub bpm: f64,
 }
 
 #[derive(Clone, PartialEq)]
@@ -83,7 +85,9 @@ pub enum HitObjectType {
 }
 
 impl Default for HitObjectType {
-    fn default() -> Self {HitObjectType::None}
+    fn default() -> Self {
+        HitObjectType::None
+    }
 }
 
 #[derive(Copy, Clone, PartialEq)]
@@ -92,11 +96,13 @@ pub enum CurveType {
     PerfectCurve,
     BezierCurve,
     LinearCurve,
-    CatmullCurve
+    CatmullCurve,
 }
 
 impl Default for CurveType {
-    fn default() -> Self {CurveType::None}
+    fn default() -> Self {
+        CurveType::None
+    }
 }
 
 #[derive(Default)]
@@ -107,7 +113,6 @@ pub struct Bezier {
     pub ncurve: i32,
     pub total_distance: f64,
 }
-
 
 #[derive(Default)]
 pub struct CircumscribedCircle {
@@ -120,7 +125,7 @@ pub struct CircumscribedCircle {
     pub end: pair_structs::Pairf64,
     pub start_ang: f64,
     pub end_ang: f64,
-    pub mid_ang: f64    
+    pub mid_ang: f64,
 }
 
 #[derive(Default, Clone, PartialEq)]
@@ -139,7 +144,7 @@ pub struct HitObject {
     pub end_time: i64,
     pub to_repeat_time: i64,
     pub end_point: pair_structs::Pairf64,
-    pub ticks: Vec<i64>
+    pub ticks: Vec<i64>,
 }
 
 #[derive(Default)]
@@ -150,19 +155,19 @@ pub struct Slider {
     pub end_angle: f64,
     pub xy: pair_structs::Pairf64,
     pub slider_xy: Vec<pair_structs::Pairf64>,
-    pub ncurve: i32
+    pub ncurve: i32,
 }
 
 #[derive(Default, PartialEq)]
 pub struct Burst {
     pub interval: i32,
-    pub strain: f64
+    pub strain: f64,
 }
 
 #[derive(Default, PartialEq)]
 pub struct Stream {
     pub interval: i32,
-    pub length: i32
+    pub length: i32,
 }
 
 #[derive(PartialEq)]
@@ -171,18 +176,20 @@ pub enum AimPointTypes {
     AimPointCircle,
     AimPointSlider,
     //AimPointSliderreverse,
-    AimPointSliderend
+    AimPointSliderend,
 }
 
 impl Default for AimPointTypes {
-    fn default() -> Self {AimPointTypes::AimPointNone}
+    fn default() -> Self {
+        AimPointTypes::AimPointNone
+    }
 }
 
 #[derive(PartialEq)]
 pub struct AimPoint {
     pub time: i64,
     pub pos: pair_structs::Pairf64,
-    pub aim_point_type: AimPointTypes
+    pub aim_point_type: AimPointTypes,
 }
 
 #[derive(Default, PartialEq)]
@@ -235,7 +242,7 @@ pub struct Beatmap {
     pub distances: Vec<f64>,
     pub aim_strains: Vec<f64>,
     pub angle_strains: Vec<f64>,
-    
+
     pub angles: Vec<f64>,
     pub angle_bonuses: Vec<f64>,
     pub reaction_times: Vec<i32>,
@@ -251,5 +258,5 @@ pub struct Beatmap {
 
     pub compressed_stream: Vec<i32>,
     pub stream: Vec<i32>,
-    pub stack: Vec<i32>
+    pub stack: Vec<i32>,
 }

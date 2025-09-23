@@ -1,9 +1,12 @@
-use crate::structs;
 use crate::calculation_utils;
 use crate::pair_structs;
+use crate::structs;
 
 pub fn get_slider_pos(hit_object: &structs::HitObject, time: i64) -> pair_structs::Pairf64 {
-    if calculation_utils::is_hit_object_type(&hit_object.hit_object_type, structs::HitObjectType::Slider) {
+    if calculation_utils::is_hit_object_type(
+        &hit_object.hit_object_type,
+        structs::HitObjectType::Slider,
+    ) {
         let mut percent: f64;
         if time <= hit_object.time {
             percent = 0.0;
@@ -12,7 +15,8 @@ pub fn get_slider_pos(hit_object: &structs::HitObject, time: i64) -> pair_struct
         } else {
             let time_length: i64 = time - hit_object.time;
             let repeats_done: i64 = time_length / hit_object.to_repeat_time;
-            percent = (time_length - hit_object.to_repeat_time * repeats_done) as f64 / hit_object.to_repeat_time as f64;
+            percent = (time_length - hit_object.to_repeat_time * repeats_done) as f64
+                / hit_object.to_repeat_time as f64;
             if repeats_done % 2 != 0 {
                 percent = 1.0 - percent;
             }
@@ -28,10 +32,13 @@ pub fn get_slider_pos(hit_object: &structs::HitObject, time: i64) -> pair_struct
             let point = hit_object.lerp_points[index];
             let point2 = hit_object.lerp_points[index + 1];
             let t2: f64 = index_f - index as f64;
-            return pair_structs::Pairf64{x: calculation_utils::lerp(point.x, point2.x, t2), y: calculation_utils::lerp(point.y, point2.y, t2)};
+            return pair_structs::Pairf64 {
+                x: calculation_utils::lerp(point.x, point2.x, t2),
+                y: calculation_utils::lerp(point.y, point2.y, t2),
+            };
         }
     }
-    return pair_structs::Pairf64{x: -1.0, y: -1.0};
+    return pair_structs::Pairf64 { x: -1.0, y: -1.0 };
 }
 
 pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
@@ -54,23 +61,38 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
 
     i = 0;
     while i < beatmap.hit_objects.len() {
-        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
-            let timing_point_index: usize = calculation_utils::get_value_pos(&timing_point_offsets, &(beatmap.hit_objects[i].time as f64), true);
+        if calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
+            let timing_point_index: usize = calculation_utils::get_value_pos(
+                &timing_point_offsets,
+                &(beatmap.hit_objects[i].time as f64),
+                true,
+            );
             if timing_point_index == usize::MAX {
                 i += 1;
                 continue;
             }
 
-            beatmap.hit_objects[i].to_repeat_time = (f64::round((((-600.0 / beatmap.timing_points[timing_point_index].bpm) * beatmap.hit_objects[i].pixel_length * beatmap.timing_points[timing_point_index].sm) / (100.0 * beatmap.sm)) as f64)) as i64;
+            beatmap.hit_objects[i].to_repeat_time = (f64::round(
+                (((-600.0 / beatmap.timing_points[timing_point_index].bpm)
+                    * beatmap.hit_objects[i].pixel_length
+                    * beatmap.timing_points[timing_point_index].sm)
+                    / (100.0 * beatmap.sm)) as f64,
+            )) as i64;
 
             //stop some aspire maps from causing ooms by catching overflows, unnested operation in the below comment
             //beatmap.hit_objects[i].end_time = beatmap.hit_objects[i].time + beatmap.hit_objects[i].to_repeat_time * beatmap.hit_objects[i].repeat as i64;
-            beatmap.hit_objects[i].end_time = match beatmap.hit_objects[i].to_repeat_time.checked_mul(beatmap.hit_objects[i].repeat as i64) {
+            beatmap.hit_objects[i].end_time = match beatmap.hit_objects[i]
+                .to_repeat_time
+                .checked_mul(beatmap.hit_objects[i].repeat as i64)
+            {
                 Some(some) => match beatmap.hit_objects[i].time.checked_add(some) {
                     Some(some) => some,
-                    None => panic!("slider overflow detected, aborting calculation")
+                    None => panic!("slider overflow detected, aborting calculation"),
                 },
-                None => panic!("slider overflow detected, aborting calculation")
+                None => panic!("slider overflow detected, aborting calculation"),
             };
 
             if beatmap.hit_objects[i].repeat > 1 {
@@ -103,9 +125,20 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
                 j += 1;
             }
 
-            if i64::abs(beatmap.hit_objects[i].end_time as i64 - beatmap.hit_objects[i].time) < 100 && (beatmap.hit_objects[i].ticks.len() == 0) {
+            if i64::abs(beatmap.hit_objects[i].end_time as i64 - beatmap.hit_objects[i].time) < 100
+                && (beatmap.hit_objects[i].ticks.len() == 0)
+            {
                 let mut hit_object_new: structs::HitObject = Default::default();
-                hit_object_new.curves = vec![pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x, y: beatmap.hit_objects[i].pos.y}, pair_structs::Pairf64{x: beatmap.hit_objects[i].pos.x + tick_interval as f64 / beatmap.st, y: beatmap.hit_objects[i].pos.y + tick_interval as f64 / beatmap.st}];
+                hit_object_new.curves = vec![
+                    pair_structs::Pairf64 {
+                        x: beatmap.hit_objects[i].pos.x,
+                        y: beatmap.hit_objects[i].pos.y,
+                    },
+                    pair_structs::Pairf64 {
+                        x: beatmap.hit_objects[i].pos.x + tick_interval as f64 / beatmap.st,
+                        y: beatmap.hit_objects[i].pos.y + tick_interval as f64 / beatmap.st,
+                    },
+                ];
                 hit_object_new.pos = beatmap.hit_objects[i].pos;
                 hit_object_new.hit_object_type = beatmap.hit_objects[i].hit_object_type;
                 hit_object_new.time = beatmap.hit_objects[i].time;
@@ -128,10 +161,26 @@ pub fn approximate_slider_points(mut beatmap: structs::Beatmap) -> structs::Beat
     return beatmap;
 }
 
-fn combine_slider_hit_object(hit_object: structs::HitObject, slider: structs::Slider) -> structs::HitObject {
-    let new_hit_object = structs::HitObject { pos: hit_object.pos, time: hit_object.time, hit_object_type: hit_object.hit_object_type, curve_type: hit_object.curve_type, curves: hit_object.curves, 
-        lerp_points: slider.curve, ncurve: slider.ncurve, //these two are the only slider values used
-        repeat: hit_object.repeat, repeat_times: hit_object.repeat_times, pixel_length: hit_object.pixel_length, end_time: hit_object.end_time, to_repeat_time: hit_object.to_repeat_time, end_point: hit_object.end_point, ticks: hit_object.ticks };
+fn combine_slider_hit_object(
+    hit_object: structs::HitObject,
+    slider: structs::Slider,
+) -> structs::HitObject {
+    let new_hit_object = structs::HitObject {
+        pos: hit_object.pos,
+        time: hit_object.time,
+        hit_object_type: hit_object.hit_object_type,
+        curve_type: hit_object.curve_type,
+        curves: hit_object.curves,
+        lerp_points: slider.curve,
+        ncurve: slider.ncurve, //these two are the only slider values used
+        repeat: hit_object.repeat,
+        repeat_times: hit_object.repeat_times,
+        pixel_length: hit_object.pixel_length,
+        end_time: hit_object.end_time,
+        to_repeat_time: hit_object.to_repeat_time,
+        end_point: hit_object.end_point,
+        ticks: hit_object.ticks,
+    };
     return new_hit_object;
 }
 
@@ -141,11 +190,14 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
 
     let control_points: usize = hit_object.curves.len() + 1;
     let mut points: Vec<pair_structs::Pairf64> = Default::default();
-    let mut last_point = pair_structs::Pairf64{x: -1.0, y: -1.0};
+    let mut last_point = pair_structs::Pairf64 { x: -1.0, y: -1.0 };
 
     let mut i: usize = 0;
     while i < hit_object.curves.len() {
-        slider.slider_xy.push(pair_structs::Pairf64{x: hit_object.curves[i].x, y: hit_object.curves[i].y});
+        slider.slider_xy.push(pair_structs::Pairf64 {
+            x: hit_object.curves[i].x,
+            y: hit_object.curves[i].y,
+        });
         i += 1;
     }
 
@@ -156,18 +208,23 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
     while i < control_points {
         let t_point: pair_structs::Pairf64;
         if i == 0 {
-            t_point = pair_structs::Pairf64 {x: slider.xy.x, y: slider.xy.y};
+            t_point = pair_structs::Pairf64 {
+                x: slider.xy.x,
+                y: slider.xy.y,
+            };
         } else {
             t_point = slider.slider_xy[i - 1];
         }
 
         if line {
-            if last_point != (pair_structs::Pairf64 {x: -1.0, y: -1.0}) {
+            if last_point != (pair_structs::Pairf64 { x: -1.0, y: -1.0 }) {
                 points.push(t_point);
                 beziers.push(bezier_fn(&points));
                 points.clear();
             }
-        } else if last_point != (pair_structs::Pairf64 {x: -1.0, y: -1.0}) && t_point == last_point {
+        } else if last_point != (pair_structs::Pairf64 { x: -1.0, y: -1.0 })
+            && t_point == last_point
+        {
             if points.len() >= 2 {
                 beziers.push(bezier_fn(&points));
             }
@@ -175,7 +232,7 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
         }
         points.push(t_point);
         last_point = t_point;
-        
+
         i += 1;
     }
 
@@ -189,7 +246,9 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
 
     let curve_points_separation: f64 = 5.0;
     slider.ncurve = (hit_object.pixel_length / curve_points_separation) as i32;
-    slider.curve.resize(slider.ncurve as usize + 1, Default::default());
+    slider
+        .curve
+        .resize(slider.ncurve as usize + 1, Default::default());
 
     if curves_list.len() == 0 {
         let object_pos_vec: Vec<pair_structs::Pairf64> = vec![hit_object.pos];
@@ -233,17 +292,21 @@ pub fn slider_fn(mut hit_object: structs::HitObject, line: bool) -> structs::Sli
         let this_curve: pair_structs::Pairf64 = cur_curve.curve_points[cur_point as usize];
 
         if distance_at - last_distance_at > 1.0 {
-            let t: f64 = (pref_distance as f64 - last_distance_at) / (distance_at - last_distance_at);
-            slider.curve[i] = pair_structs::Pairf64{x: calculation_utils::lerp(last_curve.x, this_curve.x, t), y: (calculation_utils::lerp(last_curve.y, this_curve.y, t))};
+            let t: f64 =
+                (pref_distance as f64 - last_distance_at) / (distance_at - last_distance_at);
+            slider.curve[i] = pair_structs::Pairf64 {
+                x: calculation_utils::lerp(last_curve.x, this_curve.x, t),
+                y: (calculation_utils::lerp(last_curve.y, this_curve.y, t)),
+            };
         } else {
             slider.curve[i] = this_curve;
         }
-        
+
         i += 1;
     }
 
     return slider;
-} 
+}
 
 fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
     let mut bezier: structs::Bezier = Default::default();
@@ -266,11 +329,14 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
         let mut j: usize = 0;
         while j <= n {
             let b: f64 = calculation_utils::bernstien(j as i64, n as i64, t);
-            c += pair_structs::Pairf64{x: bezier.points[j].x * b, y: bezier.points[j].y * b};
+            c += pair_structs::Pairf64 {
+                x: bezier.points[j].x * b,
+                y: bezier.points[j].y * b,
+            };
             j += 1;
         }
         bezier.curve_points.push(c);
-        
+
         i += 1;
     }
 
@@ -280,7 +346,10 @@ fn bezier_fn(points: &Vec<pair_structs::Pairf64>) -> structs::Bezier {
         if i == 0 {
             bezier.curve_dist.push(0.0);
         } else {
-            bezier.curve_dist.push(pair_structs::get_distance_from(&bezier.curve_points[i], &bezier.curve_points[i - 1]));
+            bezier.curve_dist.push(pair_structs::get_distance_from(
+                &bezier.curve_points[i],
+                &bezier.curve_points[i - 1],
+            ));
         }
         bezier.total_distance += bezier.curve_dist[i];
 
@@ -294,9 +363,9 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let mut slider: structs::Slider = Default::default();
     let mut circle: structs::CircumscribedCircle = Default::default();
     let curve_points_separation: i32 = 5;
-    
+
     let mut i: usize = 0;
-    while i < hit_object.curves.len()  {
+    while i < hit_object.curves.len() {
         slider.slider_xy.push(hit_object.curves[i]);
         i += 1;
     }
@@ -312,7 +381,7 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let norb = pair_structs::nor(&(circle.mid - circle.end));
 
     circle.circle_center = circumscribed_circle_intersect(mida, nora, midb, norb);
-    if circle.circle_center == (pair_structs::Pairf64{x: -1.0, y: -1.0}) {
+    if circle.circle_center == (pair_structs::Pairf64 { x: -1.0, y: -1.0 }) {
         slider = slider_fn(hit_object, true);
         circle.curve.resize(slider.curve.len(), Default::default());
         circle.curve = slider.curve;
@@ -323,7 +392,7 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let start_ang_point: pair_structs::Pairf64 = circle.start - circle.circle_center;
     let mid_ang_point: pair_structs::Pairf64 = circle.mid - circle.circle_center;
     let end_ang_point: pair_structs::Pairf64 = circle.end - circle.circle_center;
-    
+
     circle.start_ang = f64::atan2(start_ang_point.y, start_ang_point.x);
     circle.mid_ang = f64::atan2(mid_ang_point.y, mid_ang_point.x);
     circle.end_ang = f64::atan2(end_ang_point.y, end_ang_point.x);
@@ -331,13 +400,21 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let two_pi: f64 = std::f64::consts::PI * 2.0;
 
     if !circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang) {
-        if f64::abs(circle.start_ang + two_pi - circle.end_ang) < two_pi && circumscribed_circle_is_in(circle.start_ang + two_pi, circle.mid_ang, circle.end_ang) {
-            circle.start_ang += two_pi; 
-        } else if f64::abs(circle.start_ang - (circle.end_ang + two_pi)) < two_pi && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang + two_pi) {
+        if f64::abs(circle.start_ang + two_pi - circle.end_ang) < two_pi
+            && circumscribed_circle_is_in(circle.start_ang + two_pi, circle.mid_ang, circle.end_ang)
+        {
+            circle.start_ang += two_pi;
+        } else if f64::abs(circle.start_ang - (circle.end_ang + two_pi)) < two_pi
+            && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang + two_pi)
+        {
             circle.end_ang += two_pi;
-        } else if f64::abs(circle.start_ang - two_pi - circle.end_ang) < two_pi && circumscribed_circle_is_in(circle.start_ang - two_pi, circle.mid_ang, circle.end_ang) {
+        } else if f64::abs(circle.start_ang - two_pi - circle.end_ang) < two_pi
+            && circumscribed_circle_is_in(circle.start_ang - two_pi, circle.mid_ang, circle.end_ang)
+        {
             circle.start_ang -= two_pi;
-        } else if f64::abs(circle.start_ang - (circle.end_ang - two_pi)) < two_pi && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang - two_pi) {
+        } else if f64::abs(circle.start_ang - (circle.end_ang - two_pi)) < two_pi
+            && circumscribed_circle_is_in(circle.start_ang, circle.mid_ang, circle.end_ang - two_pi)
+        {
             circle.end_ang -= two_pi;
         } else {
             return circle;
@@ -360,22 +437,33 @@ pub fn circumscribed_circle(hit_object: structs::HitObject) -> structs::Circumsc
     let mut i: usize = 0;
     while i < len {
         let ang: f64 = calculation_utils::lerp(circle.start_ang, circle.end_ang, i as f64 / step);
-        circle.curve.push(pair_structs::Pairf64 { x: f64::cos(ang) * circle.radius + circle.circle_center.x, y: f64::sin(ang) * circle.radius + circle.circle_center.y });
-        
+        circle.curve.push(pair_structs::Pairf64 {
+            x: f64::cos(ang) * circle.radius + circle.circle_center.x,
+            y: f64::sin(ang) * circle.radius + circle.circle_center.y,
+        });
+
         i += 1;
     }
 
     return circle;
 }
 
-fn circumscribed_circle_intersect(a: pair_structs::Pairf64, ta: pair_structs::Pairf64, b: pair_structs::Pairf64, tb: pair_structs::Pairf64) -> pair_structs::Pairf64 {
+fn circumscribed_circle_intersect(
+    a: pair_structs::Pairf64,
+    ta: pair_structs::Pairf64,
+    b: pair_structs::Pairf64,
+    tb: pair_structs::Pairf64,
+) -> pair_structs::Pairf64 {
     let des: f64 = tb.x * ta.y - tb.y * ta.x;
     if f64::abs(des) < 0.00001 {
-        return pair_structs::Pairf64{x: -1.0, y: -1.0};
+        return pair_structs::Pairf64 { x: -1.0, y: -1.0 };
     }
 
     let u: f64 = ((b.y - a.y) * ta.x + (a.x - b.x) * ta.y) / des;
-    let b_new = pair_structs::Pairf64{x: b.x + (tb.x * u), y: b.y + (tb.y * u)};
+    let b_new = pair_structs::Pairf64 {
+        x: b.x + (tb.x * u),
+        y: b.y + (tb.y * u),
+    };
 
     return b_new;
 }

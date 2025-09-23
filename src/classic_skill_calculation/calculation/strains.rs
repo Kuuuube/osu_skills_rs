@@ -1,5 +1,5 @@
-use crate::structs;
 use crate::pair_structs;
+use crate::structs;
 
 pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut c: i32 = 0;
@@ -16,7 +16,11 @@ pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref as f64, f64::powf(interval_deref as f64, pow) * mult);
+                strain = scale
+                    / f64::powf(
+                        interval_deref as f64,
+                        f64::powf(interval_deref as f64, pow) * mult,
+                    );
             }
             beatmap.tap_strains.push(strain);
         } else {
@@ -31,7 +35,11 @@ pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 let scale: f64 = 7000.0; //this value comes from osu skills config file "Scale"
                 let pow: f64 = 0.1; //this value comes from osu skills config file "Pow"
                 let mult: f64 = 0.8; //this value comes from osu skills config file "Mult"
-                strain = scale / f64::powf(interval_deref as f64, f64::powf(interval_deref as f64, pow) * mult);
+                strain = scale
+                    / f64::powf(
+                        interval_deref as f64,
+                        f64::powf(interval_deref as f64, pow) * mult,
+                    );
                 let decay: f64 = 0.94; //this value comes from osu skills config file "Decay"
                 strain += old_bonus * decay;
             }
@@ -68,7 +76,10 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
         let mut strain = 0.0;
 
         if i != 0 {
-            let distance: f64 = get_weighted_aim_distance(pair_structs::get_distance_from(&beatmap.aim_points[i].pos, &beatmap.aim_points[i - 1].pos));
+            let distance: f64 = get_weighted_aim_distance(pair_structs::get_distance_from(
+                &beatmap.aim_points[i].pos,
+                &beatmap.aim_points[i - 1].pos,
+            ));
             let interval: i64 = beatmap.aim_points[i].time - beatmap.aim_points[i - 1].time;
             let time: f64 = get_weighted_aim_time(interval as f64);
             let mut angle_bonus: f64 = 1.0;
@@ -77,7 +88,7 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 let angle_mult: f64 = 4.0; //this value comes from osu skills config file "AngleMult"
                 angle_bonus = 1.0 + angle_mult * beatmap.angle_bonuses[i - 2];
             }
-            
+
             if time > 0.0 {
                 strain = distance / time * angle_bonus;
             } else {
@@ -85,7 +96,10 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 continue;
             }
 
-            if beatmap.aim_points[i].aim_point_type == structs::AimPointTypes::AimPointSliderend || beatmap.aim_points[i - 1].aim_point_type == structs::AimPointTypes::AimPointSliderend {
+            if beatmap.aim_points[i].aim_point_type == structs::AimPointTypes::AimPointSliderend
+                || beatmap.aim_points[i - 1].aim_point_type
+                    == structs::AimPointTypes::AimPointSliderend
+            {
                 let slider_strain_decay: f64 = 2.0; //this value comes from osu skills config file "SliderStrainDecay"
                 strain *= slider_strain_decay;
             }
@@ -103,6 +117,6 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
 
         i += 1;
     }
-    
+
     return beatmap;
 }

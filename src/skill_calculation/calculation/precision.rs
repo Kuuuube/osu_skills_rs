@@ -13,7 +13,8 @@ pub fn calculate_precision(beatmap: &structs::Beatmap) -> f64 {
     if beatmap.skills.agility > agility_limit {
         scaled_agility = 1.0;
     } else {
-        scaled_agility = f64::powf(beatmap.skills.agility + agility_shift, agility_pow) - agility_subtract;
+        scaled_agility =
+            f64::powf(beatmap.skills.agility + agility_shift, agility_pow) - agility_subtract;
     }
 
     let precision: f64 = total_mult * f64::powf(scaled_agility * beatmap.cs, total_pow);

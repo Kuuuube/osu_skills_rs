@@ -1,7 +1,7 @@
-use crate::structs;
-use crate::pair_structs;
 use crate::calculation_utils;
 use crate::classic_skill_calculation;
+use crate::pair_structs;
+use crate::structs;
 
 pub fn prepare_aim_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     beatmap = calculate_movement_data(beatmap);
@@ -23,9 +23,18 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if (calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider)) && previous_time != -1 {
-            let mut distance: f64 = pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
-            let rad_subtract: f64 = 2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
+        if (calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Normal,
+        ) || calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Slider,
+        )) && previous_time != -1
+        {
+            let mut distance: f64 =
+                pair_structs::get_distance_from(&beatmap.hit_objects[i].pos, &previous_pos);
+            let rad_subtract: f64 =
+                2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64;
             let interval: f64 = (beatmap.hit_objects[i].time - previous_time) as f64;
 
             if distance >= rad_subtract {
@@ -35,11 +44,23 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
             }
 
             beatmap.distances.push(distance);
-            let dist_xy: pair_structs::Pairf64 = pair_structs::Pairf64 { x: beatmap.hit_objects[i].pos.x - previous_pos.x, y: beatmap.hit_objects[i].pos.y - previous_pos.y };
-            beatmap.velocities.push(pair_structs::Pairf64{x: dist_xy.x / interval, y: dist_xy.y / interval});
+            let dist_xy: pair_structs::Pairf64 = pair_structs::Pairf64 {
+                x: beatmap.hit_objects[i].pos.x - previous_pos.x,
+                y: beatmap.hit_objects[i].pos.y - previous_pos.y,
+            };
+            beatmap.velocities.push(pair_structs::Pairf64 {
+                x: dist_xy.x / interval,
+                y: dist_xy.y / interval,
+            });
         }
 
-        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Normal,
+        ) || calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
             previous_pos = beatmap.hit_objects[i].pos;
             previous_time = beatmap.hit_objects[i].time;
         }
@@ -51,7 +72,10 @@ fn calculate_movement_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
     i = 0;
     while i < beatmap.velocities.len() {
-        let vel: pair_structs::Pairf64 = pair_structs::Pairf64 { x: beatmap.velocities[i].x, y: beatmap.velocities[i].y };
+        let vel: pair_structs::Pairf64 = pair_structs::Pairf64 {
+            x: beatmap.velocities[i].x,
+            y: beatmap.velocities[i].y,
+        };
         if i != 0 {
             beatmap.velocities_change.push(vel - old_vel);
         }
@@ -74,13 +98,33 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
         }
         prev_time = hit_obj.time;
 
-        if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
-            target_point = structs::Timing{time: hit_obj.time, pos: hit_obj.pos, key: i, press: false, data: Default::default()};
+        if calculation_utils::is_hit_object_type(
+            &hit_obj.hit_object_type,
+            structs::HitObjectType::Normal,
+        ) {
+            target_point = structs::Timing {
+                time: hit_obj.time,
+                pos: hit_obj.pos,
+                key: i,
+                press: false,
+                data: Default::default(),
+            };
 
             beatmap.target_points.push(target_point);
-        } else if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
+        } else if calculation_utils::is_hit_object_type(
+            &hit_obj.hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
             for tick in &hit_obj.ticks {
-                target_point = structs::Timing{time: *tick as i64, pos: classic_skill_calculation::calculation::slider::get_slider_pos(hit_obj, *tick), key: i, press: true, data: Default::default()};
+                target_point = structs::Timing {
+                    time: *tick as i64,
+                    pos: classic_skill_calculation::calculation::slider::get_slider_pos(
+                        hit_obj, *tick,
+                    ),
+                    key: i,
+                    press: true,
+                    data: Default::default(),
+                };
 
                 beatmap.target_points.push(target_point);
             }
@@ -92,16 +136,38 @@ fn gather_target_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
 fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     for hit_obj in &beatmap.hit_objects {
-        if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Normal) {
-            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointCircle });
-        } else if calculation_utils::is_hit_object_type(&hit_obj.hit_object_type, structs::HitObjectType::Slider) {
-            beatmap.aim_points.push(structs::AimPoint { time: hit_obj.time, pos: hit_obj.pos, aim_point_type: structs::AimPointTypes::AimPointSlider });
+        if calculation_utils::is_hit_object_type(
+            &hit_obj.hit_object_type,
+            structs::HitObjectType::Normal,
+        ) {
+            beatmap.aim_points.push(structs::AimPoint {
+                time: hit_obj.time,
+                pos: hit_obj.pos,
+                aim_point_type: structs::AimPointTypes::AimPointCircle,
+            });
+        } else if calculation_utils::is_hit_object_type(
+            &hit_obj.hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
+            beatmap.aim_points.push(structs::AimPoint {
+                time: hit_obj.time,
+                pos: hit_obj.pos,
+                aim_point_type: structs::AimPointTypes::AimPointSlider,
+            });
 
             let end_time: i64 = calculation_utils::get_last_tick_time(hit_obj);
-            let end_pos: pair_structs::Pairf64 = classic_skill_calculation::calculation::slider::get_slider_pos(hit_obj, end_time);
+            let end_pos: pair_structs::Pairf64 =
+                classic_skill_calculation::calculation::slider::get_slider_pos(hit_obj, end_time);
 
-            if hit_obj.ticks.len() != 0 || pair_structs::get_distance_from(&hit_obj.pos, &end_pos) > 2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64 {
-                beatmap.aim_points.push(structs::AimPoint { time: end_time, pos: end_pos, aim_point_type: structs::AimPointTypes::AimPointSliderend });
+            if hit_obj.ticks.len() != 0
+                || pair_structs::get_distance_from(&hit_obj.pos, &end_pos)
+                    > 2.0 * calculation_utils::cs_to_px(beatmap.cs as i32 as f64) as f64
+            {
+                beatmap.aim_points.push(structs::AimPoint {
+                    time: end_time,
+                    pos: end_pos,
+                    aim_point_type: structs::AimPointTypes::AimPointSliderend,
+                });
             }
         }
     }
@@ -111,7 +177,11 @@ fn gather_aim_points(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 fn calculate_angles(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut i: usize = 0;
     while i + 2 < beatmap.aim_points.len() {
-        let angle: f64 = calculation_utils::get_dir_angle(beatmap.aim_points[i].pos, beatmap.aim_points[i + 1].pos, beatmap.aim_points[i + 2].pos);
+        let angle: f64 = calculation_utils::get_dir_angle(
+            beatmap.aim_points[i].pos,
+            beatmap.aim_points[i + 1].pos,
+            beatmap.aim_points[i + 2].pos,
+        );
         beatmap.angles.push(angle);
 
         i += 1;
@@ -187,56 +257,88 @@ pub fn prepare_timing_points(mut beatmap: structs::Beatmap) -> structs::Beatmap 
 pub fn bake_slider_data(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
-
+        if calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
             match beatmap.hit_objects[i].curve_type {
                 structs::CurveType::BezierCurve => {
-                    let slider_data: structs::Slider = classic_skill_calculation::calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
-                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
+                    let slider_data: structs::Slider =
+                        classic_skill_calculation::calculation::slider::slider_fn(
+                            beatmap.hit_objects[i].clone(),
+                            false,
+                        );
+                    beatmap.hit_objects[i]
+                        .lerp_points
+                        .resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
-                },
+                }
                 structs::CurveType::PerfectCurve => {
                     if beatmap.hit_objects[i].curves.len() == 2 {
-                        let circle_data: structs::CircumscribedCircle = classic_skill_calculation::calculation::slider::circumscribed_circle(beatmap.hit_objects[i].clone());
-                        beatmap.hit_objects[i].lerp_points.resize(circle_data.curve.len(), Default::default());
+                        let circle_data: structs::CircumscribedCircle =
+                            classic_skill_calculation::calculation::slider::circumscribed_circle(
+                                beatmap.hit_objects[i].clone(),
+                            );
+                        beatmap.hit_objects[i]
+                            .lerp_points
+                            .resize(circle_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = circle_data.curve;
                         beatmap.hit_objects[i].ncurve = circle_data.ncurve;
                     } else {
-                        let slider_data: structs::Slider = classic_skill_calculation::calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), false);
-                        beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
+                        let slider_data: structs::Slider =
+                            classic_skill_calculation::calculation::slider::slider_fn(
+                                beatmap.hit_objects[i].clone(),
+                                false,
+                            );
+                        beatmap.hit_objects[i]
+                            .lerp_points
+                            .resize(slider_data.curve.len(), Default::default());
                         beatmap.hit_objects[i].lerp_points = slider_data.curve;
                         beatmap.hit_objects[i].ncurve = slider_data.ncurve;
                     }
-                },
+                }
                 structs::CurveType::LinearCurve => {
-                    let slider_data: structs::Slider = classic_skill_calculation::calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
-                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
+                    let slider_data: structs::Slider =
+                        classic_skill_calculation::calculation::slider::slider_fn(
+                            beatmap.hit_objects[i].clone(),
+                            true,
+                        );
+                    beatmap.hit_objects[i]
+                        .lerp_points
+                        .resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
-                },
+                }
                 structs::CurveType::CatmullCurve => {
-                    let slider_data: structs::Slider = classic_skill_calculation::calculation::slider::slider_fn(beatmap.hit_objects[i].clone(), true);
-                    beatmap.hit_objects[i].lerp_points.resize(slider_data.curve.len(), Default::default());
+                    let slider_data: structs::Slider =
+                        classic_skill_calculation::calculation::slider::slider_fn(
+                            beatmap.hit_objects[i].clone(),
+                            true,
+                        );
+                    beatmap.hit_objects[i]
+                        .lerp_points
+                        .resize(slider_data.curve.len(), Default::default());
                     beatmap.hit_objects[i].lerp_points = slider_data.curve;
                     beatmap.hit_objects[i].ncurve = slider_data.ncurve;
-                },
-                _ => ()
+                }
+                _ => (),
             }
 
             if (beatmap.hit_objects[i].repeat % 2) != 0 {
                 beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.last() {
                     Some(some) => *some,
-                    None => Default::default()
+                    None => Default::default(),
                 };
             } else {
-                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.first() {
+                beatmap.hit_objects[i].end_point = match beatmap.hit_objects[i].lerp_points.first()
+                {
                     Some(some) => *some,
-                    None => Default::default()
+                    None => Default::default(),
                 };
             }
         }
-        
+
         i += 1;
     }
     return beatmap;
@@ -246,9 +348,17 @@ fn calculate_press_intervals(mut beatmap: structs::Beatmap) -> structs::Beatmap 
     let mut previous_time: i64 = -1;
     let mut i: usize = 0;
     while i < beatmap.hit_objects.len() {
-        if calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Normal) || calculation_utils::is_hit_object_type(&beatmap.hit_objects[i].hit_object_type, structs::HitObjectType::Slider) {
+        if calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Normal,
+        ) || calculation_utils::is_hit_object_type(
+            &beatmap.hit_objects[i].hit_object_type,
+            structs::HitObjectType::Slider,
+        ) {
             if i > 0 {
-                beatmap.press_intervals.push((beatmap.hit_objects[i].time - previous_time) as i32);
+                beatmap
+                    .press_intervals
+                    .push((beatmap.hit_objects[i].time - previous_time) as i32);
             }
             previous_time = beatmap.hit_objects[i].time;
         }
@@ -287,7 +397,10 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
 
         if i32::abs(new_press_intervals[i] - old) > offset_max_displacement {
             if tmp.len() > 6 {
-                beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]})
+                beatmap.streams.push(pair_structs::Pairi32VectorVectori32 {
+                    x: old,
+                    y: vec![tmp.clone()],
+                })
             }
             tmp.clear();
         }
@@ -297,7 +410,10 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     }
 
     if tmp.len() > 6 {
-        beatmap.streams.push(pair_structs::Pairi32VectorVectori32{x: old, y: vec![tmp.clone()]});
+        beatmap.streams.push(pair_structs::Pairi32VectorVectori32 {
+            x: old,
+            y: vec![tmp.clone()],
+        });
     }
 
     beatmap.streams.sort();

@@ -1,5 +1,5 @@
-use crate::structs;
 use crate::pair_structs;
+use crate::structs;
 
 fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> structs::Stream {
     let mut max: usize = 1;
@@ -20,7 +20,10 @@ fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> st
         }
     }
 
-    return structs::Stream{interval: {interval}, length: {max as i32}};
+    return structs::Stream {
+        interval: { interval },
+        length: { max as i32 },
+    };
 }
 
 pub fn calculate_tenacity(beatmap: &structs::Beatmap) -> f64 {
@@ -34,8 +37,15 @@ pub fn calculate_tenacity(beatmap: &structs::Beatmap) -> f64 {
     let total_mult: f64 = 5.0; //this value comes from osu skills config file "TotalMult"
     let total_pow: f64 = 0.75; //this value comes from osu skills config file "TotalPow"
 
-    let interval_scaled: f64 = 1.0 / f64::powf(longest_stream.interval as f64, f64::powf(longest_stream.interval as f64, interval_pow) * interval_mult) * interval_mult2;
-    let length_scaled: f64 = f64::powf(length_divisor / longest_stream.length as f64, length_divisor / longest_stream.length as f64 * length_mult);
+    let interval_scaled: f64 =
+        1.0 / f64::powf(
+            longest_stream.interval as f64,
+            f64::powf(longest_stream.interval as f64, interval_pow) * interval_mult,
+        ) * interval_mult2;
+    let length_scaled: f64 = f64::powf(
+        length_divisor / longest_stream.length as f64,
+        length_divisor / longest_stream.length as f64 * length_mult,
+    );
     let tenacity: f64 = total_mult * f64::powf(interval_scaled * length_scaled, total_pow);
     return tenacity;
 }
