@@ -309,20 +309,20 @@ impl Ord for Pairi32VectorVectori32 {
     }
 }
 
-#[derive(Clone)]
-pub struct Pairi32VectorPairf64 {
-    pub x: i32,
-    pub y: Vec<Pairf64>,
-}
+// #[derive(Clone)]
+// pub struct Pairi32VectorPairf64 {
+//     pub x: i32,
+//     pub y: Vec<Pairf64>,
+// }
 
-impl Default for Pairi32VectorPairf64 {
-    fn default() -> Self {
-        Pairi32VectorPairf64 {
-            x: (0),
-            y: (Default::default()),
-        }
-    }
-}
+// impl Default for Pairi32VectorPairf64 {
+//     fn default() -> Self {
+//         Pairi32VectorPairf64 {
+//             x: (0),
+//             y: (Default::default()),
+//         }
+//     }
+// }
 
 pub fn get_length(pairf64_0: Pairf64) -> f64 {
     return f64::sqrt(pairf64_0.x * pairf64_0.x + pairf64_0.y * pairf64_0.y);

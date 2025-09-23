@@ -162,20 +162,6 @@ impl convert::From<Context> for Digest {
     }
 }
 
-#[cfg(feature = "std")]
-impl io::Write for Context {
-    #[inline]
-    fn write(&mut self, data: &[u8]) -> io::Result<usize> {
-        self.consume(data);
-        Ok(data.len())
-    }
-
-    #[inline]
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
 /// Compute the digest of data.
 #[inline]
 pub fn compute<T: AsRef<[u8]>>(data: T) -> Digest {

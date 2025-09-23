@@ -150,19 +150,19 @@ pub struct HitObject {
 #[derive(Default)]
 pub struct Slider {
     pub curve: Vec<pair_structs::Pairf64>,
-    pub curve_points_separation: i32,
-    pub start_angle: f64,
-    pub end_angle: f64,
+    // pub curve_points_separation: i32,
+    // pub start_angle: f64,
+    // pub end_angle: f64,
     pub xy: pair_structs::Pairf64,
     pub slider_xy: Vec<pair_structs::Pairf64>,
     pub ncurve: i32,
 }
 
-#[derive(Default, PartialEq)]
-pub struct Burst {
-    pub interval: i32,
-    pub strain: f64,
-}
+// #[derive(Default, PartialEq)]
+// pub struct Burst {
+//     pub interval: i32,
+//     pub strain: f64,
+// }
 
 #[derive(Default, PartialEq)]
 pub struct Stream {

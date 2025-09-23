@@ -150,7 +150,6 @@ fn main() {
         OutputType::Stdout => output::output_stdout(mod_int, alg, files),
         OutputType::Txt => output::output_file_txt(mod_int, alg, files, output_filepath),
         OutputType::Csv => output::output_file_csv(mod_int, alg, files, output_filepath),
-        _ => {}
     }
 
     print!("Finished calculation of all maps to `{}`\n", output_type);
