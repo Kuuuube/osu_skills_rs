@@ -101,7 +101,7 @@ pub fn output_file_csv(
     }
 }
 
-fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
+pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
     let result = panic::catch_unwind(|| {
         let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
         beatmap.mods = mod_int;
@@ -149,7 +149,7 @@ fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::B
     }
 }
 
-fn classic_process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
+pub fn classic_process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32) -> structs::Beatmap {
     let result = panic::catch_unwind(|| {
         let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
         beatmap.mods = mod_int;

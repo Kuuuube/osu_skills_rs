@@ -13,6 +13,8 @@ mod pair_structs;
 mod parser;
 mod skill_calculation;
 mod structs;
+#[cfg(test)]
+mod tests;
 
 fn main() {
     panic::set_hook(Box::new(|_info| print!("{_info}\n")));
