@@ -36,6 +36,24 @@ fn calculate_maps_classic() {
     }
 }
 
+#[test]
+fn calculate_maps_rebalance_1() {
+    let expected_default_data = get_rebalance_1_data();
+    for osu_filepath in std::fs::read_dir("src/tests/testmaps").unwrap() {
+        let filepath = osu_filepath.unwrap();
+        let pathbuf = filepath.path();
+        let filename = filepath.file_name().into_string().unwrap();
+        if !filename.contains(".osu") { continue; }
+        let processed_beatmap = crate::output::process_beatmap(
+            pathbuf,
+            0,
+            crate::structs::CalculationAlgorithm::Rebalance1,
+        );
+        assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
+    }
+}
+
+
 fn get_default_data() -> HashMap<String, Skills> {
     return HashMap::from([
         (
@@ -273,4 +291,58 @@ fn get_classic_data() -> HashMap<String, Skills> {
     }
 
     return classic_data;
+}
+
+fn get_rebalance_1_data() -> HashMap<String, Skills> {
+    let mut rebalance_1_data = get_classic_data();
+
+    if let Some(x) = rebalance_1_data.get_mut("v3.osu") {
+        x.accuracy = 257.25699243016396;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v4.osu") {
+        x.accuracy = 345.7608578547154;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v5.osu") {
+        x.accuracy = 370.1374000738153;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v6.osu") {
+        x.accuracy = 284.65594147929585;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v7.osu") {
+        x.accuracy = 608.8443109694808;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v8.osu") {
+        x.accuracy = 368.46479247932973;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v9.osu") {
+        x.accuracy = 123.78841054612984;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v10.osu") {
+        x.accuracy = 61.30327077537922;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v11.osu") {
+        x.accuracy = 261.76958852975844;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v12.osu") {
+        x.accuracy = 635.5298556224484;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v13.osu") {
+        x.accuracy = 350.26969794656657;
+    }
+
+    if let Some(x) = rebalance_1_data.get_mut("v14.osu") {
+        x.accuracy = 806.0815894257476;
+    }
+
+    return rebalance_1_data;
 }
