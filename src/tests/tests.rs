@@ -9,6 +9,7 @@ fn calculate_maps_default() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
+        if !filename.contains(".osu") { continue; }
         let processed_beatmap = crate::output::process_beatmap(
             pathbuf,
             0,
@@ -25,6 +26,7 @@ fn calculate_maps_classic() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
+        if !filename.contains(".osu") { continue; }
         let processed_beatmap = crate::output::process_beatmap(
             pathbuf,
             0,
