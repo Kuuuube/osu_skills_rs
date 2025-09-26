@@ -1,6 +1,6 @@
 use crate::pair_structs;
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub enum CalculationAlgorithm {
     #[default]
     Default,
