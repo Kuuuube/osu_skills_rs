@@ -1,7 +1,7 @@
 use std::panic;
 use std::{fs, io::Write};
 
-use crate::classic_skill_calculation;
+use crate::{classic_skill_calculation, rebalance_1};
 use crate::skill_calculation;
 use crate::structs::{self, CalculationAlgorithm, OutputType};
 use crate::{calculation_utils, osu_parser};
@@ -124,6 +124,23 @@ pub fn process_beatmap(
                 skill_calculation::calculation::agility::calculate_agility(&beatmap);
 
             match alg {
+                CalculationAlgorithm::Default => {
+                    beatmap.skills.accuracy =
+                        skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
+                },
+                CalculationAlgorithm::Classic => {
+                    beatmap.skills.accuracy =
+                        classic_skill_calculation::calculation::accuracy::calculate_accuracy(
+                            &beatmap,
+                        );
+                },
+                CalculationAlgorithm::Rebalance1 => {
+                    beatmap.skills.accuracy =
+                        rebalance_1::calculation::accuracy::calculate_accuracy(&beatmap);
+                },
+            }
+
+            match alg {
                 CalculationAlgorithm::Classic => {
                     beatmap.skills.reaction =
                         classic_skill_calculation::calculation::reaction::calculate_reaction(
@@ -131,10 +148,6 @@ pub fn process_beatmap(
                         );
                     beatmap.skills.precision =
                         classic_skill_calculation::calculation::precision::calculate_precision(
-                            &beatmap,
-                        );
-                    beatmap.skills.accuracy =
-                        classic_skill_calculation::calculation::accuracy::calculate_accuracy(
                             &beatmap,
                         );
                     beatmap.skills.memory =
@@ -145,8 +158,6 @@ pub fn process_beatmap(
                         skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
                     beatmap.skills.precision =
                         skill_calculation::calculation::precision::calculate_precision(&beatmap);
-                    beatmap.skills.accuracy =
-                        skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
                     beatmap.skills.memory =
                         skill_calculation::calculation::memory::calculate_memory(&beatmap);
                 }

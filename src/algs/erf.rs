@@ -19,7 +19,7 @@ pub fn erf(x: f64) -> f64 {
     }
 }
 
-/* /// `erf_inv` calculates the inverse error function
+/// `erf_inv` calculates the inverse error function
 /// at `x`.
 pub fn erf_inv(x: f64) -> f64 {
     if x == 0.0 {
@@ -35,7 +35,7 @@ pub fn erf_inv(x: f64) -> f64 {
     }
 }
 
-/// `erfc` calculates the complementary error function
+/* /// `erfc` calculates the complementary error function
 /// at `x`.
 pub fn erfc(x: f64) -> f64 {
     if x.is_nan() {
@@ -376,7 +376,7 @@ const ERF_IMPL_ND: &[f64] = &[
     0.193847039275845656900547e-5,
 ];
 
-/* // **********************************************************
+// **********************************************************
 // ********** Coefficients for erf_inv_impl polynomial ******
 // **********************************************************
 
@@ -565,7 +565,7 @@ const ERF_INV_IMPL_GD: &[f64] = &[
     0.399968812193862100054e-6,
     0.161809290887904476097e-8,
     0.231558608310259605225e-11,
-]; */
+];
 
 /// `erf_impl` computes the error function at `z`.
 /// If `inv` is true, `1 - erf` is calculated as opposed to `erf`
@@ -682,7 +682,7 @@ fn erf_impl(z: f64, inv: bool) -> f64 {
     }
 }
 
-/* // `erf_inv_impl` computes the inverse error function where
+// `erf_inv_impl` computes the inverse error function where
 // `p`,`q`, and `s` are the first, second, and third intermediate
 // parameters respectively
 fn erf_inv_impl(p: f64, q: f64, s: f64) -> f64 {
@@ -733,4 +733,4 @@ fn erf_inv_impl(p: f64, q: f64, s: f64) -> f64 {
         }
     };
     s * result
-} */
+}

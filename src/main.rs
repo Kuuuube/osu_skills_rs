@@ -12,6 +12,7 @@ mod osu_parser;
 mod output;
 mod pair_structs;
 mod parser;
+mod rebalance_1;
 mod skill_calculation;
 mod structs;
 #[cfg(test)]
