@@ -27,7 +27,7 @@ pub fn output(
                     print!("{}", formatted_string);
                 }
             }
-        },
+        }
         OutputType::Txt => {
             let mut output_file = match fs::OpenOptions::new()
                 .create(true)
@@ -49,11 +49,13 @@ pub fn output(
 
                     match output_file.write(formatted_string.as_bytes()) {
                         Ok(_) => (),
-                        Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
+                        Err(error) => {
+                            println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
+                        }
                     };
                 }
             }
-        },
+        }
         OutputType::Csv => {
             let mut output_file = match fs::OpenOptions::new()
                 .create(true)
@@ -82,15 +84,21 @@ pub fn output(
 
                     match output_file.write(formatted_string.as_bytes()) {
                         Ok(_) => (),
-                        Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
+                        Err(error) => {
+                            println!("osu!Skills rs: failed to write file. Error: {}\n\n", error)
+                        }
                     };
                 }
             }
-        },
+        }
     }
 }
 
-pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: CalculationAlgorithm) -> structs::Beatmap {
+pub fn process_beatmap(
+    osu_filepath: std::path::PathBuf,
+    mod_int: i32,
+    alg: CalculationAlgorithm,
+) -> structs::Beatmap {
     let result = panic::catch_unwind(|| {
         let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
         beatmap.mods = mod_int;
@@ -108,21 +116,30 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
             beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
             beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
 
-            beatmap.skills.stamina = skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
-            beatmap.skills.tenacity = skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
-            beatmap.skills.agility = skill_calculation::calculation::agility::calculate_agility(&beatmap);
+            beatmap.skills.stamina =
+                skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
+            beatmap.skills.tenacity =
+                skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
+            beatmap.skills.agility =
+                skill_calculation::calculation::agility::calculate_agility(&beatmap);
 
             match alg {
                 CalculationAlgorithm::Classic => {
                     beatmap.skills.reaction =
-                        classic_skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
+                        classic_skill_calculation::calculation::reaction::calculate_reaction(
+                            &beatmap,
+                        );
                     beatmap.skills.precision =
-                        classic_skill_calculation::calculation::precision::calculate_precision(&beatmap);
+                        classic_skill_calculation::calculation::precision::calculate_precision(
+                            &beatmap,
+                        );
                     beatmap.skills.accuracy =
-                        classic_skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
+                        classic_skill_calculation::calculation::accuracy::calculate_accuracy(
+                            &beatmap,
+                        );
                     beatmap.skills.memory =
                         classic_skill_calculation::calculation::memory::calculate_memory(&beatmap);
-                },
+                }
                 _ => {
                     beatmap.skills.reaction =
                         skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
@@ -132,7 +149,7 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
                         skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
                     beatmap.skills.memory =
                         skill_calculation::calculation::memory::calculate_memory(&beatmap);
-                },
+                }
             }
         }
         return beatmap;

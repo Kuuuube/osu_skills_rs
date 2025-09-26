@@ -9,7 +9,11 @@ fn calculate_maps_default() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
-        let processed_beatmap = crate::output::process_beatmap(pathbuf, 0, crate::structs::CalculationAlgorithm::Default);
+        let processed_beatmap = crate::output::process_beatmap(
+            pathbuf,
+            0,
+            crate::structs::CalculationAlgorithm::Default,
+        );
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }
@@ -21,7 +25,11 @@ fn calculate_maps_classic() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
-        let processed_beatmap = crate::output::process_beatmap(pathbuf, 0, crate::structs::CalculationAlgorithm::Classic);
+        let processed_beatmap = crate::output::process_beatmap(
+            pathbuf,
+            0,
+            crate::structs::CalculationAlgorithm::Classic,
+        );
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }

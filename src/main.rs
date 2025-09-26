@@ -76,7 +76,12 @@ fn main() {
 
     let mut files: Vec<std::path::PathBuf> = Default::default();
 
-    print!("Collecting filenames from `{}`\n", absolute(&input_filepath).unwrap_or_else(|_| (&input_filepath).into()).to_string_lossy());
+    print!(
+        "Collecting filenames from `{}`\n",
+        absolute(&input_filepath)
+            .unwrap_or_else(|_| (&input_filepath).into())
+            .to_string_lossy()
+    );
     match &is_dir.to_lowercase() as &str {
         "dir" => {
             let paths = match fs::read_dir(&input_filepath) {
@@ -84,7 +89,7 @@ fn main() {
                 Err(_) => {
                     println!("Failed to read dir `{}`", input_filepath);
                     return;
-                },
+                }
             };
             for path in paths {
                 let unwrapped_path = path.unwrap().path();
@@ -107,7 +112,7 @@ fn main() {
                 Err(_) => {
                     println!("Failed to read dir `{}`", input_filepath);
                     return;
-                },
+                }
             };
             for path in paths {
                 let unwrapped_path = path.unwrap().path();
