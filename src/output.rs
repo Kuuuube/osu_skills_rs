@@ -105,21 +105,17 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
             beatmap = skill_calculation::calculation::generic::prepare_aim_data(beatmap);
             beatmap = skill_calculation::calculation::generic::prepare_tap_data(beatmap);
 
+            beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
+            beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
+
+            beatmap.skills.stamina = skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
+            beatmap.skills.tenacity = skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
+            beatmap.skills.agility = skill_calculation::calculation::agility::calculate_agility(&beatmap);
+
             match alg {
                 CalculationAlgorithm::Classic => {
-                    beatmap =
-                        classic_skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
-                    beatmap =
-                        classic_skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
-
                     beatmap.skills.reaction =
                         classic_skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
-                    beatmap.skills.stamina =
-                        classic_skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
-                    beatmap.skills.tenacity =
-                        classic_skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
-                    beatmap.skills.agility =
-                        classic_skill_calculation::calculation::agility::calculate_agility(&beatmap);
                     beatmap.skills.precision =
                         classic_skill_calculation::calculation::precision::calculate_precision(&beatmap);
                     beatmap.skills.accuracy =
@@ -128,17 +124,8 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
                         classic_skill_calculation::calculation::memory::calculate_memory(&beatmap);
                 },
                 _ => {
-                    beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
-                    beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
-
                     beatmap.skills.reaction =
                         skill_calculation::calculation::reaction::calculate_reaction(&beatmap);
-                    beatmap.skills.stamina =
-                        skill_calculation::calculation::stamina::calculate_stamina(&beatmap);
-                    beatmap.skills.tenacity =
-                        skill_calculation::calculation::tenacity::calculate_tenacity(&beatmap);
-                    beatmap.skills.agility =
-                        skill_calculation::calculation::agility::calculate_agility(&beatmap);
                     beatmap.skills.precision =
                         skill_calculation::calculation::precision::calculate_precision(&beatmap);
                     beatmap.skills.accuracy =
