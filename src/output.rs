@@ -141,7 +141,7 @@ pub fn process_beatmap(
             }
 
             match alg {
-                CalculationAlgorithm::Classic => {
+                CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => {
                     beatmap.skills.reaction =
                         classic_skill_calculation::calculation::reaction::calculate_reaction(
                             &beatmap,
