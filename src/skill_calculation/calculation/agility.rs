@@ -1,10 +1,11 @@
 use crate::calculation_utils;
 use crate::structs;
+use crate::vars::SKILL_CALCULATION_VARS;
 
 pub fn calculate_agility(beatmap: &structs::Beatmap) -> f64 {
-    let total_mult: f64 = 30.0; //this value comes from osu skills config file "TotalMult"
-    let total_pow: f64 = 0.28; //this value comes from osu skills config file "TotalPow"
-    let weighting: f64 = 0.78; //this value comes from osu skills config file "Weighting"
+    let total_mult: f64 = SKILL_CALCULATION_VARS.agility.total_mult;
+    let total_pow: f64 = SKILL_CALCULATION_VARS.agility.total_pow;
+    let weighting: f64 = SKILL_CALCULATION_VARS.agility.weighting;
 
     let top_weights: Vec<f64> = calculation_utils::get_peak_vals(&beatmap.aim_strains);
 

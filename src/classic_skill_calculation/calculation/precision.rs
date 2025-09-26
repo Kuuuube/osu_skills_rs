@@ -1,10 +1,10 @@
-use crate::structs;
+use crate::{structs, vars::SKILL_CALCULATION_VARS};
 
 pub fn calculate_precision(beatmap: &structs::Beatmap) -> f64 {
-    let agility_pow: f64 = 0.1; //this value comes from osu skills config file "AgilityPow"
-    let total_mult: f64 = 20.0; //this value comes from osu skills config file "TotalMult"
-    let total_pow: f64 = 2.0; //this value comes from osu skills config file "TotalPow"
-    let agility_subtract: f64 = 0.995462; //this value comes from osu skills config file "AgilitySubtract"
+    let agility_pow: f64 = SKILL_CALCULATION_VARS.precision.agility_pow;
+    let total_mult: f64 = SKILL_CALCULATION_VARS.precision.total_mult;
+    let total_pow: f64 = SKILL_CALCULATION_VARS.precision.total_pow;
+    let agility_subtract: f64 = SKILL_CALCULATION_VARS.precision.agility_subtract;
 
     let scaled_agility: f64 =
         f64::powf(beatmap.skills.agility + 1.0, agility_pow) - agility_subtract;

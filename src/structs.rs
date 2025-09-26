@@ -260,3 +260,86 @@ pub struct Beatmap {
     pub stream: Vec<i32>,
     pub stack: Vec<i32>,
 }
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationVars {
+    pub reaction: SkillCalculationReactionVars,
+    pub precision: SkillCalculationPrecisionVars,
+    pub accuracy: SkillCalculationAccuracyVars,
+    pub agility: SkillCalculationAgilityVars,
+    pub tenacity: SkillCalculationTenacityVars,
+    pub memory: SkillCalculationMemoryVars,
+    pub stamina: SkillCalculationStaminaVars,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationReactionVars {
+    pub curve_exp: f64,
+    pub fade_in_percent: f64,
+    pub ver_scale: f64,
+    pub pattern_damping: f64,
+    pub avg_weighting: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationPrecisionVars {
+    pub total_pow: f64,
+    pub total_mult: f64,
+    pub agility_subtract: f64,
+    pub agility_pow: f64,
+    pub agility_limit: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationAccuracyVars {
+    pub total_pow: f64,
+    pub total_mult: f64,
+    pub ver_scale: f64,
+    pub acc_scale: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationAgilityVars {
+    pub total_mult: f64,
+    pub weighting: f64,
+    pub total_pow: f64,
+    pub slider_strain_decay: f64,
+    pub angle_mult: f64,
+    pub time_pow: f64,
+    pub time_mult: f64,
+    pub dist_divisor: f64,
+    pub strain_decay: f64,
+    pub dist_pow: f64,
+    pub dist_mult: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationTenacityVars {
+    pub total_pow: f64,
+    pub total_mult: f64,
+    pub length_mult: f64,
+    pub length_divisor: f64,
+    pub interval_mult2: f64,
+    pub interval_pow: f64,
+    pub interval_mult: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationMemoryVars {
+    pub total_mult: f64,
+    pub sliderbuff: f64,
+    pub total_pow: f64,
+    pub followpoints_nerf: f64,
+}
+
+#[derive(Default, Debug)]
+pub struct SkillCalculationStaminaVars {
+    pub total_pow: f64,
+    pub largest_interval: f64,
+    pub pow: f64,
+    pub total_mult: f64,
+    pub scale: f64,
+    pub mult: f64,
+    pub decay_max: f64,
+    pub decay: f64,
+}

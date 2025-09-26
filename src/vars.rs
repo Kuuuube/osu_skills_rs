@@ -1,0 +1,66 @@
+use crate::structs::{
+    SkillCalculationAccuracyVars, SkillCalculationAgilityVars, SkillCalculationMemoryVars,
+    SkillCalculationPrecisionVars, SkillCalculationReactionVars, SkillCalculationStaminaVars,
+    SkillCalculationTenacityVars, SkillCalculationVars,
+};
+
+pub const SKILL_CALCULATION_VARS: SkillCalculationVars = SkillCalculationVars {
+    reaction: SkillCalculationReactionVars {
+        curve_exp: 0.64,
+        fade_in_percent: 0.1,
+        ver_scale: 12.2,
+        pattern_damping: 0.15,
+        avg_weighting: 0.7,
+    },
+    precision: SkillCalculationPrecisionVars {
+        total_pow: 2.0,
+        total_mult: 20.0,
+        agility_subtract: 0.995462,
+        agility_pow: 0.1,
+        agility_limit: 700.0,
+    },
+    accuracy: SkillCalculationAccuracyVars {
+        total_pow: 1.3,
+        total_mult: 23100.0,
+        ver_scale: 0.3,
+        acc_scale: 0.01,
+    },
+    agility: SkillCalculationAgilityVars {
+        total_mult: 30.0,
+        weighting: 0.78,
+        total_pow: 0.28,
+        slider_strain_decay: 2.0,
+        angle_mult: 4.0,
+        time_pow: 1.04,
+        time_mult: 0.001,
+        dist_divisor: 2.0,
+        strain_decay: 16.9201,
+        dist_pow: 1.0,
+        dist_mult: 1.0,
+    },
+    tenacity: SkillCalculationTenacityVars {
+        total_pow: 0.75,
+        total_mult: 5.0,
+        length_mult: 15.0,
+        length_divisor: 0.08,
+        interval_mult2: 13000.0,
+        interval_pow: 0.143,
+        interval_mult: 0.37,
+    },
+    memory: SkillCalculationMemoryVars {
+        total_mult: 205.0,
+        sliderbuff: 1.1,
+        total_pow: 0.3,
+        followpoints_nerf: 0.8,
+    },
+    stamina: SkillCalculationStaminaVars {
+        total_pow: 0.75,
+        largest_interval: 50550.0,
+        pow: 0.1,
+        total_mult: 4.6,
+        scale: 7000.0,
+        mult: 0.8,
+        decay_max: 0.0,
+        decay: 0.94,
+    },
+};

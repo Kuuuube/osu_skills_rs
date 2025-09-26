@@ -17,6 +17,7 @@ mod skill_calculation;
 mod structs;
 #[cfg(test)]
 mod tests;
+mod vars;
 
 fn main() {
     panic::set_hook(Box::new(|_info| print!("{_info}\n")));

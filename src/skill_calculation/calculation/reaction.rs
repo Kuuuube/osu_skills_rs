@@ -1,6 +1,7 @@
 use crate::calculation_utils;
 use crate::pair_structs;
 use crate::structs;
+use crate::vars::SKILL_CALCULATION_VARS;
 
 fn get_visibility_times(
     obj: &structs::HitObject,
@@ -98,7 +99,7 @@ fn pattern_to_reaction(
     ar_ms: f64,
     cs_px: f64,
 ) -> f64 {
-    let damping: f64 = 0.15; //this value comes from osu skills config file "PatternDamping"
+    let damping: f64 = SKILL_CALCULATION_VARS.reaction.pattern_damping;
     let curve_steepness = damping;
     let pattern_requirement = pattern_req(p1, p2, p3, cs_px);
 
@@ -121,7 +122,7 @@ fn get_reaction_skill_at(
     hidden: bool,
 ) -> f64 {
     let mut time_to_react = 0.0;
-    let fade_in_react_req = 0.1; //this value comes from osu skills config file "FadeinPercent"
+    let fade_in_react_req = SKILL_CALCULATION_VARS.reaction.fade_in_percent;
     let index: i32 = calculation_utils::find_timing_at(&target_points, target_point.time);
 
     if index >= (target_points.len() as i32) - 2 {
@@ -157,8 +158,8 @@ fn get_reaction_skill_at(
         time_to_react = f64::sqrt(time_to_react * time_to_react + result * result);
     }
 
-    let ver_scale: f64 = 12.2; //this value comes from osu skills config file "VerScale"
-    let curve_exp: f64 = 0.64; //this value comes from osu skills config file "CurveExp"
+    let ver_scale: f64 = SKILL_CALCULATION_VARS.reaction.ver_scale;
+    let curve_exp: f64 = SKILL_CALCULATION_VARS.reaction.curve_exp;
     return ver_scale * f64::powf(react_to_skill(time_to_react), curve_exp);
 }
 
@@ -166,7 +167,7 @@ pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64 {
     let hidden: bool = calculation_utils::has_mod(beatmap, structs::Mods::HD);
     let mut max: f64 = 0.0;
     let mut avg: f64 = 0.0;
-    let weight: f64 = 0.7; //this value comes from osu skills config file "AvgWeighting"
+    let weight: f64 = SKILL_CALCULATION_VARS.reaction.avg_weighting;
 
     for tick in &beatmap.target_points {
         let val: f64 = get_reaction_skill_at(
