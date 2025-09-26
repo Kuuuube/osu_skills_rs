@@ -98,17 +98,15 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
         if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
             beatmap = calculation_utils::apply_mods(beatmap);
 
+            beatmap = skill_calculation::calculation::generic::prepare_timing_points(beatmap);
+            beatmap = skill_calculation::calculation::slider::approximate_slider_points(beatmap);
+            beatmap = skill_calculation::calculation::generic::bake_slider_data(beatmap);
+
+            beatmap = skill_calculation::calculation::generic::prepare_aim_data(beatmap);
+            beatmap = skill_calculation::calculation::generic::prepare_tap_data(beatmap);
+
             match alg {
                 CalculationAlgorithm::Classic => {
-                    beatmap =
-                        classic_skill_calculation::calculation::generic::prepare_timing_points(beatmap);
-                    beatmap =
-                        classic_skill_calculation::calculation::slider::approximate_slider_points(beatmap);
-                    beatmap = classic_skill_calculation::calculation::generic::bake_slider_data(beatmap);
-
-                    beatmap = classic_skill_calculation::calculation::generic::prepare_aim_data(beatmap);
-                    beatmap = classic_skill_calculation::calculation::generic::prepare_tap_data(beatmap);
-
                     beatmap =
                         classic_skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
                     beatmap =
@@ -130,13 +128,6 @@ pub fn process_beatmap(osu_filepath: std::path::PathBuf, mod_int: i32, alg: Calc
                         classic_skill_calculation::calculation::memory::calculate_memory(&beatmap);
                 },
                 _ => {
-                    beatmap = skill_calculation::calculation::generic::prepare_timing_points(beatmap);
-                    beatmap = skill_calculation::calculation::slider::approximate_slider_points(beatmap);
-                    beatmap = skill_calculation::calculation::generic::bake_slider_data(beatmap);
-
-                    beatmap = skill_calculation::calculation::generic::prepare_aim_data(beatmap);
-                    beatmap = skill_calculation::calculation::generic::prepare_tap_data(beatmap);
-
                     beatmap = skill_calculation::calculation::strains::calculate_aim_strains(beatmap);
                     beatmap = skill_calculation::calculation::strains::calculate_tap_strains(beatmap);
 

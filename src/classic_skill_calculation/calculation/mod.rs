@@ -1,10 +1,8 @@
 pub mod accuracy;
 pub mod agility;
-pub mod generic;
 pub mod memory;
 pub mod precision;
 pub mod reaction;
-pub mod slider;
 pub mod stamina;
 pub mod strains;
 pub mod tenacity;
