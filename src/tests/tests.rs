@@ -9,7 +9,9 @@ fn calculate_maps_default() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
-        if !filename.contains(".osu") { continue; }
+        if !filename.contains(".osu") {
+            continue;
+        }
         let processed_beatmap = crate::output::process_beatmap(
             pathbuf,
             0,
@@ -26,7 +28,9 @@ fn calculate_maps_classic() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
-        if !filename.contains(".osu") { continue; }
+        if !filename.contains(".osu") {
+            continue;
+        }
         let processed_beatmap = crate::output::process_beatmap(
             pathbuf,
             0,
@@ -43,7 +47,9 @@ fn calculate_maps_rebalance_1() {
         let filepath = osu_filepath.unwrap();
         let pathbuf = filepath.path();
         let filename = filepath.file_name().into_string().unwrap();
-        if !filename.contains(".osu") { continue; }
+        if !filename.contains(".osu") {
+            continue;
+        }
         let processed_beatmap = crate::output::process_beatmap(
             pathbuf,
             0,
@@ -52,7 +58,6 @@ fn calculate_maps_rebalance_1() {
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }
-
 
 fn get_default_data() -> HashMap<String, Skills> {
     return HashMap::from([
@@ -164,7 +169,7 @@ fn get_default_data() -> HashMap<String, Skills> {
                 reaction: 165.77799264498856,
             },
         ),
-            (
+        (
             "v12.osu".to_string(),
             Skills {
                 stamina: 388.7012531966348,

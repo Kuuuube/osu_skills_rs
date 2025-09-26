@@ -1,10 +1,10 @@
 use std::panic;
 use std::{fs, io::Write};
 
-use crate::{classic_skill_calculation, rebalance_1};
 use crate::skill_calculation;
 use crate::structs::{self, CalculationAlgorithm, OutputType};
 use crate::{calculation_utils, osu_parser};
+use crate::{classic_skill_calculation, rebalance_1};
 
 pub fn output(
     mod_int: i32,
@@ -127,17 +127,17 @@ pub fn process_beatmap(
                 CalculationAlgorithm::Default => {
                     beatmap.skills.accuracy =
                         skill_calculation::calculation::accuracy::calculate_accuracy(&beatmap);
-                },
+                }
                 CalculationAlgorithm::Classic => {
                     beatmap.skills.accuracy =
                         classic_skill_calculation::calculation::accuracy::calculate_accuracy(
                             &beatmap,
                         );
-                },
+                }
                 CalculationAlgorithm::Rebalance1 => {
                     beatmap.skills.accuracy =
                         rebalance_1::calculation::accuracy::calculate_accuracy(&beatmap);
-                },
+                }
             }
 
             match alg {
