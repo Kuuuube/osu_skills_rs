@@ -3,92 +3,90 @@ use std::{fs, io::Write};
 
 use crate::classic_skill_calculation;
 use crate::skill_calculation;
-use crate::structs::{self, CalculationAlgorithm};
+use crate::structs::{self, CalculationAlgorithm, OutputType};
 use crate::{calculation_utils, osu_parser};
 
-pub fn output_stdout(mod_int: i32, alg: CalculationAlgorithm, files: Vec<std::path::PathBuf>) {
-    for osu_filepath in files {
-        let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
-
-        if beatmap.skills != structs::Beatmap::default().skills {
-            let formatted_string: String = match alg {
-                CalculationAlgorithm::Classic => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-                _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
-            };
-
-            print!("{}", formatted_string);
-        }
-    }
-}
-
-pub fn output_file_txt(
+pub fn output(
     mod_int: i32,
     alg: CalculationAlgorithm,
+    output_type: OutputType,
     files: Vec<std::path::PathBuf>,
     output_file_string: String,
 ) {
-    let mut output_file = match fs::OpenOptions::new()
-        .create(true)
-        .write(true)
-        .truncate(true)
-        .open(output_file_string)
-    {
-        Ok(ok) => ok,
-        Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error),
-    };
+    match output_type {
+        OutputType::Stdout => {
+            for osu_filepath in files {
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
 
-    for osu_filepath in files {
-        let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
-        if beatmap.skills != structs::Beatmap::default().skills {
-            let formatted_string: String = match alg {
-                CalculationAlgorithm::Classic => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
-                _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+                if beatmap.skills != structs::Beatmap::default().skills {
+                    let formatted_string: String = match alg {
+                        CalculationAlgorithm::Classic => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                        _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+                    };
+
+                    print!("{}", formatted_string);
+                }
+            }
+        },
+        OutputType::Txt => {
+            let mut output_file = match fs::OpenOptions::new()
+                .create(true)
+                .write(true)
+                .truncate(true)
+                .open(output_file_string)
+            {
+                Ok(ok) => ok,
+                Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error),
             };
 
-            match output_file.write(formatted_string.as_bytes()) {
+            for osu_filepath in files {
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
+                if beatmap.skills != structs::Beatmap::default().skills {
+                    let formatted_string: String = match alg {
+                        CalculationAlgorithm::Classic => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                        _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
+                    };
+
+                    match output_file.write(formatted_string.as_bytes()) {
+                        Ok(_) => (),
+                        Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
+                    };
+                }
+            }
+        },
+        OutputType::Csv => {
+            let mut output_file = match fs::OpenOptions::new()
+                .create(true)
+                .write(true)
+                .truncate(true)
+                .open(output_file_string)
+            {
+                Ok(ok) => ok,
+                Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error),
+            };
+
+            let header: &str = match alg {
+                CalculationAlgorithm::Classic => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
+                _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
+            };
+
+            match output_file.write(header.as_bytes()) {
                 Ok(_) => (),
                 Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
             };
-        }
-    }
-}
 
-pub fn output_file_csv(
-    mod_int: i32,
-    alg: CalculationAlgorithm,
-    files: Vec<std::path::PathBuf>,
-    output_file_string: String,
-) {
-    let mut output_file = match fs::OpenOptions::new()
-        .create(true)
-        .write(true)
-        .truncate(true)
-        .open(output_file_string)
-    {
-        Ok(ok) => ok,
-        Err(error) => panic!("osu!Skills rs: couldn't open file. Error: {}", error),
-    };
+            for osu_filepath in files {
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
+                if beatmap.skills != structs::Beatmap::default().skills {
+                    let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory, beatmap.mods, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version);
 
-    let header: &str = match alg {
-        CalculationAlgorithm::Classic => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
-        _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
-    };
-
-    match output_file.write(header.as_bytes()) {
-        Ok(_) => (),
-        Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
-    };
-
-    for osu_filepath in files {
-        let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
-        if beatmap.skills != structs::Beatmap::default().skills {
-            let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory, beatmap.mods, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version);
-
-            match output_file.write(formatted_string.as_bytes()) {
-                Ok(_) => (),
-                Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
-            };
-        }
+                    match output_file.write(formatted_string.as_bytes()) {
+                        Ok(_) => (),
+                        Err(error) => println!("osu!Skills rs: failed to write file. Error: {}\n\n", error),
+                    };
+                }
+            }
+        },
     }
 }
 

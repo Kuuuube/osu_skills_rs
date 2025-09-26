@@ -8,7 +8,7 @@ pub enum CalculationAlgorithm {
     Rebalance1,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub enum OutputType {
     #[default]
     Stdout,

@@ -148,11 +148,7 @@ fn main() {
     };
 
     print!("Starting calculation of `{}` maps\n", files.len());
-    match output_type {
-        OutputType::Stdout => output::output_stdout(mod_int, alg, files),
-        OutputType::Txt => output::output_file_txt(mod_int, alg, files, output_filepath),
-        OutputType::Csv => output::output_file_csv(mod_int, alg, files, output_filepath),
-    }
+    output::output(mod_int, alg, output_type, files, output_filepath);
 
     print!("Finished calculation of all maps to `{}`\n", output_type);
 }
