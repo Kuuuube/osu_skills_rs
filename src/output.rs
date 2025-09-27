@@ -21,7 +21,7 @@ pub fn output(
 
                 if beatmap.skills != structs::Beatmap::default().skills {
                     let formatted_string: String = match alg {
-                        CalculationAlgorithm::Classic => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                        CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
                         _ => format!("BeatmapsetID: {}, BeatmapID: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
                     };
 
@@ -44,7 +44,7 @@ pub fn output(
                 let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
                 if beatmap.skills != structs::Beatmap::default().skills {
                     let formatted_string: String = match alg {
-                        CalculationAlgorithm::Classic => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
+                        CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
                         _ => format!("BeatmapsetID: {}, BeatmapID: {}, Md5: {}, Stamina: {}, Streams: {}, Aim: {}, Accuracy: {}, Precision: {}, Reaction: {}, Flashlight: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory)
                     };
 
@@ -69,7 +69,7 @@ pub fn output(
             };
 
             let header: &str = match alg {
-                CalculationAlgorithm::Classic => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
+                CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
                 _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
             };
 
