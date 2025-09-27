@@ -299,55 +299,150 @@ fn get_classic_data() -> HashMap<String, Skills> {
 }
 
 fn get_rebalance_1_data() -> HashMap<String, Skills> {
-    let mut rebalance_1_data = get_classic_data();
-
-    if let Some(x) = rebalance_1_data.get_mut("v3.osu") {
-        x.accuracy = 257.25699243016396;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v4.osu") {
-        x.accuracy = 345.7608578547154;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v5.osu") {
-        x.accuracy = 370.1374000738153;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v6.osu") {
-        x.accuracy = 284.65594147929585;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v7.osu") {
-        x.accuracy = 608.8443109694808;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v8.osu") {
-        x.accuracy = 368.46479247932973;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v9.osu") {
-        x.accuracy = 123.78841054612984;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v10.osu") {
-        x.accuracy = 61.30327077537922;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v11.osu") {
-        x.accuracy = 261.76958852975844;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v12.osu") {
-        x.accuracy = 635.5298556224484;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v13.osu") {
-        x.accuracy = 350.26969794656657;
-    }
-
-    if let Some(x) = rebalance_1_data.get_mut("v14.osu") {
-        x.accuracy = 806.0815894257476;
-    }
-
-    return rebalance_1_data;
+    return HashMap::from([
+        (
+            "v3.osu".to_string(),
+            Skills {
+                stamina: 188.09170758989,
+                tenacity: 139.28519391586053,
+                agility: 209.14886636067754,
+                precision: 310.81301545739717,
+                memory: 233.86574847804496,
+                accuracy: 357.8583216675231,
+                reaction: 152.78330617647686,
+            },
+        ),
+        (
+            "v4.osu".to_string(),
+            Skills {
+                stamina: 260.3729506723779,
+                tenacity: 140.92325122626224,
+                agility: 252.59978233383907,
+                precision: 513.7299058707363,
+                memory: 359.074493959281,
+                accuracy: 450.09688691515197,
+                reaction: 152.78507104993895,
+            },
+        ),
+        (
+            "v5.osu".to_string(),
+            Skills {
+                stamina: 251.05024432844877,
+                tenacity: 160.67530937571166,
+                agility: 242.00120786477834,
+                precision: 416.5511432115917,
+                memory: 432.12534380116387,
+                accuracy: 464.2055117084483,
+                reaction: 188.42493075827534,
+            },
+        ),
+        (
+            "v6.osu".to_string(),
+            Skills {
+                stamina: 209.07368187829078,
+                tenacity: 626.9147772161582,
+                agility: 253.23876455299225,
+                precision: 423.8601454471603,
+                memory: 340.9856639044052,
+                accuracy: 361.01623023311475,
+                reaction: 127.48293623478614,
+            },
+        ),
+        (
+            "v7.osu".to_string(),
+            Skills {
+                stamina: 401.11208240579106,
+                tenacity: 486.3285928938134,
+                agility: 282.1880067610648,
+                precision: 348.67355277372457,
+                memory: 590.1184729571977,
+                accuracy: 621.2766981959237,
+                reaction: 127.66482838689143,
+            },
+        ),
+        (
+            "v8.osu".to_string(),
+            Skills {
+                stamina: 243.03260416728966,
+                tenacity: 173.04490247887657,
+                agility: 228.412233516846,
+                precision: 407.39511318515434,
+                memory: 380.4909129835611,
+                accuracy: 473.30197200529255,
+                reaction: 241.53616041588077,
+            },
+        ),
+        (
+            "v9.osu".to_string(),
+            Skills {
+                stamina: 111.98352968828767,
+                tenacity: 626.9147772161582,
+                agility: 208.5655985504184,
+                precision: 310.4765518520394,
+                memory: 270.3659870702836,
+                accuracy: 227.9638401258083,
+                reaction: 125.85086511639216,
+            },
+        ),
+        (
+            "v10.osu".to_string(),
+            Skills {
+                stamina: 72.67911677120951,
+                tenacity: 626.9147772161582,
+                agility: 188.21139825888014,
+                precision: 219.90250743886074,
+                memory: 0.0,
+                accuracy: 154.5860524170765,
+                reaction: 99.23809751072656,
+            },
+        ),
+        (
+            "v11.osu".to_string(),
+            Skills {
+                stamina: 204.71573967058555,
+                tenacity: 48.267256654776354,
+                agility: 232.0519835031802,
+                precision: 323.54571014679016,
+                memory: 245.6954783055098,
+                accuracy: 373.9366709618941,
+                reaction: 188.7834401190493,
+            },
+        ),
+        (
+            "v12.osu".to_string(),
+            Skills {
+                stamina: 400.2959207155216,
+                tenacity: 272.30560909758174,
+                agility: 296.4932563491454,
+                precision: 355.274257743274,
+                memory: 547.6007360950356,
+                accuracy: 648.2648638459365,
+                reaction: 329.48522764394033,
+            },
+        ),
+        (
+            "v13.osu".to_string(),
+            Skills {
+                stamina: 234.669547746693,
+                tenacity: 626.9147772161582,
+                agility: 261.42079145446485,
+                precision: 249.6555380205757,
+                memory: 407.38787594804546,
+                accuracy: 430.17875374101976,
+                reaction: 212.02551486770398,
+            },
+        ),
+        (
+            "v14.osu".to_string(),
+            Skills {
+                stamina: 462.7150235628645,
+                tenacity: 508.40291043593504,
+                agility: 525.0614403978884,
+                precision: 439.45902669313944,
+                memory: 682.4811243347966,
+                accuracy: 805.5293432314736,
+                reaction: 451.5345549663724,
+            },
+        ),
+    ]);
 }
