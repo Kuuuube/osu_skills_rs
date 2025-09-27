@@ -26,9 +26,11 @@ Optional:
 
 - `--no-ext`: Removes file extension check for .osu files. This can be used to calculate lazer songs folders.
 
-- `--alg=ALG`: (classic|default) Calculation alg to use: `classic` or `default`. 
+- `--alg=ALG`: (classic|default|rebalance_1) Calculation alg to use: `classic`, `default`, or `rebalance_1`.
 
-    Classic matches the [osuSkills Calculator](https://github.com/Kert/osuSkills). 
+    Classic matches the [osuSkills Calculator](https://github.com/Kert/osuSkills) at [834cee5](https://github.com/Kert/osuSkills/commit/834cee5a08e5cd0a958b3e5dbc277b1b0b1630d5).
+
+    Rebalance_1 matches the [osuSkills Calculator](https://github.com/Kert/osuSkills) at [b03b532](https://github.com/Kert/osuSkills/commit/b03b532bfaf080837d349704924d72fc3c9c59a2).
 
     Default contains various fixes for weird decisions made in the classic alg.
 
