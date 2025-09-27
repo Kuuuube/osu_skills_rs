@@ -292,7 +292,7 @@ fn get_classic_data() -> HashMap<String, Skills> {
     }
 
     if let Some(x) = classic_data.get_mut("v14.osu") {
-        x.precision = 362.4905668436316;
+        x.precision = 320.0;
         x.memory = 829.5990418379729;
         x.accuracy = 421.68128341615466;
         x.reaction = 426.98476412851824;
