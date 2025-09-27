@@ -17,6 +17,7 @@ fn calculate_maps_default() {
             0,
             crate::structs::CalculationAlgorithm::Default,
         );
+        dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }
@@ -36,6 +37,7 @@ fn calculate_maps_classic() {
             0,
             crate::structs::CalculationAlgorithm::Classic,
         );
+        dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }
@@ -55,6 +57,7 @@ fn calculate_maps_rebalance_1() {
             0,
             crate::structs::CalculationAlgorithm::Rebalance1,
         );
+        dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
     }
 }
