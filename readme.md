@@ -34,6 +34,10 @@ Optional:
 
     Default contains various fixes for weird decisions made in the classic alg.
 
+- `--config-override=CONFIG`: (classic|rebalance_1) Override the default config preset.
+
+    By default, `rebalance_1` is used when `alg` is set to `rebalance_1` and `classic` is used when `alg` is set to `classic` or `default`.
+
 ### Skill File Parser
 
 Mandatory:

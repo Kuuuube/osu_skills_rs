@@ -2,6 +2,12 @@ use std::collections::HashMap;
 
 use crate::pair_structs;
 
+#[derive(Clone, Copy)]
+pub enum ConfigPreset {
+    Classic,
+    Rebalance1,
+}
+
 #[derive(Default, Clone, Copy)]
 pub enum CalculationAlgorithm {
     #[default]

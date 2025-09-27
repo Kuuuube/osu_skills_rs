@@ -16,6 +16,7 @@ fn calculate_maps_default() {
             pathbuf,
             0,
             crate::structs::CalculationAlgorithm::Default,
+            crate::structs::ConfigPreset::Classic,
         );
         dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
@@ -36,6 +37,7 @@ fn calculate_maps_classic() {
             pathbuf,
             0,
             crate::structs::CalculationAlgorithm::Classic,
+            crate::structs::ConfigPreset::Classic,
         );
         dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);
@@ -56,6 +58,7 @@ fn calculate_maps_rebalance_1() {
             pathbuf,
             0,
             crate::structs::CalculationAlgorithm::Rebalance1,
+            crate::structs::ConfigPreset::Rebalance1,
         );
         dbg!(&filename, &processed_beatmap.skills);
         assert!(*expected_default_data.get(&filename).unwrap() == processed_beatmap.skills);

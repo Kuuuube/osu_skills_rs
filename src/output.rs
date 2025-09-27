@@ -2,7 +2,7 @@ use std::panic;
 use std::{fs, io::Write};
 
 use crate::skill_calculation;
-use crate::structs::{self, CalculationAlgorithm, OutputType};
+use crate::structs::{self, CalculationAlgorithm, ConfigPreset, OutputType};
 use crate::vars::{SKILL_CALCULATION_VARS, SKILL_CALCULATION_VARS_REBALANCE_1};
 use crate::{calculation_utils, osu_parser};
 use crate::{classic_skill_calculation, rebalance_1};
@@ -13,11 +13,12 @@ pub fn output(
     output_type: OutputType,
     files: Vec<std::path::PathBuf>,
     output_file_string: String,
+    config_preset: ConfigPreset,
 ) {
     match output_type {
         OutputType::Stdout => {
             for osu_filepath in files {
-                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg, config_preset);
 
                 if beatmap.skills != structs::Beatmap::default().skills {
                     let formatted_string: String = match alg {
@@ -41,7 +42,7 @@ pub fn output(
             };
 
             for osu_filepath in files {
-                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg, config_preset);
                 if beatmap.skills != structs::Beatmap::default().skills {
                     let formatted_string: String = match alg {
                         CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => format!("BeatmapID: {}, BeatmapsetID: {}, Md5: {}, Stamina: {}, Tenacity: {}, Agility: {}, Accuracy: {}, Precision: {}, Reaction: {}, Memory: {}\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory),
@@ -79,7 +80,7 @@ pub fn output(
             };
 
             for osu_filepath in files {
-                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg);
+                let beatmap: structs::Beatmap = process_beatmap(osu_filepath, mod_int, alg, config_preset);
                 if beatmap.skills != structs::Beatmap::default().skills {
                     let formatted_string: String = format!("\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"\n", beatmap.beatmap_id, beatmap.beatmap_set_id, beatmap.beatmap_md5, beatmap.skills.stamina, beatmap.skills.tenacity, beatmap.skills.agility, beatmap.skills.accuracy, beatmap.skills.precision, beatmap.skills.reaction, beatmap.skills.memory, beatmap.mods, "Osu", beatmap.artist, beatmap.artist_unicode, beatmap.title, beatmap.title_unicode, beatmap.version);
 
@@ -99,12 +100,13 @@ pub fn process_beatmap(
     osu_filepath: std::path::PathBuf,
     mod_int: i32,
     alg: CalculationAlgorithm,
+    config_preset: ConfigPreset,
 ) -> structs::Beatmap {
     let result = panic::catch_unwind(|| {
         let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
-        beatmap.skill_calculation_vars = match alg {
-            CalculationAlgorithm::Default | CalculationAlgorithm::Classic => SKILL_CALCULATION_VARS,
-            CalculationAlgorithm::Rebalance1 => SKILL_CALCULATION_VARS_REBALANCE_1,
+        beatmap.skill_calculation_vars = match config_preset {
+            ConfigPreset::Classic => SKILL_CALCULATION_VARS,
+            ConfigPreset::Rebalance1 => SKILL_CALCULATION_VARS_REBALANCE_1,
         };
         beatmap.mods = mod_int;
 

@@ -3,6 +3,7 @@ use std::panic;
 use std::path::absolute;
 
 use crate::structs::CalculationAlgorithm;
+use crate::structs::ConfigPreset;
 use crate::structs::OutputType;
 
 mod algs;
@@ -26,6 +27,8 @@ fn main() {
 
     let mut input_filepath: String = Default::default();
     let mut alg: CalculationAlgorithm = Default::default();
+    let config_preset: ConfigPreset;
+    let mut config_preset_string: String = Default::default();
     let mut mod_int: i32 = Default::default();
     let mut is_dir: String = Default::default();
     let mut output_filepath: String = Default::default();
@@ -57,6 +60,7 @@ fn main() {
                 parser_mode = true;
                 parser_arg = safe_get_string(split, 1)
             }
+            "--config-override" => config_preset_string = safe_get_string(split, 1),
             _ => {
                 print!("osu!Skills rs: unknown option {}\nUsage: osu_skills_rs [OPTION]...\n\nTry `osu_skills_rs --help` for more options.\n", split[0]);
                 return;
@@ -69,6 +73,16 @@ fn main() {
     if parser_mode {
         parser::skill_file_parser(parser_arg, input_filepath, output_filepath);
         return;
+    }
+
+    if config_preset_string.len() > 0 {
+        config_preset = match_config_preset(&config_preset_string);
+    } else {
+        config_preset = match alg {
+            CalculationAlgorithm::Default => ConfigPreset::Classic,
+            CalculationAlgorithm::Classic => ConfigPreset::Classic,
+            CalculationAlgorithm::Rebalance1 => ConfigPreset::Rebalance1,
+        }
     }
 
     if input_filepath.len() == 0 {
@@ -162,7 +176,7 @@ fn main() {
     };
 
     print!("Starting calculation of `{}` maps\n", files.len());
-    output::output(mod_int, alg, output_type, files, output_filepath);
+    output::output(mod_int, alg, output_type, files, output_filepath, config_preset);
 
     print!("Finished calculation of all maps to `{}`\n", output_type);
 }
@@ -187,6 +201,13 @@ fn safe_get_string(input: Vec<&str>, index: usize) -> String {
         None => "".to_string(),
     };
     return output;
+}
+
+fn match_config_preset(config_preset_str: &str) -> ConfigPreset {
+    return match config_preset_str {
+        "rebalance_1" => ConfigPreset::Rebalance1,
+        _ => ConfigPreset::Classic,
+    };
 }
 
 fn match_alg(alg_str: &str) -> CalculationAlgorithm {
