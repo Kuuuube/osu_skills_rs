@@ -3,7 +3,6 @@ use crate::pair_structs;
 use crate::structs;
 use crate::structs::SkillCalculationReactionVars;
 
-
 fn get_visibility_times(
     obj: &structs::HitObject,
     ar: f64,

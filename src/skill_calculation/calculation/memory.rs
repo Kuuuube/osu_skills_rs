@@ -2,7 +2,6 @@ use crate::calculation_utils;
 use crate::pair_structs;
 use crate::structs;
 
-
 fn get_approach_relative_size(time: f64, hit_time: f64, ar: f64) -> f64 {
     let ar_ms: f64 = calculation_utils::ar_to_ms(ar);
 
@@ -111,7 +110,8 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             } else {
                 let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.end_point);
                 if dist > (observable_dist + help_pixels) as f64 {
-                    let follow_points_nerf: f64 = beatmap.skill_calculation_vars.memory.followpoints_nerf;
+                    let follow_points_nerf: f64 =
+                        beatmap.skill_calculation_vars.memory.followpoints_nerf;
                     mem_points = slider_bonus_factor
                         * follow_points_nerf
                         * (dist / (cur.time - old.time) as f64);

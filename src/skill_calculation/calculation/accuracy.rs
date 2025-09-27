@@ -2,7 +2,6 @@ use crate::algs::erf;
 use crate::calculation_utils;
 use crate::structs;
 
-
 pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let mut circles: f64 = 0.0;
     for obj in &beatmap.hit_objects {

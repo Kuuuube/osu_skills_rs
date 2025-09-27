@@ -2,7 +2,6 @@ use crate::pair_structs;
 use crate::structs;
 use crate::structs::SkillCalculationAgilityVars;
 
-
 pub fn calculate_tap_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut c: i32 = 0;
     let mut old_bonus: f64 = 0.0;
@@ -78,12 +77,16 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
         let mut strain = 0.0;
 
         if i != 0 {
-            let distance: f64 = get_weighted_aim_distance(pair_structs::get_distance_from(
-                &beatmap.aim_points[i].pos,
-                &beatmap.aim_points[i - 1].pos,
-            ), &beatmap.skill_calculation_vars.agility);
+            let distance: f64 = get_weighted_aim_distance(
+                pair_structs::get_distance_from(
+                    &beatmap.aim_points[i].pos,
+                    &beatmap.aim_points[i - 1].pos,
+                ),
+                &beatmap.skill_calculation_vars.agility,
+            );
             let interval: i64 = beatmap.aim_points[i].time - beatmap.aim_points[i - 1].time;
-            let time: f64 = get_weighted_aim_time(interval as f64, &beatmap.skill_calculation_vars.agility);
+            let time: f64 =
+                get_weighted_aim_time(interval as f64, &beatmap.skill_calculation_vars.agility);
             let mut angle_bonus: f64 = 1.0;
 
             if i > 1 {
@@ -102,7 +105,8 @@ pub fn calculate_aim_strains(mut beatmap: structs::Beatmap) -> structs::Beatmap 
                 || beatmap.aim_points[i - 1].aim_point_type
                     == structs::AimPointTypes::AimPointSliderend
             {
-                let slider_strain_decay: f64 = beatmap.skill_calculation_vars.agility.slider_strain_decay;
+                let slider_strain_decay: f64 =
+                    beatmap.skill_calculation_vars.agility.slider_strain_decay;
                 strain *= slider_strain_decay;
             }
 
