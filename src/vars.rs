@@ -77,7 +77,7 @@ pub const SKILL_CALCULATION_VARS_REBALANCE_1: SkillCalculationVars = SkillCalcul
         total_pow: 1.06,
         total_mult: 17.7635,
         agility_subtract: 0.995462,
-        agility_pow: 0.29,
+        agility_pow: 0.28,
         agility_limit: 900.0,
     },
     accuracy: SkillCalculationAccuracyVars {
