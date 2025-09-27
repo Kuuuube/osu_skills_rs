@@ -1,7 +1,7 @@
 use crate::algs::erf;
 use crate::calculation_utils;
 use crate::structs;
-use crate::vars::SKILL_CALCULATION_VARS;
+
 
 pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let mut circles: f64 = 0.0;
@@ -17,14 +17,14 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
     let od_ms: f64 = calculation_utils::od_to_ms(beatmap.od);
 
     let tapping: f64;
-    let acc_scale: f64 = SKILL_CALCULATION_VARS.accuracy.acc_scale;
+    let acc_scale: f64 = beatmap.skill_calculation_vars.accuracy.acc_scale;
     if beatmap.skills.stamina == 0.0 {
         tapping = 1.0; //erf::erf(f64::INFINITY)
     } else {
         tapping = erf::erf(od_ms / (acc_scale * beatmap.skills.stamina * beatmap.skills.stamina));
     }
 
-    let verscale: f64 = SKILL_CALCULATION_VARS.accuracy.ver_scale;
+    let verscale: f64 = beatmap.skill_calculation_vars.accuracy.ver_scale;
     let accuracy: f64 = f64::abs(verscale * circles * f64::ln(tapping));
 
     return accuracy;

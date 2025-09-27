@@ -259,9 +259,11 @@ pub struct Beatmap {
     pub compressed_stream: Vec<i32>,
     pub stream: Vec<i32>,
     pub stack: Vec<i32>,
+
+    pub skill_calculation_vars: SkillCalculationVars,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationVars {
     pub reaction: SkillCalculationReactionVars,
     pub precision: SkillCalculationPrecisionVars,
@@ -272,7 +274,7 @@ pub struct SkillCalculationVars {
     pub stamina: SkillCalculationStaminaVars,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationReactionVars {
     pub curve_exp: f64,
     pub fade_in_percent: f64,
@@ -281,7 +283,7 @@ pub struct SkillCalculationReactionVars {
     pub avg_weighting: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationPrecisionVars {
     pub total_pow: f64,
     pub total_mult: f64,
@@ -290,7 +292,7 @@ pub struct SkillCalculationPrecisionVars {
     pub agility_limit: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationAccuracyVars {
     pub total_pow: f64,
     pub total_mult: f64,
@@ -298,7 +300,7 @@ pub struct SkillCalculationAccuracyVars {
     pub acc_scale: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationAgilityVars {
     pub total_mult: f64,
     pub weighting: f64,
@@ -313,7 +315,7 @@ pub struct SkillCalculationAgilityVars {
     pub dist_mult: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationTenacityVars {
     pub total_pow: f64,
     pub total_mult: f64,
@@ -324,7 +326,7 @@ pub struct SkillCalculationTenacityVars {
     pub interval_mult: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationMemoryVars {
     pub total_mult: f64,
     pub sliderbuff: f64,
@@ -332,7 +334,7 @@ pub struct SkillCalculationMemoryVars {
     pub followpoints_nerf: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, PartialEq, Debug)]
 pub struct SkillCalculationStaminaVars {
     pub total_pow: f64,
     pub largest_interval: f64,

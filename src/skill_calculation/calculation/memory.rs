@@ -1,7 +1,7 @@
 use crate::calculation_utils;
 use crate::pair_structs;
 use crate::structs;
-use crate::vars::SKILL_CALCULATION_VARS;
+
 
 fn get_approach_relative_size(time: f64, hit_time: f64, ar: f64) -> f64 {
     let ar_ms: f64 = calculation_utils::ar_to_ms(ar);
@@ -56,7 +56,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             &old.hit_object_type,
             structs::HitObjectType::Slider,
         ) {
-            slider_bonus_factor = SKILL_CALCULATION_VARS.memory.sliderbuff;
+            slider_bonus_factor = beatmap.skill_calculation_vars.memory.sliderbuff;
         }
 
         let mut observable: bool = false;
@@ -111,7 +111,7 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
             } else {
                 let dist: f64 = pair_structs::get_distance_from(&cur.pos, &old.end_point);
                 if dist > (observable_dist + help_pixels) as f64 {
-                    let follow_points_nerf: f64 = SKILL_CALCULATION_VARS.memory.followpoints_nerf;
+                    let follow_points_nerf: f64 = beatmap.skill_calculation_vars.memory.followpoints_nerf;
                     mem_points = slider_bonus_factor
                         * follow_points_nerf
                         * (dist / (cur.time - old.time) as f64);
@@ -140,8 +140,8 @@ pub fn calculate_memory(beatmap: &structs::Beatmap) -> f64 {
         i += 1;
     }
 
-    let total_mult: f64 = SKILL_CALCULATION_VARS.memory.total_mult;
-    let total_pow: f64 = SKILL_CALCULATION_VARS.memory.total_pow;
+    let total_mult: f64 = beatmap.skill_calculation_vars.memory.total_mult;
+    let total_pow: f64 = beatmap.skill_calculation_vars.memory.total_pow;
     let memory: f64 = total_mult * f64::powf(total_mem_points, total_pow);
 
     return memory;

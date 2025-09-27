@@ -1,6 +1,6 @@
 use crate::pair_structs;
 use crate::structs;
-use crate::vars::SKILL_CALCULATION_VARS;
+
 
 fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> structs::Stream {
     let mut max: usize = 1;
@@ -30,13 +30,13 @@ fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> st
 pub fn calculate_tenacity(beatmap: &structs::Beatmap) -> f64 {
     let longest_stream: structs::Stream = get_longest_stream(&beatmap.streams);
 
-    let interval_mult: f64 = SKILL_CALCULATION_VARS.tenacity.interval_mult;
-    let interval_mult2: f64 = SKILL_CALCULATION_VARS.tenacity.interval_mult2;
-    let interval_pow: f64 = SKILL_CALCULATION_VARS.tenacity.interval_pow;
-    let length_divisor: f64 = SKILL_CALCULATION_VARS.tenacity.length_divisor;
-    let length_mult: f64 = SKILL_CALCULATION_VARS.tenacity.length_mult;
-    let total_mult: f64 = SKILL_CALCULATION_VARS.tenacity.total_mult;
-    let total_pow: f64 = SKILL_CALCULATION_VARS.tenacity.total_pow;
+    let interval_mult: f64 = beatmap.skill_calculation_vars.tenacity.interval_mult;
+    let interval_mult2: f64 = beatmap.skill_calculation_vars.tenacity.interval_mult2;
+    let interval_pow: f64 = beatmap.skill_calculation_vars.tenacity.interval_pow;
+    let length_divisor: f64 = beatmap.skill_calculation_vars.tenacity.length_divisor;
+    let length_mult: f64 = beatmap.skill_calculation_vars.tenacity.length_mult;
+    let total_mult: f64 = beatmap.skill_calculation_vars.tenacity.total_mult;
+    let total_pow: f64 = beatmap.skill_calculation_vars.tenacity.total_pow;
 
     let interval_scaled: f64 =
         1.0 / f64::powf(

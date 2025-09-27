@@ -1,10 +1,10 @@
-use crate::{structs, vars::SKILL_CALCULATION_VARS};
+use crate::structs;
 
 pub fn calculate_precision(beatmap: &structs::Beatmap) -> f64 {
-    let agility_limit: f64 = SKILL_CALCULATION_VARS.precision.agility_limit;
-    let agility_pow: f64 = SKILL_CALCULATION_VARS.precision.agility_pow;
-    let total_mult: f64 = SKILL_CALCULATION_VARS.precision.total_mult;
-    let total_pow: f64 = SKILL_CALCULATION_VARS.precision.total_pow;
+    let agility_limit: f64 = beatmap.skill_calculation_vars.precision.agility_limit;
+    let agility_pow: f64 = beatmap.skill_calculation_vars.precision.agility_pow;
+    let total_mult: f64 = beatmap.skill_calculation_vars.precision.total_mult;
+    let total_pow: f64 = beatmap.skill_calculation_vars.precision.total_pow;
     let agility_subtract: f64 = f64::powf(agility_limit, 0.1) - 1.0; //this value originally came from osu skills config but it is better to calculate it
     let agility_shift: f64 = f64::powf(agility_subtract, 10.0);
 

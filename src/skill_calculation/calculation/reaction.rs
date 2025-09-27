@@ -1,7 +1,8 @@
 use crate::calculation_utils;
 use crate::pair_structs;
 use crate::structs;
-use crate::vars::SKILL_CALCULATION_VARS;
+use crate::structs::SkillCalculationReactionVars;
+
 
 fn get_visibility_times(
     obj: &structs::HitObject,
@@ -98,8 +99,9 @@ fn pattern_to_reaction(
     p3: &structs::Timing,
     ar_ms: f64,
     cs_px: f64,
+    pattern_damping: f64,
 ) -> f64 {
-    let damping: f64 = SKILL_CALCULATION_VARS.reaction.pattern_damping;
+    let damping: f64 = pattern_damping;
     let curve_steepness = damping;
     let pattern_requirement = pattern_req(p1, p2, p3, cs_px);
 
@@ -120,9 +122,10 @@ fn get_reaction_skill_at(
     cs: f64,
     ar: f64,
     hidden: bool,
+    reaction_vars: &SkillCalculationReactionVars,
 ) -> f64 {
     let mut time_to_react = 0.0;
-    let fade_in_react_req = SKILL_CALCULATION_VARS.reaction.fade_in_percent;
+    let fade_in_react_req = reaction_vars.fade_in_percent;
     let index: i32 = calculation_utils::find_timing_at(&target_points, target_point.time);
 
     if index >= (target_points.len() as i32) - 2 {
@@ -154,12 +157,13 @@ fn get_reaction_skill_at(
             t3,
             actual_ar_time,
             calculation_utils::cs_to_px(cs) as f64,
+            reaction_vars.pattern_damping,
         );
         time_to_react = f64::sqrt(time_to_react * time_to_react + result * result);
     }
 
-    let ver_scale: f64 = SKILL_CALCULATION_VARS.reaction.ver_scale;
-    let curve_exp: f64 = SKILL_CALCULATION_VARS.reaction.curve_exp;
+    let ver_scale: f64 = reaction_vars.ver_scale;
+    let curve_exp: f64 = reaction_vars.curve_exp;
     return ver_scale * f64::powf(react_to_skill(time_to_react), curve_exp);
 }
 
@@ -167,7 +171,7 @@ pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64 {
     let hidden: bool = calculation_utils::has_mod(beatmap, structs::Mods::HD);
     let mut max: f64 = 0.0;
     let mut avg: f64 = 0.0;
-    let weight: f64 = SKILL_CALCULATION_VARS.reaction.avg_weighting;
+    let weight: f64 = beatmap.skill_calculation_vars.reaction.avg_weighting;
 
     for tick in &beatmap.target_points {
         let val: f64 = get_reaction_skill_at(
@@ -177,6 +181,7 @@ pub fn calculate_reaction(beatmap: &structs::Beatmap) -> f64 {
             beatmap.cs,
             beatmap.ar,
             hidden,
+            &beatmap.skill_calculation_vars.reaction,
         );
 
         if val > max {
