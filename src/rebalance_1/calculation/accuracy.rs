@@ -22,9 +22,9 @@ pub fn calculate_accuracy(beatmap: &structs::Beatmap) -> f64 {
         ss_ur /= 0.75;
     }
 
-    let ver_scale: f64 = 2.5; //this value comes from osu skills config file "VerScale"
-    let total_mult: f64 = 42.2505; //this value comes from osu skills config file "VerScale"
-    let total_pow: f64 = 0.27; //this value comes from osu skills config file "VerScale"
+    let ver_scale: f64 = beatmap.skill_calculation_vars.accuracy.ver_scale;
+    let total_mult: f64 = beatmap.skill_calculation_vars.accuracy.total_mult;
+    let total_pow: f64 = beatmap.skill_calculation_vars.accuracy.total_pow;
     let accuracy: f64 = total_mult
         * f64::powf(
             f64::powf(beatmap.skills.stamina, ver_scale) / ss_ur,

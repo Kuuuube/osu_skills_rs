@@ -64,3 +64,56 @@ pub const SKILL_CALCULATION_VARS: SkillCalculationVars = SkillCalculationVars {
         decay: 0.94,
     },
 };
+
+pub const SKILL_CALCULATION_VARS_REBALANCE_1: SkillCalculationVars = SkillCalculationVars {
+    reaction: SkillCalculationReactionVars {
+        curve_exp: 0.59,
+        fade_in_percent: 0.1,
+        ver_scale: 17.035,
+        pattern_damping: 0.15,
+        avg_weighting: 0.7,
+    },
+    precision: SkillCalculationPrecisionVars {
+        total_pow: 1.06,
+        total_mult: 17.7635,
+        agility_subtract: 0.995462,
+        agility_pow: 0.29,
+        agility_limit: 900.0,
+    },
+    accuracy: SkillCalculationAccuracyVars {
+        total_pow: 0.27,
+        total_mult: 42.2505,
+        ver_scale: 2.5,
+        acc_scale: 0.3,
+    },
+    agility: SkillCalculationAgilityVars {
+        total_mult: 67.6871,
+        weighting: 0.78,
+        total_pow: 0.15,
+        slider_strain_decay: 2.0,
+        angle_mult: 4.0,
+        time_pow: 1.04,
+        time_mult: 0.001,
+        dist_divisor: 2.0,
+        strain_decay: 16.9201,
+        dist_pow: 1.0,
+        dist_mult: 1.0,
+    },
+    tenacity: SKILL_CALCULATION_VARS.tenacity,
+    memory: SkillCalculationMemoryVars {
+        total_mult: 295.0,
+        sliderbuff: 1.1,
+        total_pow: 0.18,
+        followpoints_nerf: 0.8,
+    },
+    stamina: SkillCalculationStaminaVars {
+        total_pow: 0.68,
+        largest_interval: 50550.0,
+        pow: 0.045,
+        total_mult: 2.9,
+        scale: 7000.0,
+        mult: 0.8,
+        decay_max: 0.0,
+        decay: 0.95,
+    },
+};

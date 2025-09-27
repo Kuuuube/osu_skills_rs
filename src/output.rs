@@ -3,7 +3,7 @@ use std::{fs, io::Write};
 
 use crate::skill_calculation;
 use crate::structs::{self, CalculationAlgorithm, OutputType};
-use crate::vars::SKILL_CALCULATION_VARS;
+use crate::vars::{SKILL_CALCULATION_VARS, SKILL_CALCULATION_VARS_REBALANCE_1};
 use crate::{calculation_utils, osu_parser};
 use crate::{classic_skill_calculation, rebalance_1};
 
@@ -102,7 +102,10 @@ pub fn process_beatmap(
 ) -> structs::Beatmap {
     let result = panic::catch_unwind(|| {
         let mut beatmap: structs::Beatmap = osu_parser::parse_beatmap(osu_filepath.clone());
-        beatmap.skill_calculation_vars = SKILL_CALCULATION_VARS;
+        beatmap.skill_calculation_vars = match alg {
+            CalculationAlgorithm::Default | CalculationAlgorithm::Classic => SKILL_CALCULATION_VARS,
+            CalculationAlgorithm::Rebalance1 => SKILL_CALCULATION_VARS_REBALANCE_1,
+        };
         beatmap.mods = mod_int;
 
         if beatmap.hit_objects.len() >= 2 && beatmap.mode == 0 {
