@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::pair_structs;
 
 #[derive(Default, Clone, Copy)]
@@ -250,7 +252,7 @@ pub struct Beatmap {
     pub press_intervals: Vec<i32>,
     pub tap_strains: Vec<f64>,
 
-    pub streams: Vec<pair_structs::Pairi32VectorVectori32>,
+    pub streams: HashMap<i32, Vec<Vec<i32>>>,
 
     pub skills: Skills,
 

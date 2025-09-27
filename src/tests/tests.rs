@@ -77,7 +77,7 @@ fn get_default_data() -> HashMap<String, Skills> {
             "v4.osu".to_string(),
             Skills {
                 stamina: 176.16576775841932,
-                tenacity: 140.92325122626224,
+                tenacity: 142.95602750485276,
                 agility: 350.5245510773862,
                 precision: 546.9365392945944,
                 memory: 284.46232996693453,
@@ -316,7 +316,7 @@ fn get_rebalance_1_data() -> HashMap<String, Skills> {
             "v4.osu".to_string(),
             Skills {
                 stamina: 260.3729506723779,
-                tenacity: 140.92325122626224,
+                tenacity: 142.95602750485276,
                 agility: 252.59978233383907,
                 precision: 513.7299058707363,
                 memory: 359.074493959281,

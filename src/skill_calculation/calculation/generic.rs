@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::calculation_utils;
 use crate::pair_structs;
 use crate::skill_calculation;
@@ -369,7 +371,7 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     let mut old: i32 = 0;
     let mut tmp: Vec<i32> = Default::default();
     let mut i: usize = 0;
-    let mut uniq: Vec<i32> = Default::default();
+    let mut uniq: HashSet<i32> = Default::default();
     let offset_max_displacement: i32 = 2;
     let mut new_press_intervals: Vec<i32> = beatmap.press_intervals.clone();
 
@@ -388,16 +390,17 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
                 p += 1;
             }
             if !found {
-                uniq.push(new_press_intervals[i])
+                uniq.insert(new_press_intervals[i]);
             }
         }
 
         if i32::abs(new_press_intervals[i] - old) > offset_max_displacement {
             if tmp.len() > 6 {
-                beatmap.streams.push(pair_structs::Pairi32VectorVectori32 {
-                    x: old,
-                    y: vec![tmp.clone()],
-                })
+                if let Some(x) = beatmap.streams.get_mut(&old) {
+                    x.push(tmp.clone());
+                } else {
+                    beatmap.streams.insert(old, vec![tmp.clone()]);
+                }
             }
             tmp.clear();
         }
@@ -407,13 +410,12 @@ fn gather_tap_patterns(mut beatmap: structs::Beatmap) -> structs::Beatmap {
     }
 
     if tmp.len() > 6 {
-        beatmap.streams.push(pair_structs::Pairi32VectorVectori32 {
-            x: old,
-            y: vec![tmp.clone()],
-        });
+        if let Some(x) = beatmap.streams.get_mut(&old) {
+            x.push(tmp.clone());
+        } else {
+            beatmap.streams.insert(old, vec![tmp.clone()]);
+        }
     }
-
-    beatmap.streams.sort();
 
     return beatmap;
 }

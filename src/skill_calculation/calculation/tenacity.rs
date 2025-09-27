@@ -1,15 +1,28 @@
-use crate::pair_structs;
-use crate::structs;
+use std::collections::HashMap;
 
-fn get_longest_stream(streams: &Vec<pair_structs::Pairi32VectorVectori32>) -> structs::Stream {
+use crate::{pair_structs::Pairi32VectorVectori32, structs};
+
+fn sort_hashmap_to_vec(streams: &HashMap<i32, Vec<Vec<i32>>>) -> Vec<Pairi32VectorVectori32> {
+    let mut vec = vec![];
+    for stream in streams {
+        vec.push(Pairi32VectorVectori32 {
+            x: *stream.0,
+            y: stream.1.to_vec(),
+        });
+    }
+    vec.sort_by(|a, b| a.x.cmp(&b.x));
+    return vec;
+}
+
+fn get_longest_stream(streams: &HashMap<i32, Vec<Vec<i32>>>) -> structs::Stream {
     let mut max: usize = 1;
     let mut interval: i32 = 0;
 
-    for stream in streams {
-        interval = stream.x;
+    for stream in sort_hashmap_to_vec(streams) {
+        interval = stream.x.to_owned();
         max = 1;
 
-        for j in &stream.y {
+        for j in stream.y {
             let length: usize = j.len() + 1;
             if length > max {
                 max = length;
