@@ -70,7 +70,7 @@ pub fn output(
             };
 
             let header: &str = match alg {
-                CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
+                CalculationAlgorithm::Classic | CalculationAlgorithm::Rebalance1 => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Tenacity\",\"Agility\",\"Accuracy\",\"Precision\",\"Reaction\",\"Memory\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n",
                 _ => "\"BeatmapID\",\"BeatmapsetID\",\"Md5\",\"Stamina\",\"Streams\",\"Aim\",\"Accuracy\",\"Precision\",\"Reaction\",\"Flashlight\",\"Mods\",\"Mode\",\"Artist\",\"ArtistUnicode\",\"Title\",\"TitleUnicode\",\"Version\"\n"
             };
 
